@@ -1,7 +1,8 @@
 # DNP1-Assignment: Main Course Assignment
 
 
-<b>Feature description</b>
+<b>Feature description</b>:
+
 We need a User, having at least username, and a password. It needs an Id of type int. We need a Post. It is written by a User. It contains a Title and a Body. It also needs an Id, of type int. A User can also write a Comment on a Post. A Comment just contains a Body, and an Id of type int.
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
 
