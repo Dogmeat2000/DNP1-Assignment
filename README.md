@@ -5,7 +5,7 @@
 
 We need a User, having at least username, and a password. It needs an Id of type int. We need a Post. It is written by a User. It contains a Title and a Body. It also needs an Id, of type int. A User can also write a Comment on a Post. A Comment just contains a Body, and an Id of type int.
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
-
+<\n\n>
 <b>As User stories (Prioritized):</b>
   1.	As a User, I want to be create posts containing a header (title) and body on the internet forum, so that I can share information with other users.
   2.	As a User, I want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that I can write.
