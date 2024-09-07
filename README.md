@@ -14,8 +14,8 @@ All entities must have an Id of type int. The way we create relationships betwee
   6.  Optional: Users want to be able to create main forums, as well as sub-forums, so that posts with related themes/topics can be collected inside containing forums and subforums for ease of finding posts with related topics.<br />
   7.  Optional: Users want to be warned when attempting to edit/delete previously created posts and comments, so that users do not edit/delete anything without informed consent.<br />
   8.  Optional: Users want to be able to see and restore deleted posts within 30 days of deletion, so that mistakes can be undone.<br />
-  9.  Optional: Users want to be able to see the date and time of each post and comment.<br />
-  10.  Optional: Users want to be able to see the date and time of the most recent post or comment in each forum and sub-forum.<br />
+  9.  Optional: Users want to be able to see the date and time of each post and comment, so that users are able to identify new and old informtation.<br />
+  10.  Optional: Users want to be able to see the date and time of the most recent post or comment in each forum and sub-forum, so that users have a fast means of identifying if changes were made inside the forums they are interested in.<br />
 <br />
 <b>As Non-functional requirements:</b><br />
 -	Data types:<br />
