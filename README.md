@@ -1,13 +1,10 @@
 # DNP1-Assignment: Main Course Assignment
 
-![alt text](Images/Domain-Model.svg)
-
-
 Mandatory feature description:
 We need a User, having at least username, and a password. It needs an Id of type int. We need a Post. It is written by a User. It contains a Title and a Body. It also needs an Id, of type int. A User can also write a Comment on a Post. A Comment just contains a Body, and an Id of type int.
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
 
-As User stories (Prioritized):
+<h2><b>User stories (Prioritized):</b></h2>
   1.	<b>Mandatory:</b> Users want to be create posts containing a header (title) and body on in the forum, so that I can share information with other users.<br />
   2.	<b>Mandatory:</b> Users want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that is written by the user.<br />
   3.	<b>Mandatory:</b> Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assigned as authors on the created posts and comments<br />
@@ -22,7 +19,7 @@ As User stories (Prioritized):
 <br />
 
 
-<h2><b>As Non-functional requirements:</b></h2>
+<h2><b>Non-functional requirements:</b></h2>
 -	Data types:<br />
   o	An id of type Int must be applied to each User class.<br />
   o	Each Post must contain a Title and a Body, as well as an Id of type Int.<br />
@@ -38,5 +35,6 @@ As User stories (Prioritized):
 - How should posts and forums be sorted? By Date? By Name? Should be user be able to choose their own preference for sorting?<br />
   
 <h2><b>Domain Model:</b></h2>
-![alt text](Images/Domain-Model.svg)
+
+![alt text](Images/domain-model.svg)
 
