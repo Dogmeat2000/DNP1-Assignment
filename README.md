@@ -1,11 +1,11 @@
 # DNP1-Assignment: Main Course Assignment
 
 
-<h2><b>Mandatory feature description</b>:</h2><br />
+<h2><b>Mandatory feature description</b>:</h2>
 We need a User, having at least username, and a password. It needs an Id of type int. We need a Post. It is written by a User. It contains a Title and a Body. It also needs an Id, of type int. A User can also write a Comment on a Post. A Comment just contains a Body, and an Id of type int.
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
 <br /><br />
-<h2><b>As User stories (Prioritized):</b></h2><br />
+<h2><b>As User stories (Prioritized):</b></h2>
   1.	Mandatory: Users want to be create posts containing a header (title) and body on in the forum, so that I can share information with other users.<br />
   2.	Mandatory: Users want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that is written by the user.<br />
   3.	Mandatory: Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assignes as authors on the created posts and comments<br />
@@ -17,7 +17,7 @@ All entities must have an Id of type int. The way we create relationships betwee
   9.  Optional: Users want to be able to see the date and time of each post and comment, so that users are able to identify new and old informtation.<br />
   10.  Optional: Users want to be able to see the date and time of the most recent post or comment in each forum and sub-forum, so that users have a fast means of identifying if changes were made inside the forums they are interested in.<br />
 <br />
-<h2><b>As Non-functional requirements:</b></h2><br />
+<h2><b>As Non-functional requirements:</b></h2>
 -	Data types:<br />
   o	An id of type Int must be applied to each User class.<br />
   o	Each Post must contain a Title and a Body, as well as an Id of type Int.<br />
