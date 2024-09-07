@@ -32,5 +32,6 @@ All entities must have an Id of type int. The way we create relationships betwee
 
 <h2><b>Other considerations, not decided upon:</b></h2>
 - Should it be possible to modify and delete forums and sub-forums?
+- What if a user, who created a specific forum, wishes to delete said forum - but other users have already added posts and comments inside that forum? Tough luck?
   
 <h2><b>Domain Model:</b></h2>
