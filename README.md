@@ -11,6 +11,7 @@ All entities must have an Id of type int. The way we create relationships betwee
   3.	Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assignes as authors on the created posts and comments<br />
   4.	Users want to be able to manage (edit/delete) Posts and Comments that the user has previously created, so that the user can keep information updated and fix potential errors or misspelling.<br />
   5.	Users want to comment on multiple Posts, as well as add multiple comments to each Post, so that as many as possible can collaborate in the information sharing.<br />
+  6.  Users want to be able to create main forums, as well as sub-forums, so that posts with related themes/topics can be collected inside containing forums and subforums for ease of finding posts with related topics.<br />
 <br />
 <b>As Non-functional requirements:</b><br />
 -	Data types:<br />
