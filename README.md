@@ -13,7 +13,7 @@ All entities must have an Id of type int. The way we create relationships betwee
   5.	<b>Optional:</b> Users want to be able to manage (edit/delete) Posts and Comments that the user has previously created, so that the user can keep information updated and fix potential errors or misspelling.<br />
   6.	<b>Optional:</b> Users want to comment on multiple Posts, as well as add multiple comments to each Post, so that multiple users can collaborate in the information sharing.<br />
   7.  <b>Optional:</b> Users want to be able to create main forums, as well as sub-forums, so that posts with related themes/topics can be collected inside containing forums and subforums for ease of finding posts with related topics. Each forum/subforum should be identifiable by its unique name.<br />
-  8.  <b>Optional:</b> Users want to be warned when attempting to edit/delete previously created posts and comments, so that users do not edit/delete anything without informed consent.<br />
+  8.  <b>Optional:</b> Users need to confirm any attempt to edit/delete previously created posts and comments, so that users do not edit/delete anything without informed consent.<br />
   9.  <b>Optional:</b> Users want to be able to see and restore deleted posts within 30 days of deletion, so that mistakes can be undone.<br />
   10.  <b>Optional:</b> Users want to be able to see the date and time of each post and comment, so that users are able to identify new and old informtation.<br />
   11.  <b>Optional:</b> Users want to be able to see the date and time of the most recent post or comment in each forum and sub-forum, so that users have a fast means of identifying if changes were made inside the forums they are interested in.<br />
