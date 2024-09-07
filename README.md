@@ -28,10 +28,10 @@ All entities must have an Id of type int. The way we create relationships betwee
   o	All entities must have an Id of type int.<br /><br />
 - Rules when viewing the forum:<br />
   1.	Users should be able to see if any post or comment was edited.<br />
-  2.  All forums and sub-forums must have unique names (on the same top-level). Example: There can not be 2 main forums called "General stuff", but each of these main forums can both have a sub-forum each called "General Stuff". Same rule applies on the sub-forum level.
+  2.  All forums and sub-forums must have unique names (on the same top-level). Example: There can not be 2 main forums called "General stuff", but each of these main forums can both have a sub-forum each called "General Stuff". Same rule applies on the sub-forum level.<br />
 
 <h2><b>Other considerations, not decided upon:</b></h2>
-- Should it be possible to modify and delete forums and sub-forums?
-- What if a user, who created a specific forum, wishes to delete said forum - but other users have already added posts and comments inside that forum? Tough luck?
+- Should it be possible to modify and delete forums and sub-forums?<br />
+- What if a user, who created a specific forum, wishes to delete said forum - but other users have already added posts and comments inside that forum? Tough luck?<br />
   
 <h2><b>Domain Model:</b></h2>
