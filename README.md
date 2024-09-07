@@ -33,8 +33,12 @@ All entities must have an Id of type int. The way we create relationships betwee
 - Should it be possible to modify and delete forums and sub-forums?<br />
 - What if a user, who created a specific forum, wishes to delete said forum - but other users have already added posts and comments inside that forum? Tough luck?<br />
 - How should posts and forums be sorted? By Date? By Name? Should be user be able to choose their own preference for sorting?<br />
+
+
+<h2><b>Use Case Diagram:</b></h2>
   
 <h2><b>Domain Model:</b></h2>
 
 ![alt text](Images/domain-model.svg)
 
+<h2><b>EER Model:</b></h2>
