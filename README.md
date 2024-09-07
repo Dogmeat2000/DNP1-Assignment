@@ -6,11 +6,11 @@ We need a User, having at least username, and a password. It needs an Id of type
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
 <br /><br />
 <b>As User stories (Prioritized):</b><br />
-  1.	As a User, I want to be create posts containing a header (title) and body on the internet forum, so that I can share information with other users.<br />
-  2.	As a User, I want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that I can write.<br />
-  3.	As a User, I want to be able to connect to a internet forum with a personal username and password, so that I might post and comment on the forum.<br />
-  4.	As a User, I want to be able to manage (edit/delete) Posts and Comments that I have previously created, so that I can keep information updated and fix potential errors.<br />
-  5.	Users want to comment on multiple Posts as well as add multiple comments to Posts, so that as many as possible can collaborate in information sharing.<br />
+  1.	Users want to be create posts containing a header (title) and body on in the forum, so that I can share information with other users.<br />
+  2.	Users want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that is written by the user.<br />
+  3.	Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assignes as authors on the created posts and comments<br />
+  4.	Users want to be able to manage (edit/delete) Posts and Comments that the user has previously created, so that the user can keep information updated and fix potential errors or misspelling.<br />
+  5.	Users want to comment on multiple Posts, as well as add multiple comments to each Post, so that as many as possible can collaborate in the information sharing.<br />
 <br />
 <b>As Non-functional requirements:</b><br />
 -	Data types:<br />
