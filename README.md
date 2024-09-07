@@ -11,7 +11,7 @@ All entities must have an Id of type int. The way we create relationships betwee
   3.	<b>Mandatory:</b> Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assigned as authors on the created posts and comments<br />
   4.  <b>Optional:</b> Users want to be able to choose their own username and password, as well as modify these later, so that users may keep their personal information up to date and improve security by allowing passwords to be updated<br />
   5.	<b>Optional:</b> Users want to be able to manage (edit/delete) Posts and Comments that the user has previously created, so that the user can keep information updated and fix potential errors or misspelling.<br />
-  6.	<b>Optional:</b> Users want to comment on multiple Posts, as well as add multiple comments to each Post, so that as many as possible can collaborate in the information sharing.<br />
+  6.	<b>Optional:</b> Users want to comment on multiple Posts, as well as add multiple comments to each Post, so that multiple users can collaborate in the information sharing.<br />
   7.  <b>Optional:</b> Users want to be able to create main forums, as well as sub-forums, so that posts with related themes/topics can be collected inside containing forums and subforums for ease of finding posts with related topics.<br />
   8.  <b>Optional:</b> Users want to be warned when attempting to edit/delete previously created posts and comments, so that users do not edit/delete anything without informed consent.<br />
   9.  <b>Optional:</b> Users want to be able to see and restore deleted posts within 30 days of deletion, so that mistakes can be undone.<br />
