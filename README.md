@@ -36,3 +36,4 @@ All entities must have an Id of type int. The way we create relationships betwee
 - How should posts and forums be sorted? By Date? By Name? Should be user be able to choose their own preference for sorting?<br />
   
 <h2><b>Domain Model:</b></h2>
+![Domain Model](https://github.com/user-attachments/assets/e1b9b904-2226-4368-93f6-62a6a8221bbc)
