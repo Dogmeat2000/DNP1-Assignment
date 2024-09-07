@@ -1,7 +1,7 @@
 # DNP1-Assignment: Main Course Assignment
 
 
-<b>Mandatory feature description</b>:<br />
+<h1><b>Mandatory feature description</b>:</h1><br />
 We need a User, having at least username, and a password. It needs an Id of type int. We need a Post. It is written by a User. It contains a Title and a Body. It also needs an Id, of type int. A User can also write a Comment on a Post. A Comment just contains a Body, and an Id of type int.
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
 <br /><br />
@@ -17,7 +17,7 @@ All entities must have an Id of type int. The way we create relationships betwee
   9.  Optional: Users want to be able to see the date and time of each post and comment, so that users are able to identify new and old informtation.<br />
   10.  Optional: Users want to be able to see the date and time of the most recent post or comment in each forum and sub-forum, so that users have a fast means of identifying if changes were made inside the forums they are interested in.<br />
 <br />
-<b>As Non-functional requirements:</b><br />
+<h1><b>As Non-functional requirements:</b></h1><br />
 -	Data types:<br />
   o	An id of type Int must be applied to each User class.<br />
   o	Each Post must contain a Title and a Body, as well as an Id of type Int.<br />
