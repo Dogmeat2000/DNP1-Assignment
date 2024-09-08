@@ -1,15 +1,16 @@
 # DNP1-Assignment: Main Course Assignment
 
-#Mandatory feature description
+# Mandatory feature description
 We need a User, having at least username, and a password. It needs an Id of type int. We need a Post. It is written by a User. It contains a Title and a Body. It also needs an Id, of type int. A User can also write a Comment on a Post. A Comment just contains a Body, and an Id of type int.
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
 
 # Table of Contents:
 
- - [Mandatory feature description](#Mandatory-feature-description)
- - [User stories (Prioritized)](#User-stories-(Prioritized))
+ - [Mandatory feature description](#Mandatory---feature---description)
+ - [User stories (Prioritized)](#User---stories---(Prioritized))
 
-#User stories (Prioritized)
+
+# User stories (Prioritized)
   1.	<b>Mandatory:</b> Users want to be create posts containing a header (title) and body on in the forum, so that I can share information with other users.<br />
   2.	<b>Mandatory:</b> Users want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that is written by the user.<br />
   3.	<b>Mandatory:</b> Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assigned as authors on the created posts and comments<br />
