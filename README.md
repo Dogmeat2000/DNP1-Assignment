@@ -6,10 +6,10 @@ All entities must have an Id of type int. The way we create relationships betwee
 
 # Table of Contents:
 
- - [Mandatory feature description](#Mandatory---feature---description)
- - [User stories (Prioritized)](#User---stories---(Prioritized))
- - [Non-functional requirements](#Non---functional---requirements)
- - [Other considerations, not decided upon](#Other---considerations,---not---decided---upon)
+ - [Mandatory feature description](#Mandatory--feature--description)
+ - [User stories (Prioritized)](#User--stories--(Prioritized))
+ - [Non-functional requirements](#Non--functional--requirements)
+ - [Other considerations, not decided upon](#Other--considerations,--not--decided--upon)
  - [Use Case Diagram](#Use---Case---Diagram)
  - [Domain Model](#Domain---Model)
  - [Relational Schema](#Relational---Schema)
