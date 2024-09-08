@@ -8,6 +8,12 @@ All entities must have an Id of type int. The way we create relationships betwee
 
  - [Mandatory feature description](#Mandatory---feature---description)
  - [User stories (Prioritized)](#User---stories---(Prioritized))
+ - [Non-functional requirements](#Non---functional---requirements)
+ - [Other considerations, not decided upon](#Other---considerations,---not---decided---upon)
+ - [Use Case Diagram](#Use---Case---Diagram)
+ - [Domain Model](#Domain---Model)
+ - [Relational Schema](#Relational---Schema)
+ - [Global Relations Diagram](#Global---Relations---Diagram)
 
 
 # User stories (Prioritized)
@@ -25,7 +31,7 @@ All entities must have an Id of type int. The way we create relationships betwee
 <br />
 
 
-<h2><b>Non-functional requirements:</b></h2>
+# Non-functional requirements
 -	Data types:<br />
   o	An id of type Int must be applied to each User class.<br />
   o	Each Post must contain a Title and a Body, as well as an Id of type Int.<br />
@@ -35,23 +41,23 @@ All entities must have an Id of type int. The way we create relationships betwee
   1.	Users should be able to see if any post or comment was edited.<br />
   2.  All forums and sub-forums must have unique names (on the same top-level). Example: There can not be 2 main forums called "General stuff", but each of these main forums can both have a sub-forum each called "General Stuff". Same rule applies on the sub-forum level.<br />
 
-<h2><b>Other considerations, not decided upon:</b></h2>
+# Other considerations, not decided upon
 - Should it be possible to modify and delete forums and sub-forums?<br />
 - What if a user, who created a specific forum, wishes to delete said forum - but other users have already added posts and comments inside that forum? Tough luck?<br />
 - How should posts and forums be sorted? By Date? By Name? Should be user be able to choose their own preference for sorting?<br />
 
 
-<h2><b>Use Case Diagram:</b></h2>
+# Use Case Diagram
   
-<h2><b>Domain Model:</b></h2>
+# Domain Model
 
 ![alt text](Images/domain-model.svg)
 
-<h2><b>Relational Schema:</b></h2>
+# Relational Schema
 Based on the Domain Model, a relational schema has been written out (note: EER model is intentionally not displayed due to it being very similar to the Domain Model).
 
 ![alt text](Images/relational-schema.jpg)
 
-<h2><b>Global Relations Diagram:</b></h2>
+# Global Relations Diagram
 
 ![alt text](Images/global-Relations-diagram.svg)
