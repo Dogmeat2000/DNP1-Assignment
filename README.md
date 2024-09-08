@@ -43,5 +43,9 @@ All entities must have an Id of type int. The way we create relationships betwee
 
 <h2><b>Relational Schema:</b></h2>
 Based on the Domain Model, a relational schema has been written out (note: EER model is intentionally not displayed due to it being very similar to the Domain Model).
-![alt text](Images/Relational Schema.jpg) 
+
 ![alt text](Images/relational-schema.jpg)
+
+<h2><b>Global Relations Diagram:</b></h2>
+
+![alt text](Images/global-Relations-diagram.svg)
