@@ -8,15 +8,15 @@ All entities must have an Id of type int. The way we create relationships betwee
 
  - [Mandatory feature description](#Mandatory-feature-description)
  - [Analysis](#Analysis)
- -  [User stories (Prioritized)](#A#nalysis---User-stories-(Prioritized))
- -  [Non-functional requirements](##Analysis---Non-functional-requirements)
- -  [Other considerations, not decided upon](##Analysis---Other-considerations,-not-decided-upon)
- -  [Use Case Diagram](##Analysis---Use-Case-Diagram)
- -  [Domain Model](##Analysis---Domain-Model)
+ -  [User stories (Prioritized)](#Analysis---User-stories-(Prioritized))
+ -  [Non-functional requirements](#Analysis---Non-functional-requirements)
+ -  [Other considerations, not decided upon](#Analysis---Other-considerations,-not-decided-upon)
+ -  [Use Case Diagram](#Analysis---Use-Case-Diagram)
+ -  [Domain Model](#Analysis---Domain-Model)
  - [Design](#Design)
- -  [UML Class Diagram](##Analysis---UML-Class-Diagram)
- -  [Relational Schema](##Design---Relational-Schema)
- -  [Global Relations Diagram](##Design---Global-Relations-Diagram)
+ -  [UML Class Diagram](#Analysis---UML-Class-Diagram)
+ -  [Relational Schema](#Design---Relational-Schema)
+ -  [Global Relations Diagram](#Design---Global-Relations-Diagram)
 
 # Analysis
 
