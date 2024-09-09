@@ -39,6 +39,7 @@ All entities must have an Id of type int. The way we create relationships betwee
   3.	Each Comment must contain a Body and an Id of type int.
   4.	All entities must have an Id of type int.
   5.	Passwords must strong (min. 12 characters, min. 1 lowercase letter, min. 1 uppercase letter, min. 1 number).
+  6.	Passwords should be stored as hashes of the txt equivalent, to improve security in the case of database compromisation. Possibly hardcore a fixed encryption string inside the code.
 
  
 - Rules when viewing the forum:
@@ -57,6 +58,7 @@ All entities must have an Id of type int. The way we create relationships betwee
 - Should it be possible to ban certain users, IPs, etc.?
 - Should it be possible to add forum moderators?
 - Should it be possible to add admins?
+- How can I further improve password handling? Seperate usernames and passwords in the database? Implement hashing of usernames and passwords when storing?
 
 
 # Use Case Diagram
