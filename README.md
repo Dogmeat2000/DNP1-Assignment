@@ -7,16 +7,20 @@ All entities must have an Id of type int. The way we create relationships betwee
 # Table of Contents:
 
  - [Mandatory feature description](#Mandatory-feature-description)
- - [User stories (Prioritized)](#User-stories-(Prioritized))
- - [Non-functional requirements](#Non-functional-requirements)
- - [Other considerations, not decided upon](#Other-considerations,-not-decided-upon)
- - [Use Case Diagram](#Use-Case-Diagram)
- - [Domain Model](#Domain-Model)
- - [Relational Schema](#Relational-Schema)
- - [Global Relations Diagram](#Global-Relations-Diagram)
+ - [Analysis](#Analysis)
+   - [User stories (Prioritized)](#User-stories-(Prioritized))
+   - [Non-functional requirements](#Non-functional-requirements)
+   - [Other considerations, not decided upon](#Other-considerations,-not-decided-upon)
+   - [Use Case Diagram](#Use-Case-Diagram)
+   - [Domain Model](#Domain-Model)
+ - [Design](#Design)
+   - [UML Class Diagram](#UML-Class-Diagram)
+   - [Relational Schema](#Relational-Schema)
+   - [Global Relations Diagram](#Global-Relations-Diagram)
 
+# Analysis
 
-# User stories (Prioritized)
+## User stories (Prioritized)
   1.	<b>Mandatory:</b> Web Users want to be create posts containing a header (title) and body on in the forum, so that I can share information with other users.
   2.	<b>Mandatory:</b> Web Users want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that is written by the user.
   3.	<b>Mandatory:</b> Web Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assigned as authors on the created posts and comments
@@ -32,7 +36,7 @@ All entities must have an Id of type int. The way we create relationships betwee
   13. <b>Optional:</b> Registered Users want to be able to logout from the forum, so that each user can control access to their own profiles and content and maintain a healthy security practice on computers with multiple users.
 
 
-# Non-functional requirements
+## Non-functional requirements
 - Data types:
   1.	An id of type Int must be applied to each User class.
   2.	Each Post must contain a Title and a Body, as well as an Id of type Int.
@@ -50,7 +54,7 @@ All entities must have an Id of type int. The way we create relationships betwee
 
   
 
-# Other considerations, not decided upon
+## Other considerations, not decided upon
 - Should it be possible to modify and delete forums and sub-forums?
 - What if a user, who created a specific forum, wishes to delete said forum - but other users have already added posts and comments inside that forum? Tough luck?
 - How should posts and forums be sorted? By Date? By Name? Should be user be able to choose their own preference for sorting?
@@ -61,17 +65,26 @@ All entities must have an Id of type int. The way we create relationships betwee
 - How can I further improve password handling? Seperate usernames and passwords in the database? Implement hashing of usernames and passwords when storing?
 
 
-# Use Case Diagram
+## Use Case Diagram
+
+![Use Case Diagram](Images/use-case-diagram.svg)
+
   
-# Domain Model
+## Domain Model
 
-![alt text](Images/domain-model.svg)
+![Domain Model](Images/domain-model.svg)
 
-# Relational Schema
+# Design
+
+## UML Class Diagram
+Not added yet.
+
+## Relational Schema
 Based on the Domain Model, a relational schema has been written out (note: EER model is intentionally not displayed due to it being very similar to the Domain Model).
 
-![alt text](Images/relational-schema.jpg)
+![Relational Schema](Images/relational-schema.png)
 
-# Global Relations Diagram
 
-![alt text](Images/global-Relations-diagram.svg)
+## Global Relations Diagram
+
+![Global Relations Diagram](Images/global-Relations-diagram.svg)
