@@ -8,7 +8,7 @@ All entities must have an Id of type int. The way we create relationships betwee
 
  - [Mandatory feature description](#Mandatory-feature-description)
  - [Analysis](#Analysis)
-   - [User stories (Prioritized)](#User-stories-(Prioritized))
+   - [User stories (Prioritized)](##User-stories-(Prioritized))
    - [Non-functional requirements](#Non-functional-requirements)
    - [Other considerations, not decided upon](#Other-considerations,-not-decided-upon)
    - [Use Case Diagram](#Use-Case-Diagram)
