@@ -22,6 +22,8 @@ All entities must have an Id of type int. The way we create relationships betwee
 
 ## User stories (Prioritized)
 Implementation status: 
+![Implemented](Images/thumb-up.svg)
+![Implemented](Images/thumb-down.svg)
 
   1.	<b>Mandatory:</b> Web Users want to be create posts containing a header (title) and body on in the forum, so that I can share information with other users.
   2.	<b>Mandatory:</b> Web Users want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that is written by the user.
