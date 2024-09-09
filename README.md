@@ -10,7 +10,7 @@ All entities must have an Id of type int. The way we create relationships betwee
  - [Analysis](#Analysis)
    - [User stories (Prioritized)](#User-stories-(Prioritized))
    - [Non-functional requirements](#Non-functional-requirements)
-   - [Other considerations, not decided upon](#Other-considerations,-not-decided-upon)
+   - [Other considerations, not decided upon (yet)](#Other-considerations,-not-decided-upon)
    - [Use Case Diagram](#Use-Case-Diagram)
    - [Domain Model](#Domain-Model)
  - [Design](#Design)
@@ -21,6 +21,10 @@ All entities must have an Id of type int. The way we create relationships betwee
 # Analysis
 
 ## User stories (Prioritized)
+Implementation status: 
+![Implemented](Images/thumb-up.svg)
+![Implemented](Images/thumb-down.svg)
+
   1.	<b>Mandatory:</b> Web Users want to be create posts containing a header (title) and body on in the forum, so that I can share information with other users.
   2.	<b>Mandatory:</b> Web Users want to be able to read and comment on posts created by other users, so that information can be discussed between users. Each comment should contain a body of text, that is written by the user.
   3.	<b>Mandatory:</b> Web Users want to be able to connect to a the forum with a personal username and password, so that different users can be distinguished and different users can be assigned as authors on the created posts and comments
