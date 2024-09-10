@@ -19,6 +19,8 @@
       <Compile Include="obj\Debug\net8.0\CommandLineInterface.GlobalUsings.g.cs" />
       <Compile Include="obj\Debug\net8.0\ConsoleApp1.AssemblyInfo.cs" />
       <Compile Include="obj\Debug\net8.0\ConsoleApp1.GlobalUsings.g.cs" />
+      <Compile Remove="bin\Debug\**" />
+      <Compile Remove="obj\Debug\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -57,6 +59,23 @@
       <Content Include="obj\project.nuget.cache" />
       <Content Include="obj\project.packagespec.json" />
       <Content Include="obj\rider.project.restore.info" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\" />
+      <Folder Include="bin\Debug\net8.0\" />
+      <Folder Include="obj\Debug\net8.0\refint\" />
+      <Folder Include="obj\Debug\net8.0\ref\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="bin\Debug\**" />
+      <EmbeddedResource Remove="obj\Debug\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="bin\Debug\**" />
+      <None Remove="obj\Debug\**" />
     </ItemGroup>
 
 </Project>

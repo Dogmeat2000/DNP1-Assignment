@@ -21,4 +21,20 @@
       <Content Include="bin\Debug\net8.0\RepositoryContracts.pdb" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="bin\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="bin\Debug\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="bin\Debug\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="bin\Debug\**" />
+    </ItemGroup>
+
 </Project>

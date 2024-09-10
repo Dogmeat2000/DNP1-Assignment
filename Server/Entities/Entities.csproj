@@ -20,4 +20,20 @@
       <Content Include="obj\rider.project.restore.info" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="obj\Debug\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="obj\Debug\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="obj\Debug\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\Debug\net8.0\" />
+    </ItemGroup>
+
 </Project>
