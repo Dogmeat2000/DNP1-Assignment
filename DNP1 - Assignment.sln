@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryContracts", "Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryRepositories", "Server\InMemoryRepositories\InMemoryRepositories.csproj", "{656D512C-44AA-4BE7-B232-749FA1B998DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineInterface", "Server\CommandLineInterface\CommandLineInterface.csproj", "{57400059-C988-4650-92F8-AC0EA4BFB89D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,7 @@ Global
 		{F7F8EEDB-EFAC-498E-ABEF-C151F6D91A67} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
 		{DF04B36F-F561-4598-B1B0-9F7257E7E07C} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
 		{656D512C-44AA-4BE7-B232-749FA1B998DD} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
+		{57400059-C988-4650-92F8-AC0EA4BFB89D} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F7F8EEDB-EFAC-498E-ABEF-C151F6D91A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -31,5 +34,9 @@ Global
 		{656D512C-44AA-4BE7-B232-749FA1B998DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{656D512C-44AA-4BE7-B232-749FA1B998DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{656D512C-44AA-4BE7-B232-749FA1B998DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57400059-C988-4650-92F8-AC0EA4BFB89D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57400059-C988-4650-92F8-AC0EA4BFB89D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57400059-C988-4650-92F8-AC0EA4BFB89D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57400059-C988-4650-92F8-AC0EA4BFB89D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
