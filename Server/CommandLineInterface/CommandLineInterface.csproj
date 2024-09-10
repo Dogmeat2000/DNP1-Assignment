@@ -22,6 +22,20 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="bin\Debug\net8.0\CommandLineInterface.deps.json" />
+      <Content Include="bin\Debug\net8.0\CommandLineInterface.dll" />
+      <Content Include="bin\Debug\net8.0\CommandLineInterface.exe" />
+      <Content Include="bin\Debug\net8.0\CommandLineInterface.pdb" />
+      <Content Include="bin\Debug\net8.0\CommandLineInterface.runtimeconfig.json" />
+      <Content Include="bin\Debug\net8.0\Entities.dll" />
+      <Content Include="bin\Debug\net8.0\Entities.pdb" />
+      <Content Include="bin\Debug\net8.0\InMemoryRepositories.dll" />
+      <Content Include="bin\Debug\net8.0\InMemoryRepositories.pdb" />
+      <Content Include="bin\Debug\net8.0\RepositoryContracts.dll" />
+      <Content Include="bin\Debug\net8.0\RepositoryContracts.pdb" />
+      <Content Include="obj\ConsoleApp1.csproj.nuget.dgspec.json" />
+      <Content Include="obj\ConsoleApp1.csproj.nuget.g.props" />
+      <Content Include="obj\ConsoleApp1.csproj.nuget.g.targets" />
       <Content Include="obj\Debug\net8.0\apphost.exe" />
       <Content Include="obj\Debug\net8.0\CommandL.99A6B606.Up2Date" />
       <Content Include="obj\Debug\net8.0\CommandLineInterface.AssemblyInfoInputs.cache" />
@@ -39,6 +53,10 @@
       <Content Include="obj\Debug\net8.0\ConsoleApp1.GeneratedMSBuildEditorConfig.editorconfig" />
       <Content Include="obj\Debug\net8.0\refint\CommandLineInterface.dll" />
       <Content Include="obj\Debug\net8.0\ref\CommandLineInterface.dll" />
+      <Content Include="obj\project.assets.json" />
+      <Content Include="obj\project.nuget.cache" />
+      <Content Include="obj\project.packagespec.json" />
+      <Content Include="obj\rider.project.restore.info" />
     </ItemGroup>
 
 </Project>

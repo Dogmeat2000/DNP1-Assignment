@@ -10,4 +10,12 @@
       <ProjectReference Include="..\Entities\Entities.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="bin\Debug\net8.0\Entities.dll" />
+      <Content Include="bin\Debug\net8.0\Entities.pdb" />
+      <Content Include="bin\Debug\net8.0\RepositoryContracts.deps.json" />
+      <Content Include="bin\Debug\net8.0\RepositoryContracts.dll" />
+      <Content Include="bin\Debug\net8.0\RepositoryContracts.pdb" />
+    </ItemGroup>
+
 </Project>
