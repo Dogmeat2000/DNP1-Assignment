@@ -13,4 +13,32 @@
       <ProjectReference Include="..\InMemoryRepositories\InMemoryRepositories.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" />
+      <Compile Include="obj\Debug\net8.0\CommandLineInterface.AssemblyInfo.cs" />
+      <Compile Include="obj\Debug\net8.0\CommandLineInterface.GlobalUsings.g.cs" />
+      <Compile Include="obj\Debug\net8.0\ConsoleApp1.AssemblyInfo.cs" />
+      <Compile Include="obj\Debug\net8.0\ConsoleApp1.GlobalUsings.g.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="obj\Debug\net8.0\apphost.exe" />
+      <Content Include="obj\Debug\net8.0\CommandL.99A6B606.Up2Date" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.assets.cache" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.csproj.AssemblyReference.cache" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.csproj.CoreCompileInputs.cache" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.csproj.FileListAbsolute.txt" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.dll" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.GeneratedMSBuildEditorConfig.editorconfig" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.genruntimeconfig.cache" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.pdb" />
+      <Content Include="obj\Debug\net8.0\CommandLineInterface.sourcelink.json" />
+      <Content Include="obj\Debug\net8.0\ConsoleApp1.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net8.0\ConsoleApp1.assets.cache" />
+      <Content Include="obj\Debug\net8.0\ConsoleApp1.GeneratedMSBuildEditorConfig.editorconfig" />
+      <Content Include="obj\Debug\net8.0\refint\CommandLineInterface.dll" />
+      <Content Include="obj\Debug\net8.0\ref\CommandLineInterface.dll" />
+    </ItemGroup>
+
 </Project>

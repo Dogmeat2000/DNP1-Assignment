@@ -59,7 +59,7 @@ public class UserInMemoryRepository : IUserRepository {
     }
 
     private void GenerateDummyData() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i <= 5; i++) {
             User user = new User {
                 User_id = i
             };

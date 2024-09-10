@@ -9,6 +9,7 @@ public class ForumInMemoryRepository : IForumRepository {
 
     public ForumInMemoryRepository() {
         ForumList = [];
+        GenerateDummyData();
     }
     
     public Task<Forum> AddAsync(Forum forum) {
@@ -55,5 +56,94 @@ public class ForumInMemoryRepository : IForumRepository {
 
     public IQueryable<Forum> GetMany() {
         return ForumList.AsQueryable();
+    }
+    
+    private void GenerateDummyData() {
+        for (int i = 0; i <= 5; i++) {
+            Forum forum = new Forum();
+            switch (i) {
+                case 0:
+                    forum.Forum_id = i;
+                    forum.Title_txt = "Forum 1";
+                    forum.Timestamp_created = DateTime.Now;
+                    forum.Timestamp_modified = DateTime.MinValue;
+                    forum.Timestamp_deleted = DateTime.MinValue;
+                    forum.LastPost_id = 1;
+                    forum.LastCommentPost_id = 1;
+                    forum.LastComment_id = 1;
+                    forum.Author_id = 0;
+                    forum.ParentForum_id = -1;
+                    break;
+                
+                case 1: 
+                    forum.Forum_id = i;
+                    forum.Title_txt = "Forum 2";
+                    forum.Timestamp_created = DateTime.Now;
+                    forum.Timestamp_modified = DateTime.MinValue;
+                    forum.Timestamp_deleted = DateTime.MinValue;
+                    forum.LastPost_id = 2;
+                    forum.LastCommentPost_id = 2;
+                    forum.LastComment_id = 2;
+                    forum.Author_id = 1;
+                    forum.ParentForum_id = -1;
+                    break;
+                
+                case 2: 
+                    forum.Forum_id = i;
+                    forum.Title_txt = "SubForum 1-1";
+                    forum.Timestamp_created = DateTime.Now;
+                    forum.Timestamp_modified = DateTime.MinValue;
+                    forum.Timestamp_deleted = DateTime.MinValue;
+                    forum.LastPost_id = 0;
+                    forum.LastCommentPost_id = 0;
+                    forum.LastComment_id = 0;
+                    forum.Author_id = 0;
+                    forum.ParentForum_id = -1;
+                    break;
+                
+                case 3: 
+                    forum.Forum_id = i;
+                    forum.Title_txt = "SubForum 1-2";
+                    forum.Timestamp_created = DateTime.Now;
+                    forum.Timestamp_modified = DateTime.MinValue;
+                    forum.Timestamp_deleted = DateTime.MinValue;
+                    forum.LastPost_id = 3;
+                    forum.LastCommentPost_id = 3;
+                    forum.LastComment_id = 3;
+                    forum.Author_id = 0;
+                    forum.ParentForum_id = 1;
+                    break;
+                
+                case 4: 
+                    forum.Forum_id = i;
+                    forum.Title_txt = "SubForum 2-1";
+                    forum.Timestamp_created = DateTime.Now;
+                    forum.Timestamp_modified = DateTime.MinValue;
+                    forum.Timestamp_deleted = DateTime.MinValue;
+                    forum.LastPost_id = 5;
+                    forum.LastCommentPost_id = 5;
+                    forum.LastComment_id = 5;
+                    forum.Author_id = 4;
+                    forum.ParentForum_id = 2;
+                    break;
+                
+                case 5: 
+                    forum.Forum_id = i;
+                    forum.Title_txt = "SubForum 2-2";
+                    forum.Timestamp_created = DateTime.Now;
+                    forum.Timestamp_modified = DateTime.MinValue;
+                    forum.Timestamp_deleted = DateTime.MinValue;
+                    forum.LastPost_id = 4;
+                    forum.LastCommentPost_id = 4;
+                    forum.LastComment_id = 4;
+                    forum.Author_id = 1;
+                    forum.ParentForum_id = 2;
+                    break;
+                
+                default: 
+                    break;
+            }
+            ForumList.Add(forum);
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace ConsoleApp1;
 class Program {
     static void Main(string[] args) {
                 
-        Console.WriteLine("Launching Forum Backend (Server)");
+        Console.WriteLine("\n\nLaunching Forum Backend (Server)");
         
         // Initialize InMemoryRepositories
         Console.Write("Initializing 'InMemoryRepositories'...");
