@@ -41,6 +41,7 @@ public class CreateUser {
                 Password = Password
             };
             UserProfileRepo.AddAsync(newProfile);
+            Console.WriteLine($"-> New user created [name = {UserName}, password = {Password}]!");
   
             returnToLastView = true;
         }

@@ -14,7 +14,12 @@ public class CliApp {
     private User? LocalUser { get; set; }
     private string errorMessage { get; set; }
     private Boolean invalidEntry  { get; set; }
+    private Post? CurrentPost { get; set; }
+    private Forum? CurrentForum { get; set; }
+    private Forum? CurrentParentForum { get; set; }
+    private Forum? ParentsParentForum { get; set; }
 
+    
     public CliApp(ICommentRepository commentRepository, IForumRepository forumRepository, IPostRepository postRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository) {
         this.CommentRepository = commentRepository;
         this.ForumRepository = forumRepository;
@@ -24,8 +29,13 @@ public class CliApp {
         this.LocalUser = null;
         errorMessage = "ERROR: Please enter a valid command...!";
         invalidEntry = false;
+        CurrentPost = null;
+        CurrentForum = null;
+        CurrentParentForum = null;
+        ParentsParentForum = null;
     }
 
+    
     public async Task StartAsync() {
         
         // Main UI Logic is encapsulated inside this repeating while-loop:
@@ -36,7 +46,16 @@ public class CliApp {
             // Display Main Menu Text:
             ShowMainMenuText();
             
-            // TODO Display top level forums!
+            // Display relevant forums & posts:
+            if (CurrentPost == null) {
+                // Display forum and posts, if no post is currently active
+                DisplayForums();
+                DisplayPosts();
+            } else {
+                // Display comments, if a post was previously selected
+                DisplayComments();
+            }
+
             
             // Display last error, if user previously entered invalid command:
             if (invalidEntry) {
@@ -49,6 +68,7 @@ public class CliApp {
         }
     }
 
+    
     private void ShowMainMenuText() {
         var userName = "Anonymous";
         if(LocalUser != null) {
@@ -72,11 +92,76 @@ public class CliApp {
             Console.WriteLine("| Type 'login' to: Login to your account                                                                                         |");
             Console.WriteLine("| Type 'create' to: Create a User Account                                                                                        |");
         }
-        Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F1' to view/enter Forum 1                 |");
+        Console.WriteLine("| Type 'post '  to: Create a new post inside the currently active forum                                                          |");
+        Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F0' to view/enter Forum 1                 |");
         Console.WriteLine("| Type 'exit' to: Terminate this application                                                                                     |");
+        if (CurrentParentForum != null)
+            Console.WriteLine("| Type 'return' to: Return to previous view                                                                                      |"); 
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
     }
 
+    
+    private void DisplayForums() {
+        if (CurrentParentForum == null) {
+            Console.WriteLine("|                                                            \x1b[1mForums:\x1b[0m");
+            Console.WriteLine("|================================================================================================================================|");
+            
+            var i = 1;
+            foreach (var forum in ForumRepository.GetMany()) {
+                if (forum.ParentForum_id == -1) {
+                    Console.WriteLine($"| {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
+                    i++;
+                }
+            }   
+        }
+        else {
+            Console.WriteLine($"|                                                            \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}");
+            Console.WriteLine("|================================================================================================================================|");
+            
+            var i = 1;
+            foreach (var forum in ForumRepository.GetMany()) {
+                if (forum.ParentForum_id == CurrentParentForum.ParentForum_id) {
+                    Console.WriteLine($"| {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
+                    i++;
+                }
+            }   
+        }
+        Console.WriteLine("|================================================================================================================================|");
+    }
+
+    
+    private void DisplayPosts() {
+        Console.WriteLine(CurrentForum == null
+            ? "|                                                \x1b[1mPosts in Main Forum\x1b[0m"
+            : $"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}'\x1b[0m ");
+
+        Console.WriteLine("|................................................................................................................................|");
+
+        var i = 1;
+        foreach (var post in PostRepository.GetMany()) {
+            if (post.ParentForum_id == CurrentForum?.Forum_id) {
+                Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                i++;
+            }
+        }
+        Console.WriteLine("|================================================================================================================================|");
+    }
+
+
+    private void DisplayComments() {
+        Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, CurrentForum.Forum_id).Result.Title_txt}\x1b[0m");
+        Console.WriteLine("|................................................................................................................................|");
+        var i = 1;
+        foreach (var comment in CommentRepository.GetMany()) {
+            if (comment.ParentPost_id == CurrentPost.Post_id && comment.ParentForum_id == CurrentForum.Forum_id) {
+                Console.WriteLine($"| {i}. [Comment ID: C{comment.Comment_id}] {comment.Body_txt}");
+                Console.WriteLine($"| ___");
+                i++;
+            }
+        }
+    }
+
+    
     private string ReadUserInput() {
         var inputReceived = false;
         string? userInput = null;
@@ -92,6 +177,7 @@ public class CliApp {
         return userInput;
     }
 
+    
     private Boolean EvaluateCommand(string cmd) {
         switch (cmd.ToLower()) {
             case "user":
@@ -139,15 +225,76 @@ public class CliApp {
                 }
                 break;
             
+            case "return":
+                if (CurrentParentForum?.Forum_id != -1) {
+                    if (CurrentPost?.Post_id != -1)
+                        CurrentPost = null;
+                    else if (CurrentForum?.Forum_id != 1) {
+                        ParentsParentForum = CurrentParentForum;
+                        CurrentForum = CurrentParentForum;
+                        CurrentParentForum = ForumRepository.GetSingleAsync(CurrentForum.ParentForum_id, ParentsParentForum.Forum_id).Result;
+                    }
+
+                        
+                } else {
+                    Console.WriteLine(errorMessage);
+                    invalidEntry = true;
+                }
+                break;
+            
             case "exit":
                 Console.WriteLine("Terminating application...!");
                 return false;
             
             default:
-                Console.WriteLine(errorMessage);
-                invalidEntry = true;
+                if (cmd.ToLower().Substring(0, 3).Equals("cd ")) {
+                    //Check if it is a valid change directory command;
+                    if (!ChangeDirectory(cmd.ToLower())) {
+                        //Invalid command:
+                        Console.WriteLine(errorMessage);
+                        invalidEntry = true;
+                    }
+                    else {
+                        Console.WriteLine($"New directory is: [Forum_id: {CurrentForum?.Forum_id ?? -1} / Post_id: {CurrentPost?.Post_id ?? -1}");
+                    }
+                }
                 break;
         }
+        
         return true;
+    }
+
+    
+    /** Returns true if directory change occured. False if it failed, for whatever reason */
+    private bool ChangeDirectory(string cmd) {
+        // Extract directory information from cmd
+        var directoryType = cmd.Substring(3, 1);
+        int? id = Int32.Parse(cmd.Substring(4));
+        
+        // Check if this directory and id exists, and change it, if it does:
+        switch (directoryType) {
+            case "f":
+                foreach (var forum in ForumRepository.GetMany()) {
+                    if (forum.Forum_id == id && forum.ParentForum_id == CurrentParentForum?.Forum_id) {
+                        CurrentParentForum = CurrentForum;
+                        CurrentForum = forum;
+                        return true;
+                    }
+                }
+                return false;
+            
+            case "p":
+                foreach (var post in PostRepository.GetMany()) {
+                    if (post.Post_id == id && post.ParentForum_id == CurrentForum?.Forum_id && CurrentForum?.ParentForum_id == CurrentParentForum?.Forum_id) {
+                        CurrentPost = post;
+                        return true;
+                    }
+                }
+                return false;
+            
+            default:
+                return false;
+            
+        }
     }
 }

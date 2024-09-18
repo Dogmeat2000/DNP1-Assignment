@@ -59,7 +59,7 @@ public class PostInMemoryRepository : IPostRepository {
     }
     
     private void GenerateDummyData() {
-        for (int i = 0; i <= 5; i++) {
+        for (int i = 0; i <= 6; i++) {
             Post post = new Post();
             switch (i) {
                 case 0:
@@ -125,6 +125,17 @@ public class PostInMemoryRepository : IPostRepository {
                     post.Timestamp_modified = DateTime.MinValue;
                     post.Timestamp_deleted = DateTime.MinValue;
                     post.ParentForum_id = 4;
+                    post.Author_id = i;
+                    break;
+                
+                case 6: 
+                    post.Post_id = i;
+                    post.Title_txt = "Test Post in Main Forum";
+                    post.Body_txt = "POST: Lorem Ipsum";
+                    post.Timestamp_created = DateTime.Now;
+                    post.Timestamp_modified = DateTime.MinValue;
+                    post.Timestamp_deleted = DateTime.MinValue;
+                    post.ParentForum_id = -1;
                     post.Author_id = i;
                     break;
                 
