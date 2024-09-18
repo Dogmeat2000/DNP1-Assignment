@@ -1,50 +1,61 @@
-﻿using Entities;
+﻿using ConsoleApp1.UI;
+using Entities;
 using InMemoryRepositories;
+using RepositoryContracts;
 
 namespace ConsoleApp1;
 
 class Program {
-    static void Main(string[] args) {
-                
-        Console.WriteLine("\n\nLaunching Forum Backend (Server)");
+    static async Task Main(string[] args) {
+        // Initialize backend.
+        Console.WriteLine("\nLaunching Forum Backend (Server)");
         
         // Initialize InMemoryRepositories
         Console.Write("Initializing 'InMemoryRepositories'...");
-        
-        CommentInMemoryRepository commentManager = new CommentInMemoryRepository();
-        ForumInMemoryRepository forumManager = new ForumInMemoryRepository();
-        PostInMemoryRepository postManager = new PostInMemoryRepository();
-        UserInMemoryRepository userManager = new UserInMemoryRepository();
-        UserProfileInMemoryRepository userProfileManager = new UserProfileInMemoryRepository();
-
+        ICommentRepository commentManager = new CommentInMemoryRepository();
+        IForumRepository forumManager = new ForumInMemoryRepository();
+        IPostRepository postManager = new PostInMemoryRepository();
+        IUserRepository userManager = new UserInMemoryRepository();
+        IUserProfileRepository userProfileManager = new UserProfileInMemoryRepository();
         Console.WriteLine(" DONE!");
         
         // Test if data exists in repos
-        Console.WriteLine("\nReading generated data from 'CommentInMemoryRepository'...");
+        Console.WriteLine("\nChecking data integrity...");
+        var count = 0;
         foreach (Comment comment in commentManager.GetMany()) {
-            Console.WriteLine($"Comment_id='{comment.Comment_id}': exists");
+            count++;
         }
+        Console.WriteLine($"'CommentInMemoryRepository' contains {count} entries");
         
-        Console.WriteLine("\nReading generated data from 'ForumInMemoryRepository'...");
+        count = 0;
         foreach (Forum forum in forumManager.GetMany()) {
-            Console.WriteLine($"Forum_id='{forum.Forum_id}': exists");
+            count++;
         }
+        Console.WriteLine($"'ForumInMemoryRepository' contains {count} entries");
         
-        Console.WriteLine("\nReading generated data from 'PostInMemoryRepository'...");
+        count = 0;
         foreach (Post post in postManager.GetMany()) {
-            Console.WriteLine($"Post_id='{post.Post_id}': exists");
+            count++;
         }
+        Console.WriteLine($"'PostInMemoryRepository' contains {count} entries");
         
-        Console.WriteLine("\nReading generated data from 'UserInMemoryRepository'...");
+        count = 0;
         foreach (User user in userManager.GetMany()) {
-            Console.WriteLine($"user_id='{user.User_id}': exists");
+            count++;
         }
+        Console.WriteLine($"'UserInMemoryRepository' contains {count} entries");
         
-        Console.WriteLine("\nReading generated data from 'UserProfileInMemoryRepository'...");
+        count = 0;
         foreach (UserProfile userProfile in userProfileManager.GetMany()) {
-            Console.WriteLine($"Profile_id='{userProfile.Profile_id}': exists");
+            count++;
         }
+        Console.WriteLine($"'UserProfileInMemoryRepository' contains {count} entries");
         
-        Console.WriteLine("\n\nFORUM BACKEND IS (mostly...) READY!");
+        Console.WriteLine("\nFORUM BACKEND IS READY!");
+        
+        // Initialize User Interface
+        Console.WriteLine("\n\nInitializing Command Line Interface...");
+        CliApp cliApp = new CliApp(commentManager, forumManager, postManager, userManager, userProfileManager);
+        await cliApp.StartAsync();
     }
 }

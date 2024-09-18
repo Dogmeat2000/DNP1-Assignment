@@ -21,7 +21,7 @@ public class UserInMemoryRepository : IUserRepository {
     }
 
     public Task UpdateAsync(User user) {
-        User ? existingUser = UserList.SingleOrDefault(u => u.User_id == user.User_id);
+        User? existingUser = UserList.SingleOrDefault(u => u.User_id == user.User_id);
         if (existingUser is null) {
             throw new InvalidOperationException(
                 $"User with ID '{user.User_id}' not found");
@@ -34,7 +34,7 @@ public class UserInMemoryRepository : IUserRepository {
     }
 
     public Task DeleteAsync(int userId) {
-        User ? userToRemove = UserList.SingleOrDefault(u => u.User_id == userId);
+        User? userToRemove = UserList.SingleOrDefault(u => u.User_id == userId);
         if (userToRemove is null) {
             throw new InvalidOperationException(
                 $"User with ID '{userId}' not found");
@@ -45,7 +45,7 @@ public class UserInMemoryRepository : IUserRepository {
     }
 
     public Task<User> GetSingleAsync(int userId) {
-        User ? userToReturn = UserList.SingleOrDefault(u => u.User_id == userId);
+        User? userToReturn = UserList.SingleOrDefault(u => u.User_id == userId);
         if (userToReturn is null) {
             throw new InvalidOperationException(
                 $"User with ID '{userId}' not found");
@@ -60,9 +60,7 @@ public class UserInMemoryRepository : IUserRepository {
 
     private void GenerateDummyData() {
         for (int i = 0; i <= 5; i++) {
-            User user = new User {
-                User_id = i
-            };
+            User user = new User(i);
             UserList.Add(user);
         }
     }

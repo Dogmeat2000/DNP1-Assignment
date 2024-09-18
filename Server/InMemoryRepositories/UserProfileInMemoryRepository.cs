@@ -21,7 +21,7 @@ public class UserProfileInMemoryRepository : IUserProfileRepository {
     }
 
     public Task UpdateAsync(UserProfile userProfile) {
-        UserProfile ? existingUser = UserProfileList.SingleOrDefault(uP => uP.Profile_id == userProfile.Profile_id && uP.User_id == userProfile.User_id);
+        UserProfile? existingUser = UserProfileList.SingleOrDefault(uP => uP.Profile_id == userProfile.Profile_id && uP.User_id == userProfile.User_id);
         if (existingUser is null) {
             throw new InvalidOperationException(
                 $"UserProfile with ID '{userProfile.Profile_id}' for User '{userProfile.User_id}' not found");
@@ -34,7 +34,7 @@ public class UserProfileInMemoryRepository : IUserProfileRepository {
     }
 
     public Task DeleteAsync(int profileId, int userId) {
-        UserProfile ? userProfileToRemove = UserProfileList.SingleOrDefault(uP => uP.Profile_id == profileId && uP.User_id == userId);
+        UserProfile? userProfileToRemove = UserProfileList.SingleOrDefault(uP => uP.Profile_id == profileId && uP.User_id == userId);
         if (userProfileToRemove is null) {
             throw new InvalidOperationException(
                 $"UserProfile with ID '{profileId}' for User '{userId}' not found");
@@ -45,7 +45,7 @@ public class UserProfileInMemoryRepository : IUserProfileRepository {
     }
 
     public Task<UserProfile> GetSingleAsync(int profileId, int userId) {
-        UserProfile ? userProfileToReturn = UserProfileList.SingleOrDefault(uP => uP.Profile_id == profileId && uP.User_id == userId);
+        UserProfile? userProfileToReturn = UserProfileList.SingleOrDefault(uP => uP.Profile_id == profileId && uP.User_id == userId);
         if (userProfileToReturn is null) {
             throw new InvalidOperationException(
                 $"UserProfile with ID '{profileId}' for User '{userId}' not found");
@@ -60,7 +60,7 @@ public class UserProfileInMemoryRepository : IUserProfileRepository {
     
     private void GenerateDummyData() {
         for (int i = 0; i <= 5; i++) {
-            UserProfile userProfile = new UserProfile();
+            UserProfile userProfile = new UserProfile(0,0);
             switch (i) {
                 case 0:
                     userProfile.Profile_id = 5;

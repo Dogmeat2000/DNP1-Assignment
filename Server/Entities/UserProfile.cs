@@ -7,9 +7,10 @@ public class UserProfile
     public string Password { get; set; }
     public int User_id { get; set; }
 
-    public UserProfile() {
+    public UserProfile(int profile_id, int user_id) {
         Username = "";
         Password = "";
-        //TODO
+        Profile_id = profile_id;
+        User_id = user_id;
     }
 }

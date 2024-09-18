@@ -4,7 +4,7 @@ public class User
 {
     public int User_id { get; set; }
 
-    public User() {
-        //TODO
+    public User(int user_id) {
+        User_id = user_id;
     }
 }

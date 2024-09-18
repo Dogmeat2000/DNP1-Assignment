@@ -22,7 +22,7 @@ public class CommentInMemoryRepository : ICommentRepository {
     }
 
     public Task UpdateAsync(Comment comment) {
-        Comment ? existingComment = CommentList.SingleOrDefault(c => c.Comment_id == comment.Comment_id && c.ParentPost_id == comment.ParentPost_id && c.ParentForum_id == comment.ParentForum_id);
+        Comment? existingComment = CommentList.SingleOrDefault(c => c.Comment_id == comment.Comment_id && c.ParentPost_id == comment.ParentPost_id && c.ParentForum_id == comment.ParentForum_id);
         if (existingComment is null) {
             throw new InvalidOperationException(
                 $"Comment with ID '{comment.Comment_id}' in Post '{comment.ParentPost_id}' in Forum '{comment.ParentForum_id}' not found");
@@ -35,7 +35,7 @@ public class CommentInMemoryRepository : ICommentRepository {
     }
 
     public Task DeleteAsync(int commentId, int postId, int forumId) {
-        Comment ? commentToRemove = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
+        Comment? commentToRemove = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
         if (commentToRemove is null) {
             throw new InvalidOperationException(
                 $"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");
@@ -46,7 +46,7 @@ public class CommentInMemoryRepository : ICommentRepository {
     }
 
     public Task<Comment> GetSingleAsync(int commentId, int postId, int forumId) {
-        Comment ? commentToReturn = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
+        Comment? commentToReturn = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
         if (commentToReturn is null) {
             throw new InvalidOperationException(
                 $"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");

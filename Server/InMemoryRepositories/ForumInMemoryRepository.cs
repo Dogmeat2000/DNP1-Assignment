@@ -21,7 +21,7 @@ public class ForumInMemoryRepository : IForumRepository {
     }
 
     public Task UpdateAsync(Forum forum) {
-        Forum ? existingForum = ForumList.SingleOrDefault(f => f.Forum_id == forum.Forum_id && f.ParentForum_id == forum.ParentForum_id);
+        Forum? existingForum = ForumList.SingleOrDefault(f => f.Forum_id == forum.Forum_id && f.ParentForum_id == forum.ParentForum_id);
         if (existingForum is null) {
             throw new InvalidOperationException(
                 $"Forum with ID '{forum.Forum_id}' in Forum '{forum.ParentForum_id}' not found");
@@ -34,7 +34,7 @@ public class ForumInMemoryRepository : IForumRepository {
     }
 
     public Task DeleteAsync(int forumId, int parentForumId) {
-        Forum ? forumToRemove = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
+        Forum? forumToRemove = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
         if (forumToRemove is null) {
             throw new InvalidOperationException(
                 $"Forum with ID '{forumId}' in Forum '{parentForumId}' not found");
@@ -45,7 +45,7 @@ public class ForumInMemoryRepository : IForumRepository {
     }
 
     public Task<Forum> GetSingleAsync(int forumId, int parentForumId) {
-        Forum ? forumToReturn = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
+        Forum? forumToReturn = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
         if (forumToReturn is null) {
             throw new InvalidOperationException(
                 $"Forum with ID '{forumId}' in Forum '{parentForumId}' not found");
