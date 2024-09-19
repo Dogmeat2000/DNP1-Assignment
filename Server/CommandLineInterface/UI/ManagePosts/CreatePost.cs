@@ -5,15 +5,19 @@ namespace ConsoleApp1.UI.ManagePosts;
 
 public class CreatePost {
     
-    public async Task<Post> NewPostAsync(int parentForumId, IPostRepository postRepo, User localUser) {
+    public async Task<Post?> NewPostAsync(int parentForumId, IPostRepository postRepo, User localUser) {
         
         Console.WriteLine(": Creating Post... Type 'abort' at any step to abort...");
         
         Console.Write("\nPlease enter a title: ");
         string title = ReadUserInput() ?? "UNSPECIFIED TITLE";
+        if(CheckForAbort(title))
+            return null;
         
         Console.Write("\nPlease enter body text: ");
         string body = ReadUserInput() ?? "UNSPECIFIED BODY";
+        if(CheckForAbort(title))
+            return null;
         
         // Create the post
         Post newPost = new Post();
@@ -28,6 +32,15 @@ public class CreatePost {
         return postAdded;
     }
     
+    /** True: Abort was entered.
+     * False: Do not abort.
+     */
+    private bool CheckForAbort(string input) {
+        if (input.Equals("abort"))
+            return true;
+        return false;
+    }
+    
     private string? ReadUserInput() {
         var inputReceived = false;
         string? userInput = null;
@@ -39,5 +52,4 @@ public class CreatePost {
         }
         return userInput;
     }
-    
 }

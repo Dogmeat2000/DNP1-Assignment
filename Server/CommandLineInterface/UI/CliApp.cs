@@ -1,4 +1,5 @@
-﻿using ConsoleApp1.UI.ManagePosts;
+﻿using ConsoleApp1.UI.ManageComments;
+using ConsoleApp1.UI.ManagePosts;
 using ConsoleApp1.UI.ManageUser;
 using Entities;
 using RepositoryContracts;
@@ -98,7 +99,10 @@ public class CliApp {
             Console.WriteLine("| Type 'login' to : Login to your account                                                                                         |");
             Console.WriteLine("| Type 'create' to: Create a User Account                                                                                        |");
         }
-        Console.WriteLine("| Type 'post '  to: Create a new post inside the currently active forum                                                          |");
+        if(CurrentPost == null) 
+            Console.WriteLine("| Type 'post '  to: Create a new post inside the currently active Forum                                                          |");
+        else
+            Console.WriteLine("| Type 'comment '  to: Create a new comment inside the currently active Post                                                     |");
         if (CurrentPost == null)
             Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F0' to view/enter Forum 1                 |");
         Console.WriteLine("| Type 'exit' to  : Terminate this application                                                                                     |");
@@ -262,6 +266,18 @@ public class CliApp {
                     Post newPost = await new CreatePost().NewPostAsync(-1,PostRepository, LocalUser ?? new User(-1));
                 } else {
                     Post newPost = await new CreatePost().NewPostAsync(CurrentForum.Forum_id,PostRepository, LocalUser ?? new User(-1));
+                }
+                break;
+            
+            case "comment":
+                // Allow User to add a comment
+                if (CurrentPost == null) {
+                    Console.WriteLine(errorMessage);
+                    invalidEntry = true;
+                } else if (CurrentForum == null) {
+                    Comment newComment = await new CreateComment().NewCommentAsync(CurrentPost.Post_id, -1,CommentRepository, LocalUser ?? new User(-1));
+                } else {
+                    Comment newComment = await new CreateComment().NewCommentAsync(CurrentPost.Post_id, CurrentForum.Forum_id,CommentRepository, LocalUser ?? new User(-1));
                 }
                 break;
             
