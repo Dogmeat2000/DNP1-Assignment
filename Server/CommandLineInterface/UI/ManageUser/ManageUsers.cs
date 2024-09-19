@@ -12,9 +12,9 @@ public class ManageUsers {
     private bool returnToLastView { get; set; }
 
     public ManageUsers(IUserRepository userRepo, IUserProfileRepository userProfileRepo, User? localUser) {
-        this.UserRepo = userRepo;
-        this.UserProfileRepo = userProfileRepo;
-        this.LocalUser = localUser;
+        UserRepo = userRepo;
+        UserProfileRepo = userProfileRepo;
+        LocalUser = localUser;
         errorMessage = "ERROR: Please enter a valid command...!";
         invalidEntry = false;
         returnToLastView = false;
@@ -77,9 +77,10 @@ public class ManageUsers {
         return newUser.Start();
     }
 
-    /*private bool DeleteUser() {
-        
-    }*/
+    private bool DeleteUser() {
+        //TODO IMPLEMENT THIS!
+        return false;
+    }
         
     private string ReadUserInput() {
         var inputReceived = false;

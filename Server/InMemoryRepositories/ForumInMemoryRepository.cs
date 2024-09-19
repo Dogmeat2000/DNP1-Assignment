@@ -111,7 +111,7 @@ public class ForumInMemoryRepository : IForumRepository {
                     forum.LastCommentPost_id = 3;
                     forum.LastComment_id = 3;
                     forum.Author_id = 0;
-                    forum.ParentForum_id = 1;
+                    forum.ParentForum_id = 0;
                     break;
                 
                 case 4: 

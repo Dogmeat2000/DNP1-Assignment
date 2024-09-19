@@ -14,6 +14,7 @@ public class CliApp {
     private User? LocalUser { get; set; }
     private string errorMessage { get; set; }
     private Boolean invalidEntry  { get; set; }
+    private string lastCmd { get; set; }
     private Post? CurrentPost { get; set; }
     private Forum? CurrentForum { get; set; }
     private Forum? CurrentParentForum { get; set; }
@@ -27,12 +28,13 @@ public class CliApp {
         this.UserRepository = userRepository;
         this.UserProfileRepository = userProfileRepository;
         this.LocalUser = null;
-        errorMessage = "ERROR: Please enter a valid command...!";
+        errorMessage = ": ERROR: Please enter a valid command...!";
         invalidEntry = false;
         CurrentPost = null;
         CurrentForum = null;
         CurrentParentForum = null;
         ParentsParentForum = null;
+        lastCmd = "";
     }
 
     
@@ -55,7 +57,10 @@ public class CliApp {
                 // Display comments, if a post was previously selected
                 DisplayComments();
             }
-
+            
+            // Display last user action
+            if(lastCmd.Length > 0)
+                Console.WriteLine(": " + lastCmd);
             
             // Display last error, if user previously entered invalid command:
             if (invalidEntry) {
@@ -93,16 +98,17 @@ public class CliApp {
             Console.WriteLine("| Type 'create' to: Create a User Account                                                                                        |");
         }
         Console.WriteLine("| Type 'post '  to: Create a new post inside the currently active forum                                                          |");
-        Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F0' to view/enter Forum 1                 |");
+        if (CurrentPost == null)
+            Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F0' to view/enter Forum 1                 |");
         Console.WriteLine("| Type 'exit' to: Terminate this application                                                                                     |");
-        if (CurrentParentForum != null)
+        if (CurrentForum != null || CurrentPost != null)
             Console.WriteLine("| Type 'return' to: Return to previous view                                                                                      |"); 
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
     }
 
     
     private void DisplayForums() {
-        if (CurrentParentForum == null) {
+        if (CurrentParentForum == null && CurrentForum == null) {
             Console.WriteLine("|                                                            \x1b[1mForums:\x1b[0m");
             Console.WriteLine("|================================================================================================================================|");
             
@@ -113,8 +119,18 @@ public class CliApp {
                     i++;
                 }
             }   
-        }
-        else {
+        } else if (CurrentForum != null && CurrentParentForum == null) {
+            Console.WriteLine($"|                                                            \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, -1).Result.Title_txt}");
+            Console.WriteLine("|================================================================================================================================|");
+            
+            var i = 1;
+            foreach (var forum in ForumRepository.GetMany()) {
+                if (forum.ParentForum_id == CurrentForum.Forum_id) {
+                    Console.WriteLine($"| {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
+                    i++;
+                }
+            }   
+        } else {
             Console.WriteLine($"|                                                            \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}");
             Console.WriteLine("|================================================================================================================================|");
             
@@ -131,34 +147,79 @@ public class CliApp {
 
     
     private void DisplayPosts() {
-        Console.WriteLine(CurrentForum == null
-            ? "|                                                \x1b[1mPosts in Main Forum\x1b[0m"
-            : $"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}'\x1b[0m ");
-
-        Console.WriteLine("|................................................................................................................................|");
-
-        var i = 1;
-        foreach (var post in PostRepository.GetMany()) {
-            if (post.ParentForum_id == CurrentForum?.Forum_id) {
-                Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
-                i++;
+        bool postExists = false;
+        
+        if(CurrentForum == null) {
+            Console.WriteLine("|                                                \x1b[1mPosts in Main Forum\x1b[0m");
+            Console.WriteLine("|................................................................................................................................|");
+            var i = 1;
+            foreach (var post in PostRepository.GetMany()) {
+                if (post.ParentForum_id == -1) {
+                    Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                    postExists = true;
+                    i++;
+                }
+            }
+        } else if (CurrentParentForum == null) {
+            Console.WriteLine($"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, -1).Result.Title_txt}'\x1b[0m ");
+            Console.WriteLine("|................................................................................................................................|");
+            var i = 1;
+            foreach (var post in PostRepository.GetMany()) {
+                if (post.ParentForum_id == CurrentForum?.Forum_id) {
+                    Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                    postExists = true;
+                    i++;
+                }
+            }
+        } else {
+            Console.WriteLine($"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}'\x1b[0m ");
+            Console.WriteLine("|................................................................................................................................|");
+            var i = 1;
+            foreach (var post in PostRepository.GetMany()) {
+                if (post.ParentForum_id == CurrentForum?.Forum_id) {
+                    Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                    postExists = true;
+                    i++;
+                }
             }
         }
+
+        if (!postExists)
+            Console.WriteLine("| !!! No posts found !!!");
         Console.WriteLine("|================================================================================================================================|");
     }
 
 
     private void DisplayComments() {
-        Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, CurrentForum.Forum_id).Result.Title_txt}\x1b[0m");
-        Console.WriteLine("|................................................................................................................................|");
-        var i = 1;
-        foreach (var comment in CommentRepository.GetMany()) {
-            if (comment.ParentPost_id == CurrentPost.Post_id && comment.ParentForum_id == CurrentForum.Forum_id) {
-                Console.WriteLine($"| {i}. [Comment ID: C{comment.Comment_id}] {comment.Body_txt}");
-                Console.WriteLine($"| ___");
-                i++;
+        bool commentsExists = false;
+        
+        if (CurrentForum == null) {
+            Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, -1).Result.Title_txt}\x1b[0m");
+            Console.WriteLine("|................................................................................................................................|");
+            var i = 1;
+            foreach (var comment in CommentRepository.GetMany()) {
+                if (comment.ParentPost_id == CurrentPost.Post_id && comment.ParentForum_id == -1) {
+                    Console.WriteLine($"| {i}. [Comment ID: C{comment.Comment_id}] {comment.Body_txt}");
+                    Console.WriteLine($"| ___");
+                    commentsExists = true;
+                    i++;
+                }
+            }
+        } else {
+            Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, CurrentForum.Forum_id).Result.Title_txt}\x1b[0m");
+            Console.WriteLine("|................................................................................................................................|");
+            var i = 1;
+            foreach (var comment in CommentRepository.GetMany()) {
+                if (comment.ParentPost_id == CurrentPost.Post_id && comment.ParentForum_id == CurrentForum.Forum_id) {
+                    Console.WriteLine($"| {i}. [Comment ID: C{comment.Comment_id}] {comment.Body_txt}");
+                    Console.WriteLine($"| ___");
+                    commentsExists = true;
+                    i++;
+                }
             }
         }
+        if(!commentsExists)
+            Console.WriteLine("| !!! No comments found !!!");
     }
 
     
@@ -179,6 +240,8 @@ public class CliApp {
 
     
     private Boolean EvaluateCommand(string cmd) {
+        lastCmd = cmd.ToLower();
+        
         switch (cmd.ToLower()) {
             case "user":
                 if (LocalUser != null) {
@@ -226,16 +289,18 @@ public class CliApp {
                 break;
             
             case "return":
-                if (CurrentParentForum?.Forum_id != -1) {
-                    if (CurrentPost?.Post_id != -1)
-                        CurrentPost = null;
-                    else if (CurrentForum?.Forum_id != 1) {
-                        ParentsParentForum = CurrentParentForum;
-                        CurrentForum = CurrentParentForum;
+                if (CurrentPost != null)
+                    CurrentPost = null;
+                else if (CurrentForum != null && CurrentParentForum != null) {
+                    ParentsParentForum = CurrentParentForum;
+                    CurrentForum = CurrentParentForum;
+                    if(ParentsParentForum != null)
                         CurrentParentForum = ForumRepository.GetSingleAsync(CurrentForum.ParentForum_id, ParentsParentForum.Forum_id).Result;
-                    }
-
-                        
+                    else
+                        CurrentParentForum = ForumRepository.GetSingleAsync(CurrentForum.ParentForum_id, -1).Result;
+                } else if (CurrentForum != null && CurrentParentForum == null) {
+                    ParentsParentForum = null;
+                    CurrentForum = null;
                 } else {
                     Console.WriteLine(errorMessage);
                     invalidEntry = true;
@@ -253,9 +318,10 @@ public class CliApp {
                         //Invalid command:
                         Console.WriteLine(errorMessage);
                         invalidEntry = true;
-                    }
-                    else {
-                        Console.WriteLine($"New directory is: [Forum_id: {CurrentForum?.Forum_id ?? -1} / Post_id: {CurrentPost?.Post_id ?? -1}");
+                    } else {
+                        string logMessage = $"New directory is: [Forum_id: {CurrentForum?.Forum_id ?? -1} / Post_id: {CurrentPost?.Post_id ?? -1}]";
+                        Console.WriteLine(logMessage);
+                        lastCmd = cmd.ToLower() + "\n" + logMessage;
                     }
                 }
                 break;
@@ -268,14 +334,28 @@ public class CliApp {
     /** Returns true if directory change occured. False if it failed, for whatever reason */
     private bool ChangeDirectory(string cmd) {
         // Extract directory information from cmd
+        if (cmd.Length < 5)
+            return false;
+        
         var directoryType = cmd.Substring(3, 1);
         int? id = Int32.Parse(cmd.Substring(4));
+        
+        if (id == null)
+            return false;
         
         // Check if this directory and id exists, and change it, if it does:
         switch (directoryType) {
             case "f":
-                foreach (var forum in ForumRepository.GetMany()) {
-                    if (forum.Forum_id == id && forum.ParentForum_id == CurrentParentForum?.Forum_id) {
+                foreach (var forum in ForumRepository.GetMany()) { 
+                    // We are at the top most level, trying to navigate into the forum structure!
+                    if (CurrentPost == null && CurrentParentForum == null && forum.Forum_id == id && forum.ParentForum_id == -1) {
+                        CurrentParentForum = CurrentForum;
+                        CurrentForum = forum;
+                        return true;
+                    } 
+                    
+                    // We are NOT the top most level, trying to navigate further into the forum structure!
+                    if (CurrentPost == null && CurrentParentForum != null && forum.Forum_id == id && forum.ParentForum_id == CurrentParentForum.Forum_id) {
                         CurrentParentForum = CurrentForum;
                         CurrentForum = forum;
                         return true;
@@ -285,10 +365,23 @@ public class CliApp {
             
             case "p":
                 foreach (var post in PostRepository.GetMany()) {
-                    if (post.Post_id == id && post.ParentForum_id == CurrentForum?.Forum_id && CurrentForum?.ParentForum_id == CurrentParentForum?.Forum_id) {
+                    // We are at the top most level, trying to navigate into a post!
+                    if (CurrentParentForum == null && CurrentForum == null && post.Post_id == id && post.ParentForum_id == -1) {
                         CurrentPost = post;
                         return true;
                     }
+                    
+                    // We are inside the first subforum level, meaning there is no "parentForum":
+                    if (CurrentParentForum == null && CurrentForum != null && post.Post_id == id && post.ParentForum_id == CurrentForum.Forum_id && CurrentForum.ParentForum_id == -1) {
+                        CurrentPost = post;
+                        return true;
+                    } 
+                    
+                    // We are inside a subforum trying to navigate into a post!
+                    if (CurrentParentForum != null && post.Post_id == id && post.ParentForum_id == CurrentForum?.Forum_id && CurrentForum?.ParentForum_id == CurrentParentForum.Forum_id) {
+                        CurrentPost = post;
+                        return true;
+                    } 
                 }
                 return false;
             
