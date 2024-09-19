@@ -1,57 +1,58 @@
-﻿using Entities;
+﻿using ConsoleApp1.UI.SharedLogic;
+using Entities;
 using RepositoryContracts;
 
 namespace ConsoleApp1.UI.ManageUser;
 
 public class CreateUser {
-    IUserRepository UserRepo { get; set; }
-    IUserProfileRepository UserProfileRepo { get; set; }
-    private string UserName { get; set; }
-    private string Password { get; set; }
-    private bool returnToLastView { get; set; }
+    private bool ReturnToLastView { get; set; }
+    private string? UserName { get; set; }
+    private string? Password { get; set; }
 
-    public CreateUser(IUserRepository userRepo, IUserProfileRepository userProfileRepo) {
-        UserRepo = userRepo;
-        UserProfileRepo = userProfileRepo;
+    public CreateUser() {
         UserName = "";
         Password = "";
     }
-    
-    /** False = action aborted. True = action successful */
-    public bool Start(ref string lastCmd) {
+
+    public async Task<UserProfile?> NewUserAsync(IUserRepository userRepo, IUserProfileRepository userProfileRepo) {
+        User? newUser = null;
+        UserProfile? newUserProfile = null;
+        
         // User UI Logic is encapsulated inside this repeating while-loop:
-        while (!returnToLastView) {
+        while (!ReturnToLastView) {
             Console.WriteLine("\n-> Creating a new user! [type 'return' to abort]");
 
             // Let user select a username:
-            if (!SelectUserName())
-                return false;
+            if (!SelectUserNameAsync().Result)
+                return newUserProfile;
             
             // Let user select a password:
-            if (!SelectPassword())
-                return false;
+            if (!SelectPassword().Result)
+                return newUserProfile;
            
             // Create the new user:
-            var newUser = new User(GenerateUserId());
-            UserRepo.AddAsync(newUser);
+            newUser = await userRepo.AddAsync(new User(-1));
+            
+            //TODO Check that user was created (is not null)!
             
             // Create and add a corresponding userProfile
-            var newProfile = new UserProfile(GenerateProfileId(), newUser.User_id) {
-                Username = UserName,
-                Password = Password
-            };
-            UserProfileRepo.AddAsync(newProfile);
-            lastCmd += $"\n-> New user created [name = {UserName}, password = {Password}]!";
-            Console.WriteLine(lastCmd);
-            returnToLastView = true;
-        }
-        return true;
-    }
+            newUserProfile = await userProfileRepo.AddAsync(new UserProfile(-1, newUser.User_id));
+            newUserProfile.Username = UserName ?? "ERROR NO NAME!";
+            newUserProfile.Password = Password ?? "ERROR NO PASSWORD!";
 
-    private bool SelectPassword() {
-        while (Password.Length == 0) {
+            await userProfileRepo.UpdateAsync(newUserProfile);
+            
+            //TODO Check that the profile was created. If not, delete the created user!
+            
+            ReturnToLastView = true;
+        }
+        return newUserProfile;
+    }
+    
+    private async Task<bool> SelectPassword() {
+        while (string.IsNullOrEmpty(Password)) {
             Console.Write("Please enter a Password: ");
-            var password = ReadUserInput();
+            var password = await new UserInput().ReadUserInputAsync_Alt1() ?? "";
 
             if (password.ToLower() == "abort")
                 return false;
@@ -62,16 +63,16 @@ public class CreateUser {
         return true;
     }
 
-    private bool SelectUserName() {
-        while (UserName.Length == 0) {
+    private async Task<bool> SelectUserNameAsync() {
+        while (string.IsNullOrEmpty(UserName)) {
             Console.Write("Please enter a Username: ");
-            var name = ReadUserInput();
+            var username = await new UserInput().ReadUserInputAsync_Alt1() ?? "";
 
-            if (name.ToLower() == "abort")
+            if (username.ToLower() == "abort")
                 return false;
                 
-            if(ValidateUserName(name))
-                UserName = name;
+            if(ValidateUserName(username))
+                UserName = username;
         }
         return true;
     }
@@ -84,55 +85,5 @@ public class CreateUser {
     private bool ValidatePassword(string password) {
         // TODO Implement validation logic
         return true;
-    }
-
-    private int GenerateUserId() {
-        // Determine user_id to assign:
-        var newUserId = UserRepo.GetMany().Count();
-        var userIdValidated = false;
-        while (!userIdValidated) {
-            newUserId++;
-            userIdValidated = true;
-                
-            foreach (var user in UserRepo.GetMany()) {
-                if (user.User_id == newUserId) {
-                    userIdValidated = false;
-                    break;
-                }
-            }
-        }
-        return newUserId;
-    }
-
-    private int GenerateProfileId() {
-        // Determine profile_id to assign:
-        var newProfileId = UserProfileRepo.GetMany().Count();
-        var userProfileIdValidated = false;
-        while (!userProfileIdValidated) {
-            newProfileId++;
-            userProfileIdValidated = true;
-                
-            foreach (var userProfile in UserProfileRepo.GetMany()) {
-                if (userProfile.Profile_id == newProfileId) {
-                    userProfileIdValidated = false;
-                    break;
-                }
-            }
-        }
-        return newProfileId;
-    }
-    
-    private string ReadUserInput() {
-        var inputReceived = false;
-        string? userInput = null;
-        while (!inputReceived) {
-            userInput = Console.ReadLine();
-
-            if (userInput != null) {
-                inputReceived = true;
-                
-            }
-        }
-        return userInput;
     }
 }

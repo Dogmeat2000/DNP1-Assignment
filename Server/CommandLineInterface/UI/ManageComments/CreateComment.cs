@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using ConsoleApp1.UI.SharedLogic;
+using Entities;
 using RepositoryContracts;
 
 namespace ConsoleApp1.UI.ManageComments;
@@ -9,7 +10,7 @@ public class CreateComment {
         Console.WriteLine(": Creating Comment... Type 'abort' at any step to abort...");
 
         Console.Write("\nPlease enter comment text: ");
-        string body = ReadUserInput() ?? "UNSPECIFIED BODY";
+        string body = await new UserInput().ReadUserInputAsync_Alt1() ?? "UNSPECIFIED BODY";
         if(CheckForAbort(body))
             return null;
         
@@ -33,17 +34,5 @@ public class CreateComment {
         if (input.Equals("abort"))
             return true;
         return false;
-    }
-    
-    private string? ReadUserInput() {
-        var inputReceived = false;
-        string? userInput = null;
-        while (!inputReceived) {
-            userInput = Console.ReadLine();
-
-            if (userInput != null)
-                inputReceived = true;
-        }
-        return userInput;
     }
 }

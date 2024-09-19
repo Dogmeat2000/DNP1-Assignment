@@ -1,6 +1,8 @@
 ﻿using ConsoleApp1.UI.ManageComments;
 using ConsoleApp1.UI.ManagePosts;
 using ConsoleApp1.UI.ManageUser;
+using ConsoleApp1.UI.ManageUserProfiles;
+using ConsoleApp1.UI.SharedLogic;
 using Entities;
 using RepositoryContracts;
 
@@ -14,9 +16,9 @@ public class CliApp {
     public IUserRepository UserRepository { get; set; }
     public IUserProfileRepository UserProfileRepository { get; set; }
     private User? LocalUser { get; set; }
-    private string errorMessage { get; set; }
-    private Boolean invalidEntry  { get; set; }
-    private string lastCmd { get; set; }
+    private string ErrorMessage { get; set; }
+    private Boolean InvalidEntry  { get; set; }
+    private string LastCmd { get; set; }
     private Post? CurrentPost { get; set; }
     private Forum? CurrentForum { get; set; }
     private Forum? CurrentParentForum { get; set; }
@@ -30,13 +32,13 @@ public class CliApp {
         this.UserRepository = userRepository;
         this.UserProfileRepository = userProfileRepository;
         this.LocalUser = null;
-        errorMessage = ": ERROR: Please enter a valid command...!";
-        invalidEntry = false;
+        ErrorMessage = ": ERROR: Please enter a valid command...!";
+        InvalidEntry = false;
         CurrentPost = null;
         CurrentForum = null;
         CurrentParentForum = null;
         ParentsParentForum = null;
-        lastCmd = "";
+        LastCmd = "";
     }
 
     
@@ -61,17 +63,17 @@ public class CliApp {
             }
             
             // Display last user action
-            if(lastCmd.Length > 0)
-                Console.WriteLine(": " + lastCmd);
+            if(LastCmd.Length > 0)
+                Console.WriteLine(": " + LastCmd);
             
             // Display last error, if user previously entered invalid command:
-            if (invalidEntry) {
-                Console.WriteLine(errorMessage);
-                invalidEntry = false;
+            if (InvalidEntry) {
+                Console.WriteLine(ErrorMessage);
+                InvalidEntry = false;
             }
                 
             // Read userInput, and pick a corresponding command
-            runApp = EvaluateCommand(ReadUserInput()).Result;
+            runApp = EvaluateCommand(await new UserInput().ReadUserInputAsync_Main() ?? "INVALID COMMAND").Result;
         }
     }
 
@@ -197,6 +199,7 @@ public class CliApp {
 
     private async void DisplayCommentsAsync() {
         bool commentsExists = false;
+        
         // Display Post Details
         Post detailsDisplayed = await new ViewSinglePost().Display(CurrentPost.Post_id, CurrentPost.ParentForum_id, PostRepository, UserRepository, UserProfileRepository);
         
@@ -229,34 +232,20 @@ public class CliApp {
         if(!commentsExists)
             Console.WriteLine("| !!! No comments found !!!");
     }
-
     
-    private string ReadUserInput() {
-        var inputReceived = false;
-        string? userInput = null;
-        while (!inputReceived) {
-            Console.Write("\nCmd: ");
-            userInput = Console.ReadLine();
-
-            if (userInput != null)
-                inputReceived = true;
-        }
-        return userInput;
-    }
-
     
     private async Task<bool> EvaluateCommand(string cmd) {
-        lastCmd = cmd.ToLower();
+        LastCmd = cmd.ToLower();
         
         switch (cmd.ToLower()) {
             case "user":
                 if (LocalUser != null) {
                     String lastCmdModified = "";
                     new ManageUsers(UserRepository, UserProfileRepository, LocalUser).Start();
-                    lastCmd = lastCmdModified;
+                    LastCmd = lastCmdModified;
                 } else {
-                    Console.WriteLine(errorMessage);
-                    invalidEntry = true;
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 }
                 break;
             
@@ -272,8 +261,8 @@ public class CliApp {
             case "comment":
                 // Allow User to add a comment
                 if (CurrentPost == null) {
-                    Console.WriteLine(errorMessage);
-                    invalidEntry = true;
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 } else if (CurrentForum == null) {
                     Comment newComment = await new CreateComment().NewCommentAsync(CurrentPost.Post_id, -1,CommentRepository, LocalUser ?? new User(-1));
                 } else {
@@ -285,8 +274,8 @@ public class CliApp {
                 if (LocalUser != null) {
                     //TODO Go to userProfile view!
                 } else {
-                    Console.WriteLine(errorMessage);
-                    invalidEntry = true;
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 }
                 break;
             
@@ -294,15 +283,15 @@ public class CliApp {
                 if (LocalUser != null) {
                     //TODO Go to user logout view!
                 } else {
-                    Console.WriteLine(errorMessage);
-                    invalidEntry = true;
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 }
                 break;
             
             case "login":
                 if (LocalUser != null) {
-                    Console.WriteLine(errorMessage);
-                    invalidEntry = true;
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 } else {
                     //TODO Go to user login view!
                 }
@@ -310,12 +299,16 @@ public class CliApp {
             
             case "create":
                 if (LocalUser != null) {
-                    Console.WriteLine(errorMessage);
-                    invalidEntry = true;
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 } else {
-                    String lastCmdModified = "";
-                    new ManageUsers(UserRepository, UserProfileRepository, LocalUser).CreateUser(ref lastCmdModified);
-                    lastCmd = lastCmdModified;
+                    UserProfile? newUser = await new CreateUser().NewUserAsync(UserRepository, UserProfileRepository);
+                    if (newUser == null) {
+                        LastCmd += $"\n: ERROR, FAILED TO CREATE NEW USER!!";
+                        InvalidEntry = true;
+                        break;
+                    }
+                    LastCmd += $"\n-> New user created [name = {newUser?.Username ?? "ERROR N/A"}, password = {newUser?.Password ?? "ERROR N/A"}]!";
                 }
                 break;
             
@@ -333,8 +326,8 @@ public class CliApp {
                     ParentsParentForum = null;
                     CurrentForum = null;
                 } else {
-                    Console.WriteLine(errorMessage);
-                    invalidEntry = true;
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 }
                 break;
             
@@ -347,12 +340,12 @@ public class CliApp {
                     //Check if it is a valid change directory command;
                     if (!ChangeDirectory(cmd.ToLower())) {
                         //Invalid command:
-                        Console.WriteLine(errorMessage);
-                        invalidEntry = true;
+                        Console.WriteLine(ErrorMessage);
+                        InvalidEntry = true;
                     } else {
                         string logMessage = $"New directory is: [Forum_id: {CurrentForum?.Forum_id ?? -1} / Post_id: {CurrentPost?.Post_id ?? -1}]";
                         Console.WriteLine(logMessage);
-                        lastCmd = cmd.ToLower() + "\n" + logMessage;
+                        LastCmd = cmd.ToLower() + "\n" + logMessage;
                     }
                 }
                 break;

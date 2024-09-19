@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using ConsoleApp1.UI.SharedLogic;
+using Entities;
 using RepositoryContracts;
 
 namespace ConsoleApp1.UI.ManagePosts;
@@ -10,12 +11,12 @@ public class CreatePost {
         Console.WriteLine(": Creating Post... Type 'abort' at any step to abort...");
         
         Console.Write("\nPlease enter a title: ");
-        string title = ReadUserInput() ?? "UNSPECIFIED TITLE";
+        string title =  await new UserInput().ReadUserInputAsync_Alt1() ?? "UNSPECIFIED TITLE";
         if(CheckForAbort(title))
             return null;
         
         Console.Write("\nPlease enter body text: ");
-        string body = ReadUserInput() ?? "UNSPECIFIED BODY";
+        string body = await new UserInput().ReadUserInputAsync_Alt1() ?? "UNSPECIFIED TITLE";
         if(CheckForAbort(title))
             return null;
         
@@ -39,17 +40,5 @@ public class CreatePost {
         if (input.Equals("abort"))
             return true;
         return false;
-    }
-    
-    private string? ReadUserInput() {
-        var inputReceived = false;
-        string? userInput = null;
-        while (!inputReceived) {
-            userInput = Console.ReadLine();
-
-            if (userInput != null)
-                inputReceived = true;
-        }
-        return userInput;
     }
 }

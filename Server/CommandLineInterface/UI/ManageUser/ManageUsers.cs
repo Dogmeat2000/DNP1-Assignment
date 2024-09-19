@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using ConsoleApp1.UI.SharedLogic;
+using Entities;
 using RepositoryContracts;
 
 namespace ConsoleApp1.UI.ManageUser;
@@ -21,7 +22,7 @@ public class ManageUsers {
     }
     
     /** True = Method finished, and application should revert to Main Menu! */
-    public bool Start() {
+    public async Task<bool> Start() {
                 
         // User UI Logic is encapsulated inside this repeating while-loop:
         while (!returnToLastView) {
@@ -36,7 +37,7 @@ public class ManageUsers {
             }
                 
             // Read userInput, and pick a corresponding command
-            EvaluateCommand(ReadUserInput());
+            EvaluateCommand(await new UserInput().ReadUserInputAsync_Main() ?? "INVALID COMMAND");
         }
         return true;
     }
@@ -71,32 +72,7 @@ public class ManageUsers {
         Console.WriteLine("| Type 'return' to: Return to Main Menu                                                                                          |");
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
     }
-
-    public bool CreateUser(ref string lastCmd) {
-        CreateUser newUser = new CreateUser(UserRepo, UserProfileRepo);
-        return newUser.Start(ref lastCmd);
-    }
-
-    private bool DeleteUser() {
-        //TODO IMPLEMENT THIS!
-        return false;
-    }
-        
-    private string ReadUserInput() {
-        var inputReceived = false;
-        string? userInput = null;
-        while (!inputReceived) {
-            Console.Write("\nCmd: ");
-            userInput = Console.ReadLine();
-
-            if (userInput != null) {
-                inputReceived = true;
-                
-            }
-        }
-        return userInput;
-    }
-
+    
     private void EvaluateCommand(string cmd) {
         switch (cmd.ToLower()) {
             case "update":
