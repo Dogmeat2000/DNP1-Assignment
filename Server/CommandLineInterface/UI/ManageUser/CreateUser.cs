@@ -11,8 +11,8 @@ public class CreateUser {
     private bool returnToLastView { get; set; }
 
     public CreateUser(IUserRepository userRepo, IUserProfileRepository userProfileRepo) {
-        this.UserRepo = userRepo;
-        this.UserProfileRepo = userProfileRepo;
+        UserRepo = userRepo;
+        UserProfileRepo = userProfileRepo;
         UserName = "";
         Password = "";
     }

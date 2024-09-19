@@ -1,4 +1,5 @@
-﻿using ConsoleApp1.UI.ManageUser;
+﻿using ConsoleApp1.UI.ManagePosts;
+using ConsoleApp1.UI.ManageUser;
 using Entities;
 using RepositoryContracts;
 
@@ -55,7 +56,7 @@ public class CliApp {
                 DisplayPosts();
             } else {
                 // Display comments, if a post was previously selected
-                DisplayComments();
+                DisplayCommentsAsync();
             }
             
             // Display last user action
@@ -69,7 +70,7 @@ public class CliApp {
             }
                 
             // Read userInput, and pick a corresponding command
-            runApp = EvaluateCommand(ReadUserInput());
+            runApp = EvaluateCommand(ReadUserInput()).Result;
         }
     }
 
@@ -94,13 +95,13 @@ public class CliApp {
             Console.WriteLine("| Type 'logout' to: Logout                                                                                                       |");
         } else {
             // Display operations only available for anonymous users
-            Console.WriteLine("| Type 'login' to: Login to your account                                                                                         |");
+            Console.WriteLine("| Type 'login' to : Login to your account                                                                                         |");
             Console.WriteLine("| Type 'create' to: Create a User Account                                                                                        |");
         }
         Console.WriteLine("| Type 'post '  to: Create a new post inside the currently active forum                                                          |");
         if (CurrentPost == null)
             Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F0' to view/enter Forum 1                 |");
-        Console.WriteLine("| Type 'exit' to: Terminate this application                                                                                     |");
+        Console.WriteLine("| Type 'exit' to  : Terminate this application                                                                                     |");
         if (CurrentForum != null || CurrentPost != null)
             Console.WriteLine("| Type 'return' to: Return to previous view                                                                                      |"); 
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
@@ -190,9 +191,12 @@ public class CliApp {
     }
 
 
-    private void DisplayComments() {
+    private async void DisplayCommentsAsync() {
         bool commentsExists = false;
+        // Display Post Details
+        Post detailsDisplayed = await new ViewSinglePost().Display(CurrentPost.Post_id, CurrentPost.ParentForum_id, PostRepository, UserRepository, UserProfileRepository);
         
+        // Display Corresponding Comments:
         if (CurrentForum == null) {
             Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, -1).Result.Title_txt}\x1b[0m");
             Console.WriteLine("|................................................................................................................................|");
@@ -230,16 +234,14 @@ public class CliApp {
             Console.Write("\nCmd: ");
             userInput = Console.ReadLine();
 
-            if (userInput != null) {
+            if (userInput != null)
                 inputReceived = true;
-                
-            }
         }
         return userInput;
     }
 
     
-    private Boolean EvaluateCommand(string cmd) {
+    private async Task<bool> EvaluateCommand(string cmd) {
         lastCmd = cmd.ToLower();
         
         switch (cmd.ToLower()) {
@@ -251,6 +253,15 @@ public class CliApp {
                 } else {
                     Console.WriteLine(errorMessage);
                     invalidEntry = true;
+                }
+                break;
+            
+            case "post":
+                // Allow User to create a new post
+                if (CurrentForum == null) {
+                    Post newPost = await new CreatePost().NewPostAsync(-1,PostRepository, LocalUser ?? new User(-1));
+                } else {
+                    Post newPost = await new CreatePost().NewPostAsync(CurrentForum.Forum_id,PostRepository, LocalUser ?? new User(-1));
                 }
                 break;
             
