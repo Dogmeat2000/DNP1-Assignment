@@ -72,9 +72,9 @@ public class ManageUsers {
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
     }
 
-    public bool CreateUser() {
+    public bool CreateUser(ref string lastCmd) {
         CreateUser newUser = new CreateUser(UserRepo, UserProfileRepo);
-        return newUser.Start();
+        return newUser.Start(ref lastCmd);
     }
 
     private bool DeleteUser() {

@@ -18,10 +18,10 @@ public class CreateUser {
     }
     
     /** False = action aborted. True = action successful */
-    public bool Start() {
+    public bool Start(ref string lastCmd) {
         // User UI Logic is encapsulated inside this repeating while-loop:
         while (!returnToLastView) {
-            Console.WriteLine("-> Creating a new user! [type 'return' to abort]");
+            Console.WriteLine("\n-> Creating a new user! [type 'return' to abort]");
 
             // Let user select a username:
             if (!SelectUserName())
@@ -41,8 +41,8 @@ public class CreateUser {
                 Password = Password
             };
             UserProfileRepo.AddAsync(newProfile);
-            Console.WriteLine($"-> New user created [name = {UserName}, password = {Password}]!");
-  
+            lastCmd += $"\n-> New user created [name = {UserName}, password = {Password}]!";
+            Console.WriteLine(lastCmd);
             returnToLastView = true;
         }
         return true;

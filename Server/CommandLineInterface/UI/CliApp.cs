@@ -245,7 +245,9 @@ public class CliApp {
         switch (cmd.ToLower()) {
             case "user":
                 if (LocalUser != null) {
+                    String lastCmdModified = "";
                     new ManageUsers(UserRepository, UserProfileRepository, LocalUser).Start();
+                    lastCmd = lastCmdModified;
                 } else {
                     Console.WriteLine(errorMessage);
                     invalidEntry = true;
@@ -284,7 +286,9 @@ public class CliApp {
                     Console.WriteLine(errorMessage);
                     invalidEntry = true;
                 } else {
-                    new ManageUsers(UserRepository, UserProfileRepository, LocalUser).CreateUser();
+                    String lastCmdModified = "";
+                    new ManageUsers(UserRepository, UserProfileRepository, LocalUser).CreateUser(ref lastCmdModified);
+                    lastCmd = lastCmdModified;
                 }
                 break;
             
