@@ -61,6 +61,7 @@ public class CliApp {
                 // Display comments, if a post was previously selected
                 DisplayCommentsAsync();
             }
+            Console.ResetColor();
             
             // Display last user action
             if(LastCmd.Length > 0)
@@ -80,14 +81,17 @@ public class CliApp {
     
     private void ShowMainMenuText() {
         var userName = "Anonymous";
+        Console.ForegroundColor = ConsoleColor.DarkRed;
         if(LocalUser != null) {
             userName = "Anonymous"; //TODO Get the users name here!
             Console.WriteLine($"\n\n\nLogged in as: {userName}");
         } else {
             Console.WriteLine($"\n\n\nViewing as: {userName}");
         }
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
-        Console.WriteLine("|                                                            \x1b[1mMain Menu:\x1b[0m                                                          |");
+        Console.WriteLine("                                                             \x1b[1mMain Menu:\x1b[0m                                                           ");
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
         
         // Display operations only available for anonymous users
@@ -98,93 +102,103 @@ public class CliApp {
             Console.WriteLine("| Type 'logout' to: Logout                                                                                                       |");
         } else {
             // Display operations only available for anonymous users
-            Console.WriteLine("| Type 'login' to : Login to your account                                                                                         |");
+            Console.WriteLine("| Type 'login' to : Login to your account                                                                                        |");
             Console.WriteLine("| Type 'create' to: Create a User Account                                                                                        |");
         }
         if(CurrentPost == null) 
-            Console.WriteLine("| Type 'post '  to: Create a new post inside the currently active Forum                                                          |");
+            Console.WriteLine("| Type 'post'  to: Create a new post inside the currently active Forum                                                           |");
         else
             Console.WriteLine("| Type 'comment '  to: Create a new comment inside the currently active Post                                                     |");
         if (CurrentPost == null)
             Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F0' to view/enter Forum 1                 |");
-        Console.WriteLine("| Type 'exit' to  : Terminate this application                                                                                     |");
+        Console.WriteLine("| Type 'exit' to  : Terminate this application                                                                                   |");
         if (CurrentForum != null || CurrentPost != null)
             Console.WriteLine("| Type 'return' to: Return to previous view                                                                                      |"); 
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
+        Console.ResetColor();
     }
 
     
     private void DisplayForums() {
+        Console.ForegroundColor = ConsoleColor.Blue;
         if (CurrentParentForum == null && CurrentForum == null) {
-            Console.WriteLine("|                                                            \x1b[1mForums:\x1b[0m");
+            Console.WriteLine("                                                             \x1b[1mForums:\x1b[0m");
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("|================================================================================================================================|");
             
             var i = 1;
             foreach (var forum in ForumRepository.GetMany()) {
                 if (forum.ParentForum_id == -1) {
-                    Console.WriteLine($"| {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
+                    Console.WriteLine($" {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
                     i++;
                 }
             }   
         } else if (CurrentForum != null && CurrentParentForum == null) {
-            Console.WriteLine($"|                                                            \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, -1).Result.Title_txt}");
+            Console.WriteLine($"                                                             \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, -1).Result.Title_txt}");
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("|================================================================================================================================|");
             
             var i = 1;
             foreach (var forum in ForumRepository.GetMany()) {
                 if (forum.ParentForum_id == CurrentForum.Forum_id) {
-                    Console.WriteLine($"| {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
+                    Console.WriteLine($" {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
                     i++;
                 }
             }   
         } else {
-            Console.WriteLine($"|                                                            \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}");
+            Console.WriteLine($"                                                             \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}");
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("|================================================================================================================================|");
             
             var i = 1;
             foreach (var forum in ForumRepository.GetMany()) {
                 if (forum.ParentForum_id == CurrentParentForum.ParentForum_id) {
-                    Console.WriteLine($"| {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
+                    Console.WriteLine($" {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
                     i++;
                 }
             }   
         }
         Console.WriteLine("|================================================================================================================================|");
+        Console.ResetColor();
     }
 
     
     private void DisplayPosts() {
         bool postExists = false;
         
+        Console.ForegroundColor = ConsoleColor.Cyan;
         if(CurrentForum == null) {
-            Console.WriteLine("|                                                \x1b[1mPosts in Main Forum\x1b[0m");
+            Console.WriteLine("                                                 \x1b[1mPosts in Main Forum\x1b[0m");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("|................................................................................................................................|");
             var i = 1;
             foreach (var post in PostRepository.GetMany()) {
                 if (post.ParentForum_id == -1) {
-                    Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                    Console.WriteLine($" {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
                     postExists = true;
                     i++;
                 }
             }
         } else if (CurrentParentForum == null) {
             Console.WriteLine($"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, -1).Result.Title_txt}'\x1b[0m ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("|................................................................................................................................|");
             var i = 1;
             foreach (var post in PostRepository.GetMany()) {
                 if (post.ParentForum_id == CurrentForum?.Forum_id) {
-                    Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                    Console.WriteLine($" {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
                     postExists = true;
                     i++;
                 }
             }
         } else {
             Console.WriteLine($"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}'\x1b[0m ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("|................................................................................................................................|");
             var i = 1;
             foreach (var post in PostRepository.GetMany()) {
                 if (post.ParentForum_id == CurrentForum?.Forum_id) {
-                    Console.WriteLine($"| {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                    Console.WriteLine($" {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
                     postExists = true;
                     i++;
                 }
@@ -194,18 +208,22 @@ public class CliApp {
         if (!postExists)
             Console.WriteLine("| !!! No posts found !!!");
         Console.WriteLine("|================================================================================================================================|");
+        Console.ResetColor();
     }
 
 
     private async void DisplayCommentsAsync() {
         bool commentsExists = false;
+        Console.ForegroundColor = ConsoleColor.Cyan;
         
         // Display Post Details
         Post detailsDisplayed = await new ViewSinglePost().Display(CurrentPost.Post_id, CurrentPost.ParentForum_id, PostRepository, UserRepository, UserProfileRepository);
         
         // Display Corresponding Comments:
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         if (CurrentForum == null) {
             Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, -1).Result.Title_txt}\x1b[0m");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("|................................................................................................................................|");
             var i = 1;
             foreach (var comment in CommentRepository.GetMany()) {
@@ -217,7 +235,7 @@ public class CliApp {
                 }
             }
         } else {
-            Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, CurrentForum.Forum_id).Result.Title_txt}\x1b[0m");
+            Console.WriteLine($"                        \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, CurrentForum.Forum_id).Result.Title_txt}\x1b[0m");
             Console.WriteLine("|................................................................................................................................|");
             var i = 1;
             foreach (var comment in CommentRepository.GetMany()) {

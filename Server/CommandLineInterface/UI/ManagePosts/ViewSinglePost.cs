@@ -45,6 +45,7 @@ public class ViewSinglePost {
             title = title.Insert(i, "\n| ");
         }
         Console.WriteLine($"[P{Post.Post_id}]: \x1b[1mTitle: {title}\x1b[0m");
+        Console.ForegroundColor = ConsoleColor.Cyan;
         return true;
     }
 
