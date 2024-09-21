@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryRepositories", "Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineInterface", "Server\CommandLineInterface\CommandLineInterface.csproj", "{57400059-C988-4650-92F8-AC0EA4BFB89D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileRepositories", "Server\FileRepositories\FileRepositories.csproj", "{DA6DB04E-ABC0-46C8-BCFC-0DA39B2B7C7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,7 @@ Global
 		{DF04B36F-F561-4598-B1B0-9F7257E7E07C} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
 		{656D512C-44AA-4BE7-B232-749FA1B998DD} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
 		{57400059-C988-4650-92F8-AC0EA4BFB89D} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
+		{DA6DB04E-ABC0-46C8-BCFC-0DA39B2B7C7B} = {BA60752D-7E33-4AF8-9932-79B50EF079BD}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F7F8EEDB-EFAC-498E-ABEF-C151F6D91A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -38,5 +41,9 @@ Global
 		{57400059-C988-4650-92F8-AC0EA4BFB89D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57400059-C988-4650-92F8-AC0EA4BFB89D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57400059-C988-4650-92F8-AC0EA4BFB89D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA6DB04E-ABC0-46C8-BCFC-0DA39B2B7C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA6DB04E-ABC0-46C8-BCFC-0DA39B2B7C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA6DB04E-ABC0-46C8-BCFC-0DA39B2B7C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA6DB04E-ABC0-46C8-BCFC-0DA39B2B7C7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

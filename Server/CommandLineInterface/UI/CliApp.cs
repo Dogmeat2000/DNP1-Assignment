@@ -10,14 +10,14 @@ namespace ConsoleApp1.UI;
 
 public class CliApp {
     
-    public ICommentRepository CommentRepository { get; set; }
-    public IForumRepository ForumRepository { get; set; }
-    public IPostRepository PostRepository { get; set; }
-    public IUserRepository UserRepository { get; set; }
-    public IUserProfileRepository UserProfileRepository { get; set; }
+    private ICommentRepository CommentRepository { get; set; }
+    private IForumRepository ForumRepository { get; set; }
+    private IPostRepository PostRepository { get; set; }
+    private IUserRepository UserRepository { get; set; }
+    private IUserProfileRepository UserProfileRepository { get; set; }
     private User? LocalUser { get; set; }
     private string ErrorMessage { get; set; }
-    private Boolean InvalidEntry  { get; set; }
+    private bool InvalidEntry  { get; set; }
     private string LastCmd { get; set; }
     private Post? CurrentPost { get; set; }
     private Forum? CurrentForum { get; set; }
