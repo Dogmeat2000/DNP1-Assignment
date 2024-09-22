@@ -74,7 +74,7 @@ public class CliApp {
             }
                 
             // Read userInput, and pick a corresponding command
-            runApp = EvaluateCommand(await new UserInput().ReadUserInputAsync_Main() ?? "INVALID COMMAND").Result;
+            runApp = EvaluateCommand(await new UserInput().ReadUserInputAsync("\nCmd: ") ?? "INVALID COMMAND").Result;
         }
     }
 

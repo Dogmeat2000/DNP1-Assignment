@@ -52,7 +52,7 @@ public class CreateUser {
     private async Task<bool> SelectPassword() {
         while (string.IsNullOrEmpty(Password)) {
             Console.Write("Please enter a Password: ");
-            var password = await new UserInput().ReadUserInputAsync_Alt1() ?? "";
+            var password = await new UserInput().ReadUserInputAsync("") ?? "";
 
             if (password.ToLower() == "abort")
                 return false;
@@ -66,7 +66,7 @@ public class CreateUser {
     private async Task<bool> SelectUserNameAsync() {
         while (string.IsNullOrEmpty(UserName)) {
             Console.Write("Please enter a Username: ");
-            var username = await new UserInput().ReadUserInputAsync_Alt1() ?? "";
+            var username = await new UserInput().ReadUserInputAsync("") ?? "";
 
             if (username.ToLower() == "abort")
                 return false;

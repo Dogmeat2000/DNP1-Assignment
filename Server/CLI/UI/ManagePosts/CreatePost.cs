@@ -11,12 +11,12 @@ public class CreatePost {
         Console.WriteLine(": Creating Post... Type 'abort' at any step to abort...");
         
         Console.Write("\nPlease enter a title: ");
-        string title =  await new UserInput().ReadUserInputAsync_Alt1() ?? "UNSPECIFIED TITLE";
+        string title =  await new UserInput().ReadUserInputAsync("") ?? "UNSPECIFIED TITLE";
         if(CheckForAbort(title))
             return null;
         
         Console.Write("\nPlease enter body text: ");
-        string body = await new UserInput().ReadUserInputAsync_Alt1() ?? "UNSPECIFIED TITLE";
+        string body = await new UserInput().ReadUserInputAsync("") ?? "UNSPECIFIED TITLE";
         if(CheckForAbort(title))
             return null;
         

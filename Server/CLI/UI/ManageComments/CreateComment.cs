@@ -10,7 +10,7 @@ public class CreateComment {
         Console.WriteLine(": Creating Comment... Type 'abort' at any step to abort...");
 
         Console.Write("\nPlease enter comment text: ");
-        string body = await new UserInput().ReadUserInputAsync_Alt1() ?? "UNSPECIFIED BODY";
+        string body = await new UserInput().ReadUserInputAsync("") ?? "UNSPECIFIED BODY";
         if(CheckForAbort(body))
             return null;
         

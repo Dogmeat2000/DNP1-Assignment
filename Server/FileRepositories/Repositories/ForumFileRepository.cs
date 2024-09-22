@@ -9,6 +9,7 @@ public class ForumFileRepository : IForumRepository {
     private IFilePersistance FileManager { get; } = new FilePersistance();
     private List<Forum> ForumList { get; set; } = [];
 
+    
     public async Task<Forum> AddAsync(Forum forum) {
                 
         // Load raw data from file:
@@ -20,10 +21,15 @@ public class ForumFileRepository : IForumRepository {
             // Cast the loaded data to the proper load format:
             ForumList = rawData.OfType<Forum>().ToList();
             
-            // Add the new Forum to the list of Forums:
+            // Select a unique id for this Forum instance:
             forum.Forum_id = ForumList.Any() 
                 ? ForumList.Max(f => f.Forum_id) + 1 
                 : 1;
+            
+            // Assign a time of creation:
+            forum.Timestamp_created = DateTime.Now;
+            
+            // Add the Forum to the List:
             ForumList.Add(forum);
             
             // Cast the modified data back to the proper save format, and attempt to save:
@@ -40,6 +46,7 @@ public class ForumFileRepository : IForumRepository {
         return forum;
     }
 
+    
     public async Task UpdateAsync(Forum forum) {
                 
         // Load raw data from file:
@@ -57,13 +64,20 @@ public class ForumFileRepository : IForumRepository {
                 throw new InvalidOperationException($"Forum with ID '{forum.Forum_id}' not found");
             }
             
-            // If it does exist, Remove it from the list of Forums, and then add the modified one:
+            // If it does exist, Remove it from the list of Forums:
             ForumList.Remove(existingForum);
+            
+            // Assign/Update the modified date:
+            existingForum.Timestamp_modified = DateTime.Now;
+            
+            // Add the modified Forum to the list:
             ForumList.Add(existingForum);
             
             // Cast the modified data back to the proper save format, and attempt to save:
             if (await FileManager.SaveToJsonFileAsync(_filePath, ForumList.Cast<object>().ToList())) {
                 Console.WriteLine($": Modified Forum with ID '{forum.Forum_id}'");
+                
+                // TODO Update underlying Posts and Comments also! -> Should happen in business UI Logic, instead of here!
             } else {
                 Console.WriteLine($": ERROR DID NOT Modify Forum with ID '{forum.Forum_id}'");
             }
@@ -73,6 +87,7 @@ public class ForumFileRepository : IForumRepository {
         }
     }
 
+    
     public async Task DeleteAsync(int forumId, int parentForumId) {
                 
         // Load raw data from file:
@@ -96,15 +111,17 @@ public class ForumFileRepository : IForumRepository {
             // Cast the modified data back to the proper save format, and attempt to save:
             if (await FileManager.SaveToJsonFileAsync(_filePath, ForumList.Cast<object>().ToList())) {
                 Console.WriteLine($": DELETED Forum with ID '{forumToRemove.Forum_id}'");
+                // TODO: Delete all underlying Posts and Comments also!
             } else {
                 Console.WriteLine($": ERROR DID NOT Delete Forum with ID '{forumToRemove.Forum_id}'");
             }
 
         } else {
-            throw new Exception("Error occured while updating comment. Data failed to load.");
+            throw new Exception("Error occured while deleting Forum. Data failed to load.");
         }
     }
 
+    
     public async Task<Forum> GetSingleAsync(int forumId, int parentForumId) {
                         
         // Load raw data from file:
@@ -128,6 +145,7 @@ public class ForumFileRepository : IForumRepository {
         throw new Exception("Error occured while retrieving a single Forum. Data failed to load.");
     }
 
+    
     public IQueryable<Forum> GetMany() {
         // Load raw data from file:
         List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new Forum()).Result;

@@ -2,23 +2,12 @@
 
 public class UserInput {
 
-    public async Task<string?> ReadUserInputAsync_Main() {
+    /** Pass, as an argument, the desired string to display to the user on the same line user input is taken from, in the console. */
+    public async Task<string?> ReadUserInputAsync(string visCmd) {
         var inputReceived = false;
         string? userInput = null;
         while (!inputReceived) {
             Console.Write("\nCmd: ");
-            userInput = Console.ReadLine();
-
-            if (userInput != null)
-                inputReceived = true;
-        }
-        return userInput;
-    }
-    
-    public async Task<string?> ReadUserInputAsync_Alt1() {
-        var inputReceived = false;
-        string? userInput = null;
-        while (!inputReceived) {
             userInput = Console.ReadLine();
 
             if (userInput != null)

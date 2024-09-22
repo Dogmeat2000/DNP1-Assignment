@@ -15,16 +15,18 @@ class Program {
         Console.Write("Initializing 'InMemoryRepositories'...");
         
         // Old InMemoryRepositories commented out and replaced by FileRepositories:
-        //ICommentRepository commentManager = new CommentInMemoryRepository();
-        //IForumRepository forumManager = new ForumInMemoryRepository();
+        /*ICommentRepository commentManager = new CommentInMemoryRepository();
+        IForumRepository forumManager = new ForumInMemoryRepository();
         IPostRepository postManager = new PostInMemoryRepository();
-        IUserRepository userManager = new UserInMemoryRepository();
+        IUserRepository userManager = new UserInMemoryRepository();*/
         IUserProfileRepository userProfileManager = new UserProfileInMemoryRepository();
         Console.WriteLine(" DONE!");
         
         // Current FileRepositories:
         ICommentRepository commentManager = new CommentFileRepository();
         IForumRepository forumManager = new ForumFileRepository();
+        IPostRepository postManager = new PostFileRepository();
+        IUserRepository userManager = new UserFileRepository();
         
         // Test if data exists in repos
         Console.WriteLine("\nChecking data integrity...");

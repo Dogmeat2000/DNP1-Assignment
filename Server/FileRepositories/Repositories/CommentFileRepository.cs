@@ -22,10 +22,15 @@ public class CommentFileRepository : ICommentRepository {
             // Cast the loaded data to the proper load format:
             CommentList = rawData.OfType<Comment>().ToList();
             
-            // Add the new comment to the list of Comments:
+            // Select a unique id for this Comment instance:
             comment.Comment_id = CommentList.Any() 
                 ? CommentList.Max(c => c.Comment_id) + 1 
                 : 1;
+            
+            // Assign a time of creation:
+            comment.Timestamp_created = DateTime.Now;
+            
+            // Add the new comment to the list of Comments:
             CommentList.Add(comment);
             
             // Cast the modified data back to the proper save format, and attempt to save:
@@ -60,8 +65,13 @@ public class CommentFileRepository : ICommentRepository {
                 throw new InvalidOperationException($"Comment with ID '{comment.Comment_id}' in Post '{comment.ParentPost_id}' in Forum '{comment.ParentForum_id}' not found");
             }
             
-            // If it does exist, Remove it from the list of Comments, and then add the modified one:
+            // If it does exist, Remove it from the list of Comments:
             CommentList.Remove(existingComment);
+            
+            // Assign/Update the modified date:
+            existingComment.Timestamp_modified = DateTime.Now;
+            
+            // Add the modified Comment to the list:
             CommentList.Add(comment);
             
             // Cast the modified data back to the proper save format, and attempt to save:
@@ -105,7 +115,7 @@ public class CommentFileRepository : ICommentRepository {
             }
 
         } else {
-            throw new Exception("Error occured while updating comment. Data failed to load.");
+            throw new Exception("Error occured while deleting comment. Data failed to load.");
         }
     }
 
