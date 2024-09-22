@@ -147,6 +147,6 @@ public class CommentFileRepository : ICommentRepository {
             // Return the entire list:
             return CommentList.AsQueryable();
         } 
-        throw new Exception("Error occured while retrieving a single comment. Data failed to load.");
+        throw new Exception("Error occured while retrieving all comments. Data failed to load.");
     }
 }

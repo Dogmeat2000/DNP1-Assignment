@@ -111,12 +111,8 @@ public class FilePersistance : IFilePersistance {
         var retryCount = 0;
 
         while (retryCount < maxNumberOfRetries) {
-            //Check that we are inside the proper folder:
-            /*if (GetPathFromSpecificDirectory("Server", filePath) != null)
-                filePath = (GetPathFromSpecificDirectory("Server", filePath) ?? filePath) + @"\DataFiles\comments.json";*/
-            
             // Attempt to create an empty file:
-            File.WriteAllText(filePath, "[]"); //Empty list is JSON formatting!
+            File.WriteAllText(filePath, "[]"); //Empty list in JSON formatting!
         
             // Check that file was created:
             if (CheckFileExists(filePath)) 
