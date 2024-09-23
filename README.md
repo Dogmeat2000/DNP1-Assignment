@@ -2,6 +2,10 @@
 
 Run the application, by selected "program.cs" inside the CommandLineInterface project and running that! Currently only a very basic implementation!
 
+## Currently Only accessable through a Command Line Interface:
+
+![(IMPLEMENTED)](Images/Screenshot_CLI_V3.png)
+
 # Mandatory feature description
 We need a User, having at least username, and a password. It needs an Id of type int. We need a Post. It is written by a User. It contains a Title and a Body. It also needs an Id, of type int. A User can also write a Comment on a Post. A Comment just contains a Body, and an Id of type int.
 All entities must have an Id of type int. The way we create relationships between the Entities is described in detail further below. In short, we use foreign keys, rather than associations.
