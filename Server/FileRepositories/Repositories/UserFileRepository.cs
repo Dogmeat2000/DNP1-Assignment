@@ -8,12 +8,17 @@ public class UserFileRepository : IUserRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\users.json";
     private IFilePersistance FileManager { get; } = new FilePersistance();
     private List<User> UserList { get; set; } = [];
+    public string ErrorAddFailed { get; } = "Error occured while adding User. Data failed to load.";
+    public string ErrorUpdateFailed { get; } = "Error occured while updating User. Data failed to load.";
+    public string ErrorDeleteFailed { get; } = "Error occured while deleting User. Data failed to load.";
+    public string ErrorGetSingleFailed { get; } = "Error occured while retrieving a single User. Data failed to load.";
+    public string ErrorGetManyFailed { get; } = "Error occured while retrieving all User. Data failed to load.";
 
     
     public async Task<User> AddAsync(User user) {
                         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User(-1));
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User());
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -21,12 +26,12 @@ public class UserFileRepository : IUserRepository {
             // Cast the loaded data to the proper load format:
             UserList = rawData.OfType<User>().ToList();
             
-            // Identify a unique post_id to assign to this Post.
+            // Identify a unique User_id to assign to this User.
             user.User_id = UserList.Any() 
                 ? UserList.Max(u => u.User_id) + 1 
                 : 1;
             
-            // Add the new Post to the list of Posts:
+            // Add the new User to the list of Users:
             UserList.Add(user);
             
             // Cast the modified data back to the proper save format, and attempt to save:
@@ -37,7 +42,7 @@ public class UserFileRepository : IUserRepository {
             }
 
         } else {
-            throw new Exception("Error occured while adding User. Data failed to load.");
+            throw new Exception(ErrorAddFailed);
         }
         
         return user;
@@ -47,7 +52,7 @@ public class UserFileRepository : IUserRepository {
     public async Task UpdateAsync(User user) {
                         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User(-1));
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User());
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -58,14 +63,14 @@ public class UserFileRepository : IUserRepository {
             // Check if the Post to modify actually exists:
             User? existingUser = UserList.SingleOrDefault(u => u.User_id == user.User_id);
             if (existingUser is null) {
-                throw new InvalidOperationException($"Post with ID '{user.User_id}'");
+                throw new InvalidOperationException($"Post with ID '{user.User_id}' not found");
             }
             
             // If it does exist, Remove it from the list of Comments:
             UserList.Remove(existingUser);
             
             // Add the modified Post to the List
-            UserList.Add(existingUser);
+            UserList.Add(user);
             
             // Cast the modified data back to the proper save format, and attempt to save:
             if (await FileManager.SaveToJsonFileAsync(_filePath, UserList.Cast<object>().ToList())) {
@@ -75,7 +80,7 @@ public class UserFileRepository : IUserRepository {
                 Console.WriteLine($": ERROR DID NOT Modify User with ID '{user.User_id}'");
             }
         } else {
-            throw new Exception("Error occured while updating comment. Data failed to load.");
+            throw new Exception(ErrorUpdateFailed);
         }
     }
 
@@ -83,7 +88,7 @@ public class UserFileRepository : IUserRepository {
     public async Task DeleteAsync(int userId) {
                         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User(-1));
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User());
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -91,13 +96,13 @@ public class UserFileRepository : IUserRepository {
             // Cast the loaded data to the proper load format:
             UserList = rawData.OfType<User>().ToList();
             
-            // Check if the comment to remove actually exists:
+            // Check if the User to remove actually exists:
             User? userToRemove = UserList.SingleOrDefault(u => u.User_id == userId);
             if (userToRemove is null) {
                 throw new InvalidOperationException($"User with ID '{userId}' not found");
             }
             
-            // If it does exist, Remove it from the list of Comments:
+            // If it does exist, Remove it from the list of Users:
             UserList.Remove(userToRemove);
             
             // Cast the modified data back to the proper save format, and attempt to save:
@@ -107,9 +112,8 @@ public class UserFileRepository : IUserRepository {
             } else {
                 Console.WriteLine($": ERROR DID NOT Delete User with ID '{userId}'");
             }
-
         } else {
-            throw new Exception("Error occured while deleting User. Data failed to load.");
+            throw new Exception(ErrorDeleteFailed);
         }
     }
 
@@ -117,7 +121,7 @@ public class UserFileRepository : IUserRepository {
     public async Task<User> GetSingleAsync(int userId) {
                                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User(-1));
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new User());
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -125,7 +129,7 @@ public class UserFileRepository : IUserRepository {
             // Cast the loaded data to the proper load format:
             UserList = rawData.OfType<User>().ToList();
             
-            // Check if the comment actually exists:
+            // Check if the User actually exists:
             User? userToReturn = UserList.SingleOrDefault(u => u.User_id == userId);
             if (userToReturn is null) {
                 throw new InvalidOperationException($"User with ID '{userId}' not found");
@@ -134,13 +138,13 @@ public class UserFileRepository : IUserRepository {
             // If it does exist, return it:
             return userToReturn;
         } 
-        throw new Exception("Error occured while retrieving a single User. Data failed to load.");
+        throw new Exception(ErrorGetSingleFailed);
     }
 
     
     public IQueryable<User> GetMany() {
         // Load raw data from file:
-        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new User(-1)).Result;
+        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new User()).Result;
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -151,6 +155,6 @@ public class UserFileRepository : IUserRepository {
             // Return the entire list:
             return UserList.AsQueryable();
         } 
-        throw new Exception("Error occured while retrieving all Users. Data failed to load.");
+        throw new Exception(ErrorGetManyFailed);
     }
 }

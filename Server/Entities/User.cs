@@ -7,4 +7,8 @@ public class User
     public User(int user_id) {
         User_id = user_id;
     }
+    
+    public User() {
+        User_id = -1;
+    }
 }

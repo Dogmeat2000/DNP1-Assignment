@@ -14,6 +14,5 @@ public class Post
     public Post() {
         Title_txt = "";
         Body_txt = "";
-        //TODO
     }
 }

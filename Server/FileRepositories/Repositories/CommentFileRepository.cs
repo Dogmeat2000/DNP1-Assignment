@@ -9,6 +9,11 @@ public class CommentFileRepository : ICommentRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\comments.json";
     private IFilePersistance FileManager { get; } = new FilePersistance();
     private List<Comment> CommentList { get; set; } = [];
+    public string ErrorAddFailed { get; } = "Error occured while adding Comment. Data failed to load.";
+    public string ErrorUpdateFailed { get; } = "Error occured while updating Comment. Data failed to load.";
+    public string ErrorDeleteFailed { get; } = "Error occured while deleting Comment. Data failed to load.";
+    public string ErrorGetSingleFailed { get; } = "Error occured while retrieving a single Comment. Data failed to load.";
+    public string ErrorGetManyFailed { get; } = "Error occured while retrieving all Comments. Data failed to load.";
 
 
     public async Task<Comment> AddAsync(Comment comment) {
@@ -41,7 +46,7 @@ public class CommentFileRepository : ICommentRepository {
             }
 
         } else {
-            throw new Exception("Error occured while adding comment. Data failed to load.");
+            throw new Exception(ErrorAddFailed);
         }
         
         return comment;
@@ -69,7 +74,7 @@ public class CommentFileRepository : ICommentRepository {
             CommentList.Remove(existingComment);
             
             // Assign/Update the modified date:
-            existingComment.Timestamp_modified = DateTime.Now;
+            comment.Timestamp_modified = DateTime.Now;
             
             // Add the modified Comment to the list:
             CommentList.Add(comment);
@@ -80,9 +85,8 @@ public class CommentFileRepository : ICommentRepository {
             } else {
                 Console.WriteLine($": ERROR DID NOT Modify comment with ID '{comment.Comment_id}' in Post '{comment.ParentPost_id}' in Forum '{comment.ParentForum_id}'");
             }
-
         } else {
-            throw new Exception("Error occured while updating comment. Data failed to load.");
+            throw new Exception(ErrorUpdateFailed);
         }
     }
 
@@ -115,10 +119,10 @@ public class CommentFileRepository : ICommentRepository {
             }
 
         } else {
-            throw new Exception("Error occured while deleting comment. Data failed to load.");
+            throw new Exception(ErrorDeleteFailed);
         }
     }
-
+    
     
     public async Task<Comment> GetSingleAsync(int commentId, int postId, int forumId) {
                 
@@ -140,7 +144,7 @@ public class CommentFileRepository : ICommentRepository {
             // If it does exist, return it:
             return commentToReturn;
         } 
-        throw new Exception("Error occured while retrieving a single comment. Data failed to load.");
+        throw new Exception(ErrorGetSingleFailed);
     }
 
     
@@ -157,6 +161,6 @@ public class CommentFileRepository : ICommentRepository {
             // Return the entire list:
             return CommentList.AsQueryable();
         } 
-        throw new Exception("Error occured while retrieving all comments. Data failed to load.");
+        throw new Exception(ErrorGetManyFailed);
     }
 }

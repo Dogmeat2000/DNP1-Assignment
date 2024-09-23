@@ -15,6 +15,5 @@ public class Forum
 
     public Forum() {
         Title_txt = "";
-        //TODO
     }
 }

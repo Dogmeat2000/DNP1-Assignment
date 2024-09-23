@@ -13,4 +13,11 @@ public class UserProfile
         Profile_id = profile_id;
         User_id = user_id;
     }
+
+    public UserProfile() {
+        Username = "";
+        Password = "";
+        Profile_id = -1;
+        User_id = -1;
+    }
 }

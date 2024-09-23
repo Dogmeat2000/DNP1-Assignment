@@ -8,6 +8,11 @@ public class PostFileRepository : IPostRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\posts.json";
     private IFilePersistance FileManager { get; } = new FilePersistance();
     private List<Post> PostList { get; set; } = [];
+    public string ErrorAddFailed { get; } = "Error occured while adding Post. Data failed to load.";
+    public string ErrorUpdateFailed { get; } = "Error occured while updating Post. Data failed to load.";
+    public string ErrorDeleteFailed { get; } = "Error occured while deleting Post. Data failed to load.";
+    public string ErrorGetSingleFailed { get; } = "Error occured while retrieving a single Post. Data failed to load.";
+    public string ErrorGetManyFailed { get; } = "Error occured while retrieving all Posts. Data failed to load.";
 
     
     public async Task<Post> AddAsync(Post post) {
@@ -40,7 +45,7 @@ public class PostFileRepository : IPostRepository {
             }
 
         } else {
-            throw new Exception("Error occured while adding Post. Data failed to load.");
+            throw new Exception(ErrorAddFailed);
         }
         
         return post;
@@ -68,10 +73,10 @@ public class PostFileRepository : IPostRepository {
             PostList.Remove(existingPost);
             
             // Assign/Update the modified date:
-            existingPost.Timestamp_modified = DateTime.Now;
+            post.Timestamp_modified = DateTime.Now;
             
             // Add the modified Post to the List
-            PostList.Add(existingPost);
+            PostList.Add(post);
             
             // Cast the modified data back to the proper save format, and attempt to save:
             if (await FileManager.SaveToJsonFileAsync(_filePath, PostList.Cast<object>().ToList())) {
@@ -81,7 +86,7 @@ public class PostFileRepository : IPostRepository {
                 Console.WriteLine($": ERROR DID NOT Modify Post with ID '{post.Post_id}' in Forum '{post.ParentForum_id}'");
             }
         } else {
-            throw new Exception("Error occured while updating comment. Data failed to load.");
+            throw new Exception(ErrorUpdateFailed);
         }
     }
 
@@ -97,13 +102,13 @@ public class PostFileRepository : IPostRepository {
             // Cast the loaded data to the proper load format:
             PostList = rawData.OfType<Post>().ToList();
             
-            // Check if the comment to remove actually exists:
+            // Check if the Post to remove actually exists:
             Post? postToRemove = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
             if (postToRemove is null) {
                 throw new InvalidOperationException($"Post with ID '{postId}' in Forum '{parentForumId}' not found");
             }
             
-            // If it does exist, Remove it from the list of Comments:
+            // If it does exist, Remove it from the list of Posts:
             PostList.Remove(postToRemove);
             
             // Cast the modified data back to the proper save format, and attempt to save:
@@ -113,9 +118,8 @@ public class PostFileRepository : IPostRepository {
             } else {
                 Console.WriteLine($": ERROR DID NOT Delete Post with ID '{postToRemove.Post_id}' in Forum '{postToRemove.ParentForum_id}'");
             }
-
         } else {
-            throw new Exception("Error occured while deleting Post. Data failed to load.");
+            throw new Exception(ErrorDeleteFailed);
         }
     }
 
@@ -131,7 +135,7 @@ public class PostFileRepository : IPostRepository {
             // Cast the loaded data to the proper load format:
             PostList = rawData.OfType<Post>().ToList();
             
-            // Check if the comment actually exists:
+            // Check if the Post actually exists:
             Post? postToReturn = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == postId);
             if (postToReturn is null) {
                 throw new InvalidOperationException($"Post with ID '{postId}' Forum '{parentForumId}' not found");
@@ -140,7 +144,7 @@ public class PostFileRepository : IPostRepository {
             // If it does exist, return it:
             return postToReturn;
         } 
-        throw new Exception("Error occured while retrieving a single Post. Data failed to load.");
+        throw new Exception(ErrorGetSingleFailed);
     }
 
     
@@ -157,6 +161,6 @@ public class PostFileRepository : IPostRepository {
             // Return the entire list:
             return PostList.AsQueryable();
         } 
-        throw new Exception("Error occured while retrieving all Posts. Data failed to load.");
+        throw new Exception(ErrorGetManyFailed);
     }
 }

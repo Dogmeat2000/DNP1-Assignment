@@ -13,7 +13,5 @@ public class Comment
 
     public Comment() {
         Body_txt = "";
-        
-        //TODO
     }
 }

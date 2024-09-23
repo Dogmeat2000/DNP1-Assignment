@@ -8,6 +8,11 @@ public class ForumFileRepository : IForumRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\forums.json";
     private IFilePersistance FileManager { get; } = new FilePersistance();
     private List<Forum> ForumList { get; set; } = [];
+    public string ErrorAddFailed { get; } = "Error occured while adding Forum. Data failed to load.";
+    public string ErrorUpdateFailed { get; } = "Error occured while updating Forum. Data failed to load.";
+    public string ErrorDeleteFailed { get; } = "Error occured while deleting Forum. Data failed to load.";
+    public string ErrorGetSingleFailed { get; } = "Error occured while retrieving a single Forum. Data failed to load.";
+    public string ErrorGetManyFailed { get; } = "Error occured while retrieving all Forums. Data failed to load.";
 
     
     public async Task<Forum> AddAsync(Forum forum) {
@@ -40,7 +45,7 @@ public class ForumFileRepository : IForumRepository {
             }
 
         } else {
-            throw new Exception("Error occured while adding Forum. Data failed to load.");
+            throw new Exception(ErrorAddFailed);
         }
         
         return forum;
@@ -68,10 +73,10 @@ public class ForumFileRepository : IForumRepository {
             ForumList.Remove(existingForum);
             
             // Assign/Update the modified date:
-            existingForum.Timestamp_modified = DateTime.Now;
+            forum.Timestamp_modified = DateTime.Now;
             
             // Add the modified Forum to the list:
-            ForumList.Add(existingForum);
+            ForumList.Add(forum);
             
             // Cast the modified data back to the proper save format, and attempt to save:
             if (await FileManager.SaveToJsonFileAsync(_filePath, ForumList.Cast<object>().ToList())) {
@@ -83,7 +88,7 @@ public class ForumFileRepository : IForumRepository {
             }
 
         } else {
-            throw new Exception("Error occured while updating comment. Data failed to load.");
+            throw new Exception(ErrorUpdateFailed);
         }
     }
 
@@ -105,7 +110,7 @@ public class ForumFileRepository : IForumRepository {
                 throw new InvalidOperationException($"Forum with ID '{forumId}' not found");
             }
             
-            // If it does exist, Remove it from the list of Comments:
+            // If it does exist, Remove it from the list of Forums:
             ForumList.Remove(forumToRemove);
             
             // Cast the modified data back to the proper save format, and attempt to save:
@@ -115,9 +120,8 @@ public class ForumFileRepository : IForumRepository {
             } else {
                 Console.WriteLine($": ERROR DID NOT Delete Forum with ID '{forumToRemove.Forum_id}'");
             }
-
         } else {
-            throw new Exception("Error occured while deleting Forum. Data failed to load.");
+            throw new Exception(ErrorDeleteFailed);
         }
     }
 
@@ -133,7 +137,7 @@ public class ForumFileRepository : IForumRepository {
             // Cast the loaded data to the proper load format:
             ForumList = rawData.OfType<Forum>().ToList();
             
-            // Check if the comment actually exists:
+            // Check if the Forum actually exists:
             Forum? forumToReturn = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
             if (forumToReturn is null) {
                 throw new InvalidOperationException($"Forum with ID '{forumId}' not found");
@@ -142,7 +146,7 @@ public class ForumFileRepository : IForumRepository {
             // If it does exist, return it:
             return forumToReturn;
         } 
-        throw new Exception("Error occured while retrieving a single Forum. Data failed to load.");
+        throw new Exception(ErrorGetSingleFailed);
     }
 
     
@@ -159,6 +163,6 @@ public class ForumFileRepository : IForumRepository {
             // Return the entire list:
             return ForumList.AsQueryable();
         } 
-        throw new Exception("Error occured while retrieving all Forums. Data failed to load.");
+        throw new Exception(ErrorGetManyFailed);
     }
 }

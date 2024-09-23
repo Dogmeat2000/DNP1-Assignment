@@ -16,28 +16,22 @@ public class CliApp {
     private IUserRepository UserRepository { get; set; }
     private IUserProfileRepository UserProfileRepository { get; set; }
     private User? LocalUser { get; set; }
-    private string ErrorMessage { get; set; }
+    private string ErrorMessage { get; }
     private bool InvalidEntry  { get; set; }
     private string LastCmd { get; set; }
-    private Post? CurrentPost { get; set; }
-    private Forum? CurrentForum { get; set; }
-    private Forum? CurrentParentForum { get; set; }
-    private Forum? ParentsParentForum { get; set; }
+    private NavigationManager NavHelper { get; } = new ();
+    private CLISettings Settings { get; } = new ();
 
     
     public CliApp(ICommentRepository commentRepository, IForumRepository forumRepository, IPostRepository postRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository) {
-        this.CommentRepository = commentRepository;
-        this.ForumRepository = forumRepository;
-        this.PostRepository = postRepository;
-        this.UserRepository = userRepository;
-        this.UserProfileRepository = userProfileRepository;
-        this.LocalUser = null;
+        CommentRepository = commentRepository;
+        ForumRepository = forumRepository;
+        PostRepository = postRepository;
+        UserRepository = userRepository;
+        UserProfileRepository = userProfileRepository;
+        LocalUser = null;
         ErrorMessage = ": ERROR: Please enter a valid command...!";
         InvalidEntry = false;
-        CurrentPost = null;
-        CurrentForum = null;
-        CurrentParentForum = null;
-        ParentsParentForum = null;
         LastCmd = "";
     }
 
@@ -53,15 +47,14 @@ public class CliApp {
             ShowMainMenuText();
             
             // Display relevant forums & posts:
-            if (CurrentPost == null) {
+            if (NavHelper.CurrentPost == null) {
                 // Display forum and posts, if no post is currently active
                 DisplayForums();
                 DisplayPosts();
             } else {
-                // Display comments, if a post was previously selected
+                // Display comments, if a Post is active
                 DisplayCommentsAsync();
             }
-            Console.ResetColor();
             
             // Display last user action
             if(LastCmd.Length > 0)
@@ -81,17 +74,16 @@ public class CliApp {
     
     private void ShowMainMenuText() {
         var userName = "Anonymous";
-        Console.ForegroundColor = ConsoleColor.DarkRed;
+        Console.ForegroundColor = Settings.UserTextColor;
         if(LocalUser != null) {
             userName = "Anonymous"; //TODO Get the users name here!
             Console.WriteLine($"\n\n\nLogged in as: {userName}");
         } else {
             Console.WriteLine($"\n\n\nViewing as: {userName}");
         }
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
-        Console.WriteLine("                                                             \x1b[1mMain Menu:\x1b[0m                                                           ");
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = Settings.MainMenuTextColor;
+        Console.WriteLine("\n    \x1b[1mMain Menu:\x1b[0m                                                           ");
+        Console.ForegroundColor = Settings.MainMenuTextColor;
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
         
         // Display operations only available for anonymous users
@@ -105,14 +97,17 @@ public class CliApp {
             Console.WriteLine("| Type 'login' to : Login to your account                                                                                        |");
             Console.WriteLine("| Type 'create' to: Create a User Account                                                                                        |");
         }
-        if(CurrentPost == null) 
+        if(NavHelper.CurrentPost == null && LocalUser != null)
+            Console.WriteLine("| Type 'forum' to: Create a new Forum at this location                                                                           |");
+
+        if (NavHelper.CurrentPost == null) {
             Console.WriteLine("| Type 'post'  to: Create a new post inside the currently active Forum                                                           |");
-        else
-            Console.WriteLine("| Type 'comment '  to: Create a new comment inside the currently active Post                                                     |");
-        if (CurrentPost == null)
             Console.WriteLine("| Type 'cd ' + 'identifier' next to forum or post names in order to view them. Ex: 'cd F0' to view/enter Forum 1                 |");
+        } else
+            Console.WriteLine("| Type 'comment '  to: Create a new comment inside the currently active Post                                                     |");
+        
         Console.WriteLine("| Type 'exit' to  : Terminate this application                                                                                   |");
-        if (CurrentForum != null || CurrentPost != null)
+        if (NavHelper.CurrentForum != null || NavHelper.CurrentPost != null)
             Console.WriteLine("| Type 'return' to: Return to previous view                                                                                      |"); 
         Console.WriteLine("|--------------------------------------------------------------------------------------------------------------------------------|");
         Console.ResetColor();
@@ -120,92 +115,57 @@ public class CliApp {
 
     
     private void DisplayForums() {
-        Console.ForegroundColor = ConsoleColor.Blue;
-        if (CurrentParentForum == null && CurrentForum == null) {
-            Console.WriteLine("                                                             \x1b[1mForums:\x1b[0m");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("|================================================================================================================================|");
-            
-            var i = 1;
-            foreach (var forum in ForumRepository.GetMany()) {
-                if (forum.ParentForum_id == -1) {
-                    Console.WriteLine($" {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
-                    i++;
-                }
-            }   
-        } else if (CurrentForum != null && CurrentParentForum == null) {
-            Console.WriteLine($"                                                             \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, -1).Result.Title_txt}");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("|================================================================================================================================|");
-            
-            var i = 1;
-            foreach (var forum in ForumRepository.GetMany()) {
-                if (forum.ParentForum_id == CurrentForum.Forum_id) {
-                    Console.WriteLine($" {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
-                    i++;
-                }
-            }   
+        Console.ForegroundColor = Settings.ForumTextColor;
+        if (NavHelper.CurrentParentForum == null && NavHelper.CurrentForum == null) {
+            Console.WriteLine("    \x1b[1mGlobal Forums:\x1b[0m");
+            Console.ForegroundColor = Settings.ForumTextColor;
         } else {
-            Console.WriteLine($"                                                             \x1b[1mForum:\x1b[0m {ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("|================================================================================================================================|");
-            
-            var i = 1;
-            foreach (var forum in ForumRepository.GetMany()) {
-                if (forum.ParentForum_id == CurrentParentForum.ParentForum_id) {
-                    Console.WriteLine($" {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
-                    i++;
-                }
-            }   
+            Console.WriteLine($"    \x1b[1mForum:\x1b[0m {ForumRepository
+                .GetSingleAsync(NavHelper.CurrentForum?.Forum_id ?? -1, NavHelper.CurrentParentForum?.Forum_id ?? -1)
+                .Result
+                .Title_txt}");
+            Console.ForegroundColor = Settings.ForumTextColor;
         }
+        Console.WriteLine("|================================================================================================================================|");
+            
+        var i = 1;
+        foreach (var forum in ForumRepository.GetMany()) {
+            if (forum.ParentForum_id == (NavHelper.CurrentForum?.Forum_id ?? -1)) {
+                Console.WriteLine($" {i}. [Forum ID: F{forum.Forum_id}] {forum.Title_txt}");
+                i++;
+            }
+        }   
+        
+        if (i == 1)
+            Console.WriteLine("| !!! No forums found !!!");
         Console.WriteLine("|================================================================================================================================|");
         Console.ResetColor();
     }
 
     
     private void DisplayPosts() {
-        bool postExists = false;
-        
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        if(CurrentForum == null) {
-            Console.WriteLine("                                                 \x1b[1mPosts in Main Forum\x1b[0m");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("|................................................................................................................................|");
-            var i = 1;
-            foreach (var post in PostRepository.GetMany()) {
-                if (post.ParentForum_id == -1) {
-                    Console.WriteLine($" {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
-                    postExists = true;
-                    i++;
-                }
-            }
-        } else if (CurrentParentForum == null) {
-            Console.WriteLine($"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, -1).Result.Title_txt}'\x1b[0m ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("|................................................................................................................................|");
-            var i = 1;
-            foreach (var post in PostRepository.GetMany()) {
-                if (post.ParentForum_id == CurrentForum?.Forum_id) {
-                    Console.WriteLine($" {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
-                    postExists = true;
-                    i++;
-                }
-            }
+        Console.ForegroundColor = Settings.PostTextColor;
+        if (NavHelper.CurrentForum == null) {
+            Console.WriteLine("    \x1b[1mGlobal Posts\x1b[0m");
+            Console.ForegroundColor = Settings.PostTextColor;
         } else {
-            Console.WriteLine($"|                                                  \x1b[1mPosts in Forum '{ForumRepository.GetSingleAsync(CurrentForum.Forum_id, CurrentParentForum.ParentForum_id).Result.Title_txt}'\x1b[0m ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("|................................................................................................................................|");
-            var i = 1;
-            foreach (var post in PostRepository.GetMany()) {
-                if (post.ParentForum_id == CurrentForum?.Forum_id) {
-                    Console.WriteLine($" {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
-                    postExists = true;
-                    i++;
-                }
+            Console.WriteLine($"    \x1b[1mPosts in Forum '{ForumRepository
+                .GetSingleAsync(NavHelper.CurrentForum.Forum_id, NavHelper.CurrentParentForum?.Forum_id ?? -1)
+                .Result
+                .Title_txt}'\x1b[0m ");
+            Console.ForegroundColor = Settings.PostTextColor;
+        }
+
+        Console.WriteLine("|................................................................................................................................|");
+        var i = 1;
+        foreach (var post in PostRepository.GetMany()) {
+            if (post.ParentForum_id == (NavHelper.CurrentForum?.Forum_id ?? -1)) {
+                Console.WriteLine($" {i}. [Post ID: P{post.Post_id}] {post.Title_txt}");
+                i++;
             }
         }
 
-        if (!postExists)
+        if (i == 1)
             Console.WriteLine("| !!! No posts found !!!");
         Console.WriteLine("|================================================================================================================================|");
         Console.ResetColor();
@@ -213,42 +173,31 @@ public class CliApp {
 
 
     private async void DisplayCommentsAsync() {
-        bool commentsExists = false;
-        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.ForegroundColor = Settings.PostTextColor;
         
         // Display Post Details
-        Post detailsDisplayed = await new ViewSinglePost().Display(CurrentPost.Post_id, CurrentPost.ParentForum_id, PostRepository, UserRepository, UserProfileRepository);
-        
-        // Display Corresponding Comments:
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        if (CurrentForum == null) {
-            Console.WriteLine($"|                       \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, -1).Result.Title_txt}\x1b[0m");
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+        if (NavHelper.CurrentPost != null) {
+            await new ViewSinglePost().Display(NavHelper.CurrentPost.Post_id, NavHelper.CurrentPost.ParentForum_id, PostRepository, UserRepository, UserProfileRepository);
+            
+            // Display Corresponding Comments:
+            Console.ForegroundColor = Settings.CommentTextColor;
+            Console.WriteLine($"    \x1b[1mComments in Post: {PostRepository
+                .GetSingleAsync(NavHelper.CurrentPost.Post_id, NavHelper.CurrentForum?.Forum_id ?? -1)
+                .Result
+                .Title_txt}\x1b[0m");
+            Console.ForegroundColor = Settings.CommentTextColor;
             Console.WriteLine("|................................................................................................................................|");
             var i = 1;
             foreach (var comment in CommentRepository.GetMany()) {
-                if (comment.ParentPost_id == CurrentPost.Post_id && comment.ParentForum_id == -1) {
+                if (comment.ParentPost_id == NavHelper.CurrentPost.Post_id && comment.ParentForum_id == (NavHelper.CurrentForum?.Forum_id ?? -1)) {
                     Console.WriteLine($"| {i}. [Comment ID: C{comment.Comment_id}] {comment.Body_txt}");
-                    Console.WriteLine($"| ___");
-                    commentsExists = true;
+                    Console.WriteLine("| ___");
                     i++;
                 }
             }
-        } else {
-            Console.WriteLine($"                        \x1b[1mComments in Post: {PostRepository.GetSingleAsync(CurrentPost.Post_id, CurrentForum.Forum_id).Result.Title_txt}\x1b[0m");
-            Console.WriteLine("|................................................................................................................................|");
-            var i = 1;
-            foreach (var comment in CommentRepository.GetMany()) {
-                if (comment.ParentPost_id == CurrentPost.Post_id && comment.ParentForum_id == CurrentForum.Forum_id) {
-                    Console.WriteLine($"| {i}. [Comment ID: C{comment.Comment_id}] {comment.Body_txt}");
-                    Console.WriteLine($"| ___");
-                    commentsExists = true;
-                    i++;
-                }
-            }
+            if(i == 1)
+                Console.WriteLine("| !!! No comments found !!!");
         }
-        if(!commentsExists)
-            Console.WriteLine("| !!! No comments found !!!");
     }
     
     
@@ -259,7 +208,7 @@ public class CliApp {
             case "user":
                 if (LocalUser != null) {
                     String lastCmdModified = "";
-                    new ManageUsers(UserRepository, UserProfileRepository, LocalUser).Start();
+                    await new ManageUsers(UserRepository, UserProfileRepository, LocalUser).Start();
                     LastCmd = lastCmdModified;
                 } else {
                     Console.WriteLine(ErrorMessage);
@@ -269,28 +218,40 @@ public class CliApp {
             
             case "post":
                 // Allow User to create a new post
-                if (CurrentForum == null) {
-                    Post newPost = await new CreatePost().NewPostAsync(-1,PostRepository, LocalUser ?? new User(-1));
+                if (NavHelper.CurrentForum == null) {
+                    Post? newPost = await new CreatePost().NewPostAsync(-1,PostRepository, LocalUser ?? new User());
                 } else {
-                    Post newPost = await new CreatePost().NewPostAsync(CurrentForum.Forum_id,PostRepository, LocalUser ?? new User(-1));
+                    Post? newPost = await new CreatePost().NewPostAsync(NavHelper.CurrentForum.Forum_id,PostRepository, LocalUser ?? new User());
                 }
                 break;
             
             case "comment":
                 // Allow User to add a comment
-                if (CurrentPost == null) {
+                if (NavHelper.CurrentPost == null) {
                     Console.WriteLine(ErrorMessage);
                     InvalidEntry = true;
-                } else if (CurrentForum == null) {
-                    Comment newComment = await new CreateComment().NewCommentAsync(CurrentPost.Post_id, -1,CommentRepository, LocalUser ?? new User(-1));
+                } else if (NavHelper.CurrentForum == null) {
+                    Comment? newComment = await new CreateComment().NewCommentAsync(NavHelper.CurrentPost.Post_id, -1,CommentRepository, LocalUser ?? new User());
                 } else {
-                    Comment newComment = await new CreateComment().NewCommentAsync(CurrentPost.Post_id, CurrentForum.Forum_id,CommentRepository, LocalUser ?? new User(-1));
+                    Comment? newComment = await new CreateComment().NewCommentAsync(NavHelper.CurrentPost.Post_id, NavHelper.CurrentForum.Forum_id,CommentRepository, LocalUser ?? new User());
+                }
+                break;
+            
+            case "forum": 
+                // Allow User to Create a new Forum, if User is logged in and not inside a Post!
+                if (LocalUser != null && NavHelper.CurrentPost != null) {
+                    //TODO Implement
+                    throw new NotImplementedException();
+                } else {
+                    Console.WriteLine(ErrorMessage);
+                    InvalidEntry = true;
                 }
                 break;
             
             case "profile":
                 if (LocalUser != null) {
                     //TODO Go to userProfile view!
+                    throw new NotImplementedException();
                 } else {
                     Console.WriteLine(ErrorMessage);
                     InvalidEntry = true;
@@ -300,6 +261,7 @@ public class CliApp {
             case "logout":
                 if (LocalUser != null) {
                     //TODO Go to user logout view!
+                    throw new NotImplementedException();
                 } else {
                     Console.WriteLine(ErrorMessage);
                     InvalidEntry = true;
@@ -311,7 +273,8 @@ public class CliApp {
                     Console.WriteLine(ErrorMessage);
                     InvalidEntry = true;
                 } else {
-                    //TODO Go to user login view!
+                    //TODO Implement
+                    throw new NotImplementedException();
                 }
                 break;
             
@@ -331,18 +294,18 @@ public class CliApp {
                 break;
             
             case "return":
-                if (CurrentPost != null)
-                    CurrentPost = null;
-                else if (CurrentForum != null && CurrentParentForum != null) {
-                    ParentsParentForum = CurrentParentForum;
-                    CurrentForum = CurrentParentForum;
-                    if(ParentsParentForum != null)
-                        CurrentParentForum = ForumRepository.GetSingleAsync(CurrentForum.ParentForum_id, ParentsParentForum.Forum_id).Result;
+                if (NavHelper.CurrentPost != null)
+                    NavHelper.CurrentPost = null;
+                else if (NavHelper.CurrentForum != null && NavHelper.CurrentParentForum != null) {
+                    NavHelper.ParentsParentForum = NavHelper.CurrentParentForum;
+                    NavHelper.CurrentForum = NavHelper.CurrentParentForum;
+                    if(NavHelper.ParentsParentForum != null)
+                        NavHelper.CurrentParentForum = ForumRepository.GetSingleAsync(NavHelper.CurrentForum.ParentForum_id, NavHelper.ParentsParentForum.Forum_id).Result;
                     else
-                        CurrentParentForum = ForumRepository.GetSingleAsync(CurrentForum.ParentForum_id, -1).Result;
-                } else if (CurrentForum != null && CurrentParentForum == null) {
-                    ParentsParentForum = null;
-                    CurrentForum = null;
+                        NavHelper.CurrentParentForum = ForumRepository.GetSingleAsync(NavHelper.CurrentForum.ParentForum_id, -1).Result;
+                } else if (NavHelper.CurrentForum != null && NavHelper.CurrentParentForum == null) {
+                    NavHelper.ParentsParentForum = null;
+                    NavHelper.CurrentForum = null;
                 } else {
                     Console.WriteLine(ErrorMessage);
                     InvalidEntry = true;
@@ -361,7 +324,7 @@ public class CliApp {
                         Console.WriteLine(ErrorMessage);
                         InvalidEntry = true;
                     } else {
-                        string logMessage = $"New directory is: [Forum_id: {CurrentForum?.Forum_id ?? -1} / Post_id: {CurrentPost?.Post_id ?? -1}]";
+                        string logMessage = $"New directory is: [Forum_id: {NavHelper.CurrentForum?.Forum_id ?? -1} / Post_id: {NavHelper.CurrentPost?.Post_id ?? -1}]";
                         Console.WriteLine(logMessage);
                         LastCmd = cmd.ToLower() + "\n" + logMessage;
                     }
@@ -390,16 +353,24 @@ public class CliApp {
             case "f":
                 foreach (var forum in ForumRepository.GetMany()) { 
                     // We are at the top most level, trying to navigate into the forum structure!
-                    if (CurrentPost == null && CurrentParentForum == null && forum.Forum_id == id && forum.ParentForum_id == -1) {
-                        CurrentParentForum = CurrentForum;
-                        CurrentForum = forum;
+                    if (NavHelper.CurrentPost == null 
+                        && NavHelper.CurrentParentForum == null 
+                        && forum.Forum_id == id 
+                        && forum.ParentForum_id == -1) 
+                    {
+                        NavHelper.CurrentParentForum = NavHelper.CurrentForum;
+                        NavHelper.CurrentForum = forum;
                         return true;
                     } 
                     
                     // We are NOT the top most level, trying to navigate further into the forum structure!
-                    if (CurrentPost == null && CurrentParentForum != null && forum.Forum_id == id && forum.ParentForum_id == CurrentParentForum.Forum_id) {
-                        CurrentParentForum = CurrentForum;
-                        CurrentForum = forum;
+                    if (NavHelper.CurrentPost == null 
+                        && NavHelper.CurrentParentForum != null 
+                        && forum.Forum_id == id 
+                        && forum.ParentForum_id == NavHelper.CurrentParentForum.Forum_id) 
+                    {
+                        NavHelper.CurrentParentForum = NavHelper.CurrentForum;
+                        NavHelper.CurrentForum = forum;
                         return true;
                     }
                 }
@@ -408,20 +379,33 @@ public class CliApp {
             case "p":
                 foreach (var post in PostRepository.GetMany()) {
                     // We are at the top most level, trying to navigate into a post!
-                    if (CurrentParentForum == null && CurrentForum == null && post.Post_id == id && post.ParentForum_id == -1) {
-                        CurrentPost = post;
+                    if (NavHelper.CurrentParentForum == null 
+                        && NavHelper.CurrentForum == null 
+                        && post.Post_id == id 
+                        && post.ParentForum_id == -1) 
+                    {
+                        NavHelper.CurrentPost = post;
                         return true;
                     }
                     
                     // We are inside the first subforum level, meaning there is no "parentForum":
-                    if (CurrentParentForum == null && CurrentForum != null && post.Post_id == id && post.ParentForum_id == CurrentForum.Forum_id && CurrentForum.ParentForum_id == -1) {
-                        CurrentPost = post;
+                    if (NavHelper.CurrentParentForum == null 
+                        && NavHelper.CurrentForum != null 
+                        && post.Post_id == id 
+                        && post.ParentForum_id == NavHelper.CurrentForum.Forum_id 
+                        && NavHelper.CurrentForum.ParentForum_id == -1) 
+                    {
+                        NavHelper.CurrentPost = post;
                         return true;
                     } 
                     
                     // We are inside a subforum trying to navigate into a post!
-                    if (CurrentParentForum != null && post.Post_id == id && post.ParentForum_id == CurrentForum?.Forum_id && CurrentForum?.ParentForum_id == CurrentParentForum.Forum_id) {
-                        CurrentPost = post;
+                    if (NavHelper.CurrentParentForum != null 
+                        && post.Post_id == id 
+                        && post.ParentForum_id == NavHelper.CurrentForum?.Forum_id 
+                        && NavHelper.CurrentForum?.ParentForum_id == NavHelper.CurrentParentForum.Forum_id) 
+                    {
+                        NavHelper.CurrentPost = post;
                         return true;
                     } 
                 }
