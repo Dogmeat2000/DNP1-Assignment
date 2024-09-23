@@ -136,7 +136,7 @@ public class PostFileRepository : IPostRepository {
             PostList = rawData.OfType<Post>().ToList();
             
             // Check if the Post actually exists:
-            Post? postToReturn = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == postId);
+            Post? postToReturn = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
             if (postToReturn is null) {
                 throw new InvalidOperationException($"Post with ID '{postId}' Forum '{parentForumId}' not found");
             }

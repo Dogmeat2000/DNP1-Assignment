@@ -14,20 +14,23 @@ public class CreateUser {
         Password = "";
     }
 
-    public async Task<UserProfile?> NewUserAsync(IUserRepository userRepo, IUserProfileRepository userProfileRepo) {
-        User? newUser = null;
+    
+    public async Task<UserProfile?> NewUserAsync(IUserRepository userRepo, IUserProfileRepository userProfileRepo, CLISettings settings) {
+        User? newUser;
         UserProfile? newUserProfile = null;
         
         // User UI Logic is encapsulated inside this repeating while-loop:
         while (!ReturnToLastView) {
+            Console.ForegroundColor = settings.AppPromptTextColor;
             Console.WriteLine("\n-> Creating a new user! [type 'return' to abort]");
-
+            Console.ResetColor();
+            
             // Let user select a username:
-            if (!SelectUserNameAsync().Result)
+            if (!SelectUserNameAsync(settings).Result)
                 return newUserProfile;
             
             // Let user select a password:
-            if (!SelectPassword().Result)
+            if (!SelectPassword(settings).Result)
                 return newUserProfile;
            
             // Create the new user:
@@ -49,10 +52,14 @@ public class CreateUser {
         return newUserProfile;
     }
     
-    private async Task<bool> SelectPassword() {
+    
+    private async Task<bool> SelectPassword(CLISettings settings) {
         while (string.IsNullOrEmpty(Password)) {
+            Console.ForegroundColor = settings.AppPromptTextColor;
             Console.Write("Please enter a Password: ");
-            var password = await new UserInput().ReadUserInputAsync("") ?? "";
+            Console.ResetColor();
+            
+            var password = await new LocalUserManager().ReadUserInputAsync("") ?? "";
 
             if (password.ToLower() == "abort")
                 return false;
@@ -63,10 +70,14 @@ public class CreateUser {
         return true;
     }
 
-    private async Task<bool> SelectUserNameAsync() {
+    
+    private async Task<bool> SelectUserNameAsync(CLISettings settings) {
         while (string.IsNullOrEmpty(UserName)) {
+            Console.ForegroundColor = settings.AppPromptTextColor;
             Console.Write("Please enter a Username: ");
-            var username = await new UserInput().ReadUserInputAsync("") ?? "";
+            Console.ResetColor();
+            
+            var username = await new LocalUserManager().ReadUserInputAsync("") ?? "";
 
             if (username.ToLower() == "abort")
                 return false;
@@ -77,11 +88,13 @@ public class CreateUser {
         return true;
     }
 
+    
     private bool ValidateUserName(string userName) {
         // TODO Implement validation logic
         return true;
     }
 
+    
     private bool ValidatePassword(string password) {
         // TODO Implement validation logic
         return true;

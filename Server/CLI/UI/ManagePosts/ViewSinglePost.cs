@@ -57,9 +57,14 @@ public class ViewSinglePost {
 
     private bool DisplayPostText() {
         string text = Post.Body_txt;
-        for (int i = 70; i < text.Length; i++) {
+        string modText = "";
+
+        int i = 120;
+        while (i < text.Length) {
             text = text.Insert(i, "\n| ");
+            i += 120;
         }
+        
         Console.WriteLine($"|\n| Body: {text}");
         return true;
     }

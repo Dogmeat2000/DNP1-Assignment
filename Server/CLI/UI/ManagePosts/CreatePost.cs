@@ -6,17 +6,22 @@ namespace ConsoleApp1.UI.ManagePosts;
 
 public class CreatePost {
     
-    public async Task<Post?> NewPostAsync(int parentForumId, IPostRepository postRepo, User localUser) {
+    public async Task<Post?> NewPostAsync(int parentForumId, IPostRepository postRepo, User localUser, CLISettings settings) {
         
+        Console.ForegroundColor = settings.AppPromptTextColor;
         Console.WriteLine(": Creating Post... Type 'abort' at any step to abort...");
-        
         Console.Write("\nPlease enter a title: ");
-        string title =  await new UserInput().ReadUserInputAsync("") ?? "UNSPECIFIED TITLE";
+        Console.ResetColor();
+        
+        string title =  await new LocalUserManager().ReadUserInputAsync("") ?? "UNSPECIFIED TITLE";
         if(CheckForAbort(title))
             return null;
         
+        Console.ForegroundColor = settings.AppPromptTextColor;
         Console.Write("\nPlease enter body text: ");
-        string body = await new UserInput().ReadUserInputAsync("") ?? "UNSPECIFIED TITLE";
+        Console.ResetColor();
+        
+        string body = await new LocalUserManager().ReadUserInputAsync("") ?? "UNSPECIFIED TITLE";
         if(CheckForAbort(title))
             return null;
         

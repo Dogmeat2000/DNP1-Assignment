@@ -6,4 +6,8 @@ public class CLISettings {
     public ConsoleColor CommentTextColor { get; } = ConsoleColor.DarkYellow;
     public ConsoleColor UserTextColor { get; } = ConsoleColor.DarkRed;
     public ConsoleColor MainMenuTextColor { get; } = ConsoleColor.Green;
+    public ConsoleColor ErrorTextColor { get; } = ConsoleColor.Red;
+    public ConsoleColor UserInputTextColor { get; } = ConsoleColor.White;
+    public ConsoleColor AppPromptTextColor { get; } = ConsoleColor.DarkGreen;
+    
 }

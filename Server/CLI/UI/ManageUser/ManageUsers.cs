@@ -37,7 +37,7 @@ public class ManageUsers {
             }
                 
             // Read userInput, and pick a corresponding command
-            EvaluateCommand(await new UserInput().ReadUserInputAsync("\nCmd: ") ?? "INVALID COMMAND");
+            EvaluateCommand(await new LocalUserManager().ReadUserInputAsync("\nCmd: ") ?? "INVALID COMMAND");
         }
         return true;
     }
