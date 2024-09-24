@@ -23,12 +23,14 @@ public class LocalUserManager {
     }
 
 
-    public async Task<bool> Login(IUserRepository userRepo, IUserProfileRepository profileRepo) {
+    public async Task<bool> Login(IUserRepository userRepo, IUserProfileRepository profileRepo, CLISettings settings) {
         // Prompt User to Login with a username:
         string? username = null;
         while (username == null) {
+            Console.ForegroundColor = settings.AppPromptTextColor;
             Console.WriteLine(": Enter 'abort' to cancel at any time.\n");
             Console.Write(": Please enter username: ");
+            Console.ResetColor();
             username = await ReadUserInputAsync("");
             
             if(username.ToLower().Equals("abort"))
@@ -36,7 +38,9 @@ public class LocalUserManager {
             
             // Check if the given username exists:
             if (profileRepo.GetMany().SingleOrDefault(p => p.Username.Equals(username)) == null) {
+                Console.ForegroundColor = settings.ErrorTextColor;
                 Console.WriteLine("\n: ERROR Username '" + username + "' does not exist");
+                Console.ResetColor();
                 username = null;
             }
         }
@@ -44,7 +48,9 @@ public class LocalUserManager {
         // Prompt User to enter a password:
         string? password = null;
         while (password == null) {
+            Console.ForegroundColor = settings.AppPromptTextColor;
             Console.Write(": Please enter password: ");
+            Console.ResetColor();
             password = await ReadUserInputAsync("");
             
             if(password.ToLower().Equals("abort"))
@@ -52,7 +58,9 @@ public class LocalUserManager {
             
             // Check if the given username exists:
             if (profileRepo.GetMany().SingleOrDefault(p => p.Username.Equals(username) && p.Password.Equals(password)) == null) {
+                Console.ForegroundColor = settings.ErrorTextColor;
                 Console.WriteLine($": Wrong password!");
+                Console.ResetColor();
                 password = null;
             } else {
                 LocalUserProfile = profileRepo.GetMany().SingleOrDefault(p => p.Username.Equals(username) && p.Password.Equals(password));

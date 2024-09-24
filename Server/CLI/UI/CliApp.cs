@@ -1,4 +1,5 @@
 ﻿using ConsoleApp1.UI.ManageComments;
+using ConsoleApp1.UI.ManageForums;
 using ConsoleApp1.UI.ManagePosts;
 using ConsoleApp1.UI.ManageUser;
 using ConsoleApp1.UI.ManageUserProfiles;
@@ -228,18 +229,25 @@ public class CliApp {
                 if (NavHelper.CurrentPost == null) {
                     PrintErrorMessage(ErrorMessage);
                     InvalidEntry = true;
-                } else if (NavHelper.CurrentForum == null) {
-                    Comment? newComment = await new CreateComment().NewCommentAsync(NavHelper.CurrentPost.Post_id, -1,CommentRepository, LocalUserManager.LocalUser ?? new User());
                 } else {
-                    Comment? newComment = await new CreateComment().NewCommentAsync(NavHelper.CurrentPost.Post_id, NavHelper.CurrentForum.Forum_id,CommentRepository, LocalUserManager.LocalUser ?? new User());
+                    Comment? newComment = await new CreateComment().NewCommentAsync(
+                        NavHelper.CurrentPost.Post_id, 
+                        NavHelper.CurrentForum?.Forum_id ?? -1,
+                        CommentRepository, 
+                        LocalUserManager.LocalUser ?? new User()
+                    );
                 }
                 break;
             
             case "newforum": 
                 // Allow User to Create a new Forum, if User is logged in and not inside a Post!
-                if (LocalUserManager.LocalUser != null && NavHelper.CurrentPost != null) {
-                    //TODO Implement
-                    throw new NotImplementedException();
+                if (LocalUserManager.LocalUser != null && NavHelper.CurrentPost == null) {
+                    Forum? newForum = await new CreateForum().NewForumAsync(NavHelper.CurrentForum?.Forum_id ?? -1, ForumRepository, LocalUserManager.LocalUser, Settings);
+                    if (newForum == null) {
+                        LastCmd += "\n: ERROR, FAILED TO CREATE NEW FORUM!\n";
+                    } else {
+                        LastCmd += $"\n-> Created new Forum {newForum.Title_txt}!";
+                    }
                 } else {
                     PrintErrorMessage(ErrorMessage);
                     InvalidEntry = true;
@@ -259,11 +267,10 @@ public class CliApp {
             case "logout":
                 if (LocalUserManager.LocalUser != null) {
                     if (!LocalUserManager.Logout()) {
-                        LastCmd += "\n: ERROR, LOGOUT FAILED!!";
-                        InvalidEntry = true;
+                        LastCmd += "\n: ERROR, LOGOUT FAILED!!\n";
                         break;
                     }
-                    LastCmd += "\n-> You are now logged out!";
+                    LastCmd += "\n-> You are now logged out!\n";
                 } else {
                     PrintErrorMessage(ErrorMessage);
                     InvalidEntry = true;
@@ -275,9 +282,8 @@ public class CliApp {
                     PrintErrorMessage(ErrorMessage);
                     InvalidEntry = true;
                 } else {
-                    if (!await LocalUserManager.Login(UserRepository, UserProfileRepository)) {
+                    if (!await LocalUserManager.Login(UserRepository, UserProfileRepository, Settings)) {
                         LastCmd += "\n: ERROR, LOGIN FAILED!!";
-                        InvalidEntry = true;
                         break;
                     }
                     LastCmd += $"\n-> Logged in as [name = {LocalUserManager.LocalUserProfile?.Username ?? "ERROR N/A"}]!";
@@ -437,7 +443,7 @@ public class CliApp {
         if (LastCmd.Length > 0) {
             if (LastCmd.ToLower().Contains("error")) {
                 string sub1 = ": " + LastCmd.Substring(0, LastCmd.ToLower().IndexOf("error", StringComparison.Ordinal));
-                string sub2 = ": " + LastCmd.Substring(sub1.Length);
+                string sub2 = ": " + LastCmd.Substring(sub1.Length-2);
                     
                 Console.ForegroundColor = Settings.UserInputTextColor;
                 Console.Write(sub1);

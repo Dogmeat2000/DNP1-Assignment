@@ -15,5 +15,8 @@ public class Forum
 
     public Forum() {
         Title_txt = "";
+        LastPost_id = -1;
+        LastCommentPost_id = -1;
+        LastComment_id = -1;
     }
 }
