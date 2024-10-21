@@ -6,8 +6,8 @@ namespace FileRepositories.Repositories;
 
 public class UserProfileFileRepository : IUserProfileRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\userprofiles.json";
-    private IFilePersistance FileManager { get; } = new FilePersistance();
-    private List<UserProfile> UserProfileList { get; set; } = [];
+    public IFilePersistance FileManager { get; } = new FilePersistance();
+    public List<UserProfile> UserProfileList { get; private set; } = [];
     public string ErrorAddFailed { get; } = "Error occured while adding UserProfile. Data failed to load.";
     public string ErrorUpdateFailed { get; } = "Error occured while updating UserProfile. Data failed to load.";
     public string ErrorDeleteFailed { get; } = "Error occured while deleting UserProfile. Data failed to load.";
@@ -42,7 +42,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
             }
 
         } else {
-            throw new Exception(ErrorAddFailed);
+            throw new IOException(ErrorAddFailed);
         }
         
         return userProfile;
@@ -62,9 +62,8 @@ public class UserProfileFileRepository : IUserProfileRepository {
             
             // Check if the Post to modify actually exists:
             UserProfile? existingUserProfile = UserProfileList.SingleOrDefault(uP => uP.Profile_id == userProfile.Profile_id && uP.User_id == userProfile.User_id);
-            if (existingUserProfile is null) {
-                throw new InvalidOperationException($"UserProfile with ID '{userProfile.Profile_id}' for User with ID {userProfile.User_id} not found");
-            }
+            if (existingUserProfile is null)
+                throw new KeyNotFoundException($"UserProfile with ID '{userProfile.Profile_id}' for User with ID {userProfile.User_id} not found");
             
             // If it does exist, Remove it from the list of Comments:
             UserProfileList.Remove(existingUserProfile);
@@ -79,7 +78,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
                 Console.WriteLine($": ERROR DID NOT Modify UserProfile with ID '{userProfile.Profile_id}' associated with User with ID '{userProfile.User_id}'");
             }
         } else {
-            throw new Exception(ErrorUpdateFailed);
+            throw new IOException(ErrorUpdateFailed);
         }
     }
 
@@ -97,9 +96,8 @@ public class UserProfileFileRepository : IUserProfileRepository {
             
             // Check if the UserProfile to remove actually exists:
             UserProfile? userProfileToRemove = UserProfileList.SingleOrDefault(uP => uP.Profile_id == profileId  && uP.User_id == userId);
-            if (userProfileToRemove is null) {
-                throw new InvalidOperationException($"UserProfile with ID '{profileId}' associated with User with ID '{userId}' not found");
-            }
+            if (userProfileToRemove is null)
+                throw new KeyNotFoundException($"UserProfile with ID '{profileId}' associated with User with ID '{userId}' not found");
             
             // If it does exist, Remove it from the list of UserProfiles:
             UserProfileList.Remove(userProfileToRemove);
@@ -111,7 +109,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
                 Console.WriteLine($": ERROR DID NOT Delete UserProfile with ID '{profileId}' associated with User with ID '{userId}'");
             }
         } else {
-            throw new Exception(ErrorDeleteFailed);
+            throw new IOException(ErrorDeleteFailed);
         }
     }
 
@@ -129,14 +127,13 @@ public class UserProfileFileRepository : IUserProfileRepository {
             
             // Check if the UserProfile actually exists:
             UserProfile? userProfileToReturn = UserProfileList.SingleOrDefault(uP => uP.Profile_id == profileId && uP.User_id == userId);
-            if (userProfileToReturn is null) {
-                throw new InvalidOperationException($"UserProfile with ID '{profileId}' associated with User with ID '{userId}' not found");
-            }
+            if (userProfileToReturn is null)
+                throw new KeyNotFoundException($"UserProfile with ID '{profileId}' associated with User with ID '{userId}' not found");
             
             // If it does exist, return it:
             return userProfileToReturn;
         } 
-        throw new Exception(ErrorGetSingleFailed);
+        throw new IOException(ErrorGetSingleFailed);
     }
 
     
@@ -153,6 +150,6 @@ public class UserProfileFileRepository : IUserProfileRepository {
             // Return the entire list:
             return UserProfileList.AsQueryable();
         } 
-        throw new Exception(ErrorGetManyFailed);
+        throw new IOException(ErrorGetManyFailed);
     }
 }

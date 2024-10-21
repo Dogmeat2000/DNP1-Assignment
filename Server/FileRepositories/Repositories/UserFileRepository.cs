@@ -6,8 +6,8 @@ namespace FileRepositories.Repositories;
 
 public class UserFileRepository : IUserRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\users.json";
-    private IFilePersistance FileManager { get; } = new FilePersistance();
-    private List<User> UserList { get; set; } = [];
+    public IFilePersistance FileManager { get; } = new FilePersistance();
+    public List<User> UserList { get; private set; } = [];
     public string ErrorAddFailed { get; } = "Error occured while adding User. Data failed to load.";
     public string ErrorUpdateFailed { get; } = "Error occured while updating User. Data failed to load.";
     public string ErrorDeleteFailed { get; } = "Error occured while deleting User. Data failed to load.";
@@ -42,7 +42,7 @@ public class UserFileRepository : IUserRepository {
             }
 
         } else {
-            throw new Exception(ErrorAddFailed);
+            throw new IOException(ErrorAddFailed);
         }
         
         return user;
@@ -63,7 +63,7 @@ public class UserFileRepository : IUserRepository {
             // Check if the Post to modify actually exists:
             User? existingUser = UserList.SingleOrDefault(u => u.User_id == user.User_id);
             if (existingUser is null) {
-                throw new InvalidOperationException($"Post with ID '{user.User_id}' not found");
+                throw new KeyNotFoundException($"Post with ID '{user.User_id}' not found");
             }
             
             // If it does exist, Remove it from the list of Comments:
@@ -80,7 +80,7 @@ public class UserFileRepository : IUserRepository {
                 Console.WriteLine($": ERROR DID NOT Modify User with ID '{user.User_id}'");
             }
         } else {
-            throw new Exception(ErrorUpdateFailed);
+            throw new IOException(ErrorUpdateFailed);
         }
     }
 
@@ -99,7 +99,7 @@ public class UserFileRepository : IUserRepository {
             // Check if the User to remove actually exists:
             User? userToRemove = UserList.SingleOrDefault(u => u.User_id == userId);
             if (userToRemove is null) {
-                throw new InvalidOperationException($"User with ID '{userId}' not found");
+                throw new KeyNotFoundException($"User with ID '{userId}' not found");
             }
             
             // If it does exist, Remove it from the list of Users:
@@ -113,7 +113,7 @@ public class UserFileRepository : IUserRepository {
                 Console.WriteLine($": ERROR DID NOT Delete User with ID '{userId}'");
             }
         } else {
-            throw new Exception(ErrorDeleteFailed);
+            throw new IOException(ErrorDeleteFailed);
         }
     }
 
@@ -132,13 +132,13 @@ public class UserFileRepository : IUserRepository {
             // Check if the User actually exists:
             User? userToReturn = UserList.SingleOrDefault(u => u.User_id == userId);
             if (userToReturn is null) {
-                throw new InvalidOperationException($"User with ID '{userId}' not found");
+                throw new KeyNotFoundException($"User with ID '{userId}' not found");
             }
             
             // If it does exist, return it:
             return userToReturn;
         } 
-        throw new Exception(ErrorGetSingleFailed);
+        throw new IOException(ErrorGetSingleFailed);
     }
 
     
@@ -155,6 +155,6 @@ public class UserFileRepository : IUserRepository {
             // Return the entire list:
             return UserList.AsQueryable();
         } 
-        throw new Exception(ErrorGetManyFailed);
+        throw new IOException(ErrorGetManyFailed);
     }
 }

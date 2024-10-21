@@ -6,8 +6,8 @@ namespace FileRepositories.Repositories;
 
 public class PostFileRepository : IPostRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\posts.json";
-    private IFilePersistance FileManager { get; } = new FilePersistance();
-    private List<Post> PostList { get; set; } = [];
+    public IFilePersistance FileManager { get; } = new FilePersistance();
+    public List<Post> PostList { get; private set; } = [];
     public string ErrorAddFailed { get; } = "Error occured while adding Post. Data failed to load.";
     public string ErrorUpdateFailed { get; } = "Error occured while updating Post. Data failed to load.";
     public string ErrorDeleteFailed { get; } = "Error occured while deleting Post. Data failed to load.";
@@ -45,7 +45,7 @@ public class PostFileRepository : IPostRepository {
             }
 
         } else {
-            throw new Exception(ErrorAddFailed);
+            throw new IOException(ErrorAddFailed);
         }
         
         return post;
@@ -65,9 +65,8 @@ public class PostFileRepository : IPostRepository {
             
             // Check if the Post to modify actually exists:
             Post? existingPost = PostList.SingleOrDefault(p => p.Post_id == post.Post_id && p.ParentForum_id == post.ParentForum_id);
-            if (existingPost is null) {
-                throw new InvalidOperationException($"Post with ID '{post.Post_id}' in Forum '{post.ParentForum_id}' not found");
-            }
+            if (existingPost is null)
+                throw new KeyNotFoundException($"Post with ID '{post.Post_id}' in Forum '{post.ParentForum_id}' not found");
             
             // If it does exist, Remove it from the list of Comments:
             PostList.Remove(existingPost);
@@ -86,7 +85,7 @@ public class PostFileRepository : IPostRepository {
                 Console.WriteLine($": ERROR DID NOT Modify Post with ID '{post.Post_id}' in Forum '{post.ParentForum_id}'");
             }
         } else {
-            throw new Exception(ErrorUpdateFailed);
+            throw new IOException(ErrorUpdateFailed);
         }
     }
 
@@ -104,9 +103,8 @@ public class PostFileRepository : IPostRepository {
             
             // Check if the Post to remove actually exists:
             Post? postToRemove = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
-            if (postToRemove is null) {
-                throw new InvalidOperationException($"Post with ID '{postId}' in Forum '{parentForumId}' not found");
-            }
+            if (postToRemove is null)
+                throw new KeyNotFoundException($"Post with ID '{postId}' in Forum '{parentForumId}' not found");
             
             // If it does exist, Remove it from the list of Posts:
             PostList.Remove(postToRemove);
@@ -119,7 +117,7 @@ public class PostFileRepository : IPostRepository {
                 Console.WriteLine($": ERROR DID NOT Delete Post with ID '{postToRemove.Post_id}' in Forum '{postToRemove.ParentForum_id}'");
             }
         } else {
-            throw new Exception(ErrorDeleteFailed);
+            throw new IOException(ErrorDeleteFailed);
         }
     }
 
@@ -137,14 +135,13 @@ public class PostFileRepository : IPostRepository {
             
             // Check if the Post actually exists:
             Post? postToReturn = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
-            if (postToReturn is null) {
-                throw new InvalidOperationException($"Post with ID '{postId}' Forum '{parentForumId}' not found");
-            }
+            if (postToReturn is null)
+                throw new KeyNotFoundException($"Post with ID '{postId}' Forum '{parentForumId}' not found");
             
             // If it does exist, return it:
             return postToReturn;
         } 
-        throw new Exception(ErrorGetSingleFailed);
+        throw new IOException(ErrorGetSingleFailed);
     }
 
     
@@ -161,6 +158,6 @@ public class PostFileRepository : IPostRepository {
             // Return the entire list:
             return PostList.AsQueryable();
         } 
-        throw new Exception(ErrorGetManyFailed);
+        throw new IOException(ErrorGetManyFailed);
     }
 }

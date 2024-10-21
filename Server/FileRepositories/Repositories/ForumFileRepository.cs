@@ -6,8 +6,8 @@ namespace FileRepositories.Repositories;
 
 public class ForumFileRepository : IForumRepository {
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\forums.json";
-    private IFilePersistance FileManager { get; } = new FilePersistance();
-    private List<Forum> ForumList { get; set; } = [];
+    public IFilePersistance FileManager { get; } = new FilePersistance();
+    public List<Forum> ForumList { get; private set; } = [];
     public string ErrorAddFailed { get; } = "Error occured while adding Forum. Data failed to load.";
     public string ErrorUpdateFailed { get; } = "Error occured while updating Forum. Data failed to load.";
     public string ErrorDeleteFailed { get; } = "Error occured while deleting Forum. Data failed to load.";
@@ -45,7 +45,7 @@ public class ForumFileRepository : IForumRepository {
             }
 
         } else {
-            throw new Exception(ErrorAddFailed);
+            throw new IOException(ErrorAddFailed);
         }
         
         return forum;
@@ -65,9 +65,8 @@ public class ForumFileRepository : IForumRepository {
             
             // Check if the Forum to modify actually exists:
             Forum? existingForum = ForumList.SingleOrDefault(f => f.Forum_id == forum.Forum_id && f.ParentForum_id == forum.ParentForum_id);
-            if (existingForum is null) {
-                throw new InvalidOperationException($"Forum with ID '{forum.Forum_id}' not found");
-            }
+            if (existingForum is null)
+                throw new KeyNotFoundException($"Forum with ID '{forum.Forum_id}' not found");
             
             // If it does exist, Remove it from the list of Forums:
             ForumList.Remove(existingForum);
@@ -88,7 +87,7 @@ public class ForumFileRepository : IForumRepository {
             }
 
         } else {
-            throw new Exception(ErrorUpdateFailed);
+            throw new IOException(ErrorUpdateFailed);
         }
     }
 
@@ -106,9 +105,8 @@ public class ForumFileRepository : IForumRepository {
             
             // Check if the Forum to remove actually exists:
             Forum? forumToRemove = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
-            if (forumToRemove is null) {
-                throw new InvalidOperationException($"Forum with ID '{forumId}' not found");
-            }
+            if (forumToRemove is null)
+                throw new KeyNotFoundException($"Forum with ID '{forumId}' not found");
             
             // If it does exist, Remove it from the list of Forums:
             ForumList.Remove(forumToRemove);
@@ -121,7 +119,7 @@ public class ForumFileRepository : IForumRepository {
                 Console.WriteLine($": ERROR DID NOT Delete Forum with ID '{forumToRemove.Forum_id}'");
             }
         } else {
-            throw new Exception(ErrorDeleteFailed);
+            throw new IOException(ErrorDeleteFailed);
         }
     }
 
@@ -139,14 +137,13 @@ public class ForumFileRepository : IForumRepository {
             
             // Check if the Forum actually exists:
             Forum? forumToReturn = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
-            if (forumToReturn is null) {
-                throw new InvalidOperationException($"Forum with ID '{forumId}' not found");
-            }
+            if (forumToReturn is null)
+                throw new KeyNotFoundException($"Forum with ID '{forumId}' not found");
             
             // If it does exist, return it:
             return forumToReturn;
         } 
-        throw new Exception(ErrorGetSingleFailed);
+        throw new IOException(ErrorGetSingleFailed);
     }
 
     
@@ -163,6 +160,6 @@ public class ForumFileRepository : IForumRepository {
             // Return the entire list:
             return ForumList.AsQueryable();
         } 
-        throw new Exception(ErrorGetManyFailed);
+        throw new IOException(ErrorGetManyFailed);
     }
 }

@@ -7,8 +7,8 @@ namespace FileRepositories.Repositories;
 public class CommentFileRepository : ICommentRepository {
 
     private readonly string _filePath = Directory.GetCurrentDirectory() + @"\DataFiles\comments.json";
-    private IFilePersistance FileManager { get; } = new FilePersistance();
-    private List<Comment> CommentList { get; set; } = [];
+    public IFilePersistance FileManager { get; } = new FilePersistance();
+    public List<Comment> CommentList { get; private set; } = [];
     public string ErrorAddFailed { get; } = "Error occured while adding Comment. Data failed to load.";
     public string ErrorUpdateFailed { get; } = "Error occured while updating Comment. Data failed to load.";
     public string ErrorDeleteFailed { get; } = "Error occured while deleting Comment. Data failed to load.";
@@ -46,7 +46,7 @@ public class CommentFileRepository : ICommentRepository {
             }
 
         } else {
-            throw new Exception(ErrorAddFailed);
+            throw new IOException(ErrorAddFailed);
         }
         
         return comment;
@@ -66,9 +66,8 @@ public class CommentFileRepository : ICommentRepository {
             
             // Check if the comment to modify actually exists:
             Comment? existingComment = CommentList.SingleOrDefault(c => c.Comment_id == comment.Comment_id && c.ParentPost_id == comment.ParentPost_id && c.ParentForum_id == comment.ParentForum_id);
-            if (existingComment is null) {
-                throw new InvalidOperationException($"Comment with ID '{comment.Comment_id}' in Post '{comment.ParentPost_id}' in Forum '{comment.ParentForum_id}' not found");
-            }
+            if (existingComment is null)
+                throw new KeyNotFoundException($"Comment with ID '{comment.Comment_id}' in Post '{comment.ParentPost_id}' in Forum '{comment.ParentForum_id}' not found");
             
             // If it does exist, Remove it from the list of Comments:
             CommentList.Remove(existingComment);
@@ -86,7 +85,7 @@ public class CommentFileRepository : ICommentRepository {
                 Console.WriteLine($": ERROR DID NOT Modify comment with ID '{comment.Comment_id}' in Post '{comment.ParentPost_id}' in Forum '{comment.ParentForum_id}'");
             }
         } else {
-            throw new Exception(ErrorUpdateFailed);
+            throw new IOException(ErrorUpdateFailed);
         }
     }
 
@@ -104,9 +103,8 @@ public class CommentFileRepository : ICommentRepository {
             
             // Check if the comment to remove actually exists:
             Comment? commentToRemove = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
-            if (commentToRemove is null) {
-                throw new InvalidOperationException($"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");
-            }
+            if (commentToRemove is null)
+                throw new KeyNotFoundException($"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");
             
             // If it does exist, Remove it from the list of Comments:
             CommentList.Remove(commentToRemove);
@@ -119,7 +117,7 @@ public class CommentFileRepository : ICommentRepository {
             }
 
         } else {
-            throw new Exception(ErrorDeleteFailed);
+            throw new IOException(ErrorDeleteFailed);
         }
     }
     
@@ -136,15 +134,14 @@ public class CommentFileRepository : ICommentRepository {
             CommentList = rawData.OfType<Comment>().ToList();
             
             // Check if the comment actually exists:
-            Comment? commentToReturn = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
-            if (commentToReturn is null) {
-                throw new InvalidOperationException($"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");
-            }
+             Comment? commentToReturn = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
+             if (commentToReturn is null)
+                 throw new KeyNotFoundException($"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");
             
             // If it does exist, return it:
             return commentToReturn;
         } 
-        throw new Exception(ErrorGetSingleFailed);
+        throw new IOException(ErrorGetSingleFailed);
     }
 
     
@@ -161,6 +158,6 @@ public class CommentFileRepository : ICommentRepository {
             // Return the entire list:
             return CommentList.AsQueryable();
         } 
-        throw new Exception(ErrorGetManyFailed);
+        throw new IOException(ErrorGetManyFailed);
     }
 }
