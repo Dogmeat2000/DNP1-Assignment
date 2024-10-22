@@ -24,6 +24,8 @@ public class CommentsController : ControllerBase {
     [HttpPost(("/"), Name = "PostComment")]
     public async Task<ActionResult<CommentDTO>> CreateComment(int fId, int pId, [FromBody] CommentDTO newPost) {
         try {
+            // TODO: Validate parameters/arguments!
+            
             // Convert DTO to proper entity:
             Comment comment = CommentConverter.DTOToComment(newPost);
             
@@ -43,6 +45,8 @@ public class CommentsController : ControllerBase {
     [HttpGet(("{cId:int}"), Name = "Get")]
     public async Task<ActionResult<CommentDTO>> GetComment(int fId, int pId, int cId) {
         try {
+            // TODO: Validate parameters/arguments!
+            
             // Attempt to retrieve Comment from repository:
             Comment? comment = await _commentRepository.GetSingleAsync(cId, pId, fId);
             
@@ -63,6 +67,8 @@ public class CommentsController : ControllerBase {
     [HttpGet(("/"), Name = "Get")]
     public ActionResult<List<CommentDTO>> GetComments(int fId, int pId) {
         try {
+            // TODO: Validate parameters/arguments!
+            
             // Query all matching Comments:
             IQueryable<Comment> comments = _commentRepository.GetMany().Where(c => c.ParentForum_id == fId && c.ParentPost_id == pId);
             
@@ -90,6 +96,8 @@ public class CommentsController : ControllerBase {
     [HttpGet(("/"), Name = "Get")]
     public ActionResult<List<CommentDTO>> GetCommentsByAuthor(int fId, int pId, int authorId) {
         try {
+            // TODO: Validate parameters/arguments!
+            
             // Query all matching Comments:
             IQueryable<Comment> comments = _commentRepository.GetMany().Where(
                 c => c.ParentForum_id == fId && c.ParentPost_id == pId && c.Author_Id == authorId);
@@ -117,8 +125,9 @@ public class CommentsController : ControllerBase {
     // Replace an existing comment (Update)
     [HttpPut(("/"), Name = "Put")]
     public async Task<IActionResult> Put(int fId, int pId, [FromBody] CommentDTO post) {
-
         try {
+            // TODO: Validate parameters/arguments!
+            
             // Convert received DTO to repository entity:
             Comment commentFromClient = CommentConverter.DTOToComment(post);
         
@@ -147,6 +156,8 @@ public class CommentsController : ControllerBase {
     [HttpDelete(("/{cId:int}"), Name = "Delete")]
     public async  Task<IActionResult> DeleteComment(int fId, int pId, int cId) {
         try {
+            // TODO: Validate parameters/arguments!
+            
             await _commentRepository.DeleteAsync(fId, pId, cId);
 
             // Return:
@@ -158,6 +169,4 @@ public class CommentsController : ControllerBase {
             return ValidationProblem(); // If some other problem occured:
         }
     }
-    
-
 }
