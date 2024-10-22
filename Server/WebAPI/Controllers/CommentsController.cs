@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 // TODO: Investigate how to embed HATEOAS links in responses!
 
 [ApiController]
-[Route("{fId:int}/{pId:int}/[controller]")]
+[Route("{fId:int}/{pId:int}")]
 public class CommentsController : ControllerBase {
     private readonly ICommentRepository _commentRepository;
 
@@ -64,7 +64,7 @@ public class CommentsController : ControllerBase {
     
     
     // Read Multiple Comments (Read), filtered by forum and post id.
-    [HttpGet(("/"), Name = "Get")]
+    [HttpGet(("/[controller]"), Name = "Get")]
     public ActionResult<List<CommentDTO>> GetComments(int fId, int pId) {
         try {
             // TODO: Validate parameters/arguments!
@@ -93,7 +93,7 @@ public class CommentsController : ControllerBase {
     
     
     // Read Multiple Comments (Read), filtered by forum, post and user_id
-    [HttpGet(("/"), Name = "Get")]
+    [HttpGet(("/[controller]"), Name = "Get")]
     public ActionResult<List<CommentDTO>> GetCommentsByAuthor(int fId, int pId, int authorId) {
         try {
             // TODO: Validate parameters/arguments!
@@ -123,7 +123,7 @@ public class CommentsController : ControllerBase {
     
     
     // Replace an existing comment (Update)
-    [HttpPut(("/"), Name = "Put")]
+    [HttpPut(("/[controller]"), Name = "Put")]
     public async Task<IActionResult> Put(int fId, int pId, [FromBody] CommentDTO post) {
         try {
             // TODO: Validate parameters/arguments!

@@ -63,6 +63,35 @@ public class ForumsController : ControllerBase {
     }
     
     
+    // Read Multiple Forums (Read), filtered by forum_id.
+    [HttpGet(("/[controller]"), Name = "Get")]
+    public ActionResult<List<ForumDTO>> GetForums(int fId, int parentForumdId) {
+        try {
+            // TODO: Validate parameters/arguments!
+            
+            // Query all matching Forums:
+            IQueryable<Forum> forums = _forumRepository.GetMany().Where(f => f.ParentForum_id == fId && f.ParentForum_id == parentForumdId);
+            
+            // If none were found, throw error:
+            if(!forums.Any())
+                throw new KeyNotFoundException();
+            
+            // Convert found objects to DTO:
+            List<ForumDTO> results = new List<ForumDTO>();
+            foreach (Forum forum in forums)
+                results.Add(ForumConverter.ForumToDTO(forum));
+            
+            // return result:
+            return Ok(results);
+            
+        } catch (KeyNotFoundException) { 
+            return NotFound(); // If forum was not found:
+        } catch (Exception) { 
+            return ValidationProblem(); // If some other problem occured:
+        }
+    }
+    
+    
     // Replace an existing forum (Update)
     [HttpPut(("/"), Name = "Put")]
     public async Task<IActionResult> Put(int fId, [FromBody] ForumDTO forum) {
