@@ -69,7 +69,7 @@ public class PostsController : ControllerBase {
         try {
             // TODO: Validate parameters/arguments!
             
-            // Query all matching Forums:
+            // Query all matching Posts:
             IQueryable<Post> posts = _postRepository.GetMany().Where(p => p.ParentForum_id == fId);
             
             // If none were found, throw error:
@@ -98,7 +98,7 @@ public class PostsController : ControllerBase {
         try {
             // TODO: Validate parameters/arguments!
             
-            // Query all matching Forums:
+            // Query all matching Posts:
             IQueryable<Post> posts = _postRepository.GetMany().Where(p => p.ParentForum_id == fId && p.Title_txt.Contains(searchString));
             
             // If none were found, throw error:
@@ -127,7 +127,7 @@ public class PostsController : ControllerBase {
         try {
             // TODO: Validate parameters/arguments!
             
-            // Query all matching Forums:
+            // Query all matching Posts:
             IQueryable<Post> posts = _postRepository.GetMany().Where(p => p.ParentForum_id == fId && p.Author_id == authorId);
             
             // If none were found, throw error:
