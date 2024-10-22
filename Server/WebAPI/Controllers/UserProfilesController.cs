@@ -94,12 +94,12 @@ public class UserProfilesController : ControllerBase {
     
     // Replace an existing UserProfile (Update)
     [HttpPut(("/{uPId:int}"), Name = "Put")]
-    public async Task<IActionResult> Put(int uPId, int uId, [FromBody] UserProfileDTO post) {
+    public async Task<IActionResult> Put(int uPId, int uId, [FromBody] UserProfileDTO userProfile) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Convert received DTO to repository entity:
-            UserProfile userProfileFromClient = UserProfileConverter.DTOToUserProfile(post);
+            UserProfile userProfileFromClient = UserProfileConverter.DTOToUserProfile(userProfile);
         
             // Check if a UserProfile of this type already exists:
             UserProfile userProfileFromRepository = await _userProfileRepository.GetSingleAsync(uPId, uId);
