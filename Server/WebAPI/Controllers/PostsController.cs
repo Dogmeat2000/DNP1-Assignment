@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 // TODO: Investigate how to embed HATEOAS links in responses!
 
 [ApiController]
-[Route("{fId:int}")]
+[Route("[controller]")]
 public class PostsController : ControllerBase {
     private readonly IPostRepository _postRepository;
 
@@ -21,7 +21,7 @@ public class PostsController : ControllerBase {
     // EndPoints are defined below:
     
     // Create a new Post (Create)
-    [HttpPost(("/"), Name = "PostPost")]
+    [HttpPost(Name = "PostPost")]
     public async Task<ActionResult<PostDTO>> CreatePost([FromBody] PostDTO newPost) {
         try {
             // TODO: Validate parameters/arguments!
@@ -42,8 +42,8 @@ public class PostsController : ControllerBase {
     
     
     // Read an existing Post (Read)
-    [HttpGet(("/{pId:int}"), Name = "Get")]
-    public async Task<ActionResult<PostDTO>> GetPost(int fId, int pId) {
+    [HttpGet(("{pId:int}"), Name = "GetPost")]
+    public async Task<ActionResult<PostDTO>> GetPost([FromQuery] int fId, int pId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -63,72 +63,20 @@ public class PostsController : ControllerBase {
     }
     
     
-    // Read Multiple Posts (Read), filtered by forum_id.
-    [HttpGet(("/[controller]"), Name = "Get")]
-    public ActionResult<List<PostDTO>> GetPosts(int fId) {
+    // Read Multiple Posts (Read), filtered by forum_id, with optional parameters for filtering by title contents or authorId
+    [HttpGet(Name = "GetPosts")]
+    public ActionResult<List<PostDTO>> GetPosts([FromQuery] int fId, [FromQuery] string? searchString, [FromQuery] int? authorId) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Query all matching Posts:
             IQueryable<Post> posts = _postRepository.GetMany().Where(p => p.ParentForum_id == fId);
             
-            // If none were found, throw error:
-            if(!posts.Any())
-                throw new KeyNotFoundException();
-            
-            // Convert found objects to DTO:
-            List<PostDTO> results = new List<PostDTO>();
-            foreach (Post post in posts)
-                results.Add(PostConverter.PostToDTO(post));
-            
-            // return result:
-            return Ok(results);
-            
-        } catch (KeyNotFoundException) { 
-            return NotFound(); // If post was not found:
-        } catch (Exception) { 
-            return ValidationProblem(); // If some other problem occured:
-        }
-    }
-    
-    
-    // Read Multiple Posts (Read), filtered by forum_id, containing a certain String value.
-    [HttpGet(("/[controller]"), Name = "Get")]
-    public ActionResult<List<PostDTO>> GetPostsWithTitleContaining(int fId, string searchString) {
-        try {
-            // TODO: Validate parameters/arguments!
-            
-            // Query all matching Posts:
-            IQueryable<Post> posts = _postRepository.GetMany().Where(p => p.ParentForum_id == fId && p.Title_txt.Contains(searchString));
-            
-            // If none were found, throw error:
-            if(!posts.Any())
-                throw new KeyNotFoundException();
-            
-            // Convert found objects to DTO:
-            List<PostDTO> results = new List<PostDTO>();
-            foreach (Post post in posts)
-                results.Add(PostConverter.PostToDTO(post));
-            
-            // return result:
-            return Ok(results);
-            
-        } catch (KeyNotFoundException) { 
-            return NotFound(); // If post was not found:
-        } catch (Exception) { 
-            return ValidationProblem(); // If some other problem occured:
-        }
-    }
-    
-    
-    // Read Multiple Posts (Read), filtered by forum_id, written by a specific user.
-    [HttpGet(("/[controller]"), Name = "Get")]
-    public ActionResult<List<PostDTO>> GetPostsAuthoredBy(int fId, int authorId) {
-        try {
-            // TODO: Validate parameters/arguments!
-            
-            // Query all matching Posts:
-            IQueryable<Post> posts = _postRepository.GetMany().Where(p => p.ParentForum_id == fId && p.Author_id == authorId);
+            if(authorId.HasValue)
+                posts = posts.Where(p => p.Author_id == authorId);
+  
+            if(searchString != null)
+                posts = posts.Where(p => p.Title_txt.Contains(searchString));
             
             // If none were found, throw error:
             if(!posts.Any())
@@ -151,8 +99,8 @@ public class PostsController : ControllerBase {
     
     
     // Replace an existing post (Update)
-    [HttpPut(("/{pId:int}"), Name = "Put")]
-    public async Task<IActionResult> Put(int fId, int pId, [FromBody] PostDTO post) {
+    [HttpPut(("{pId:int}"), Name = "PutPost")]
+    public async Task<IActionResult> Put([FromQuery] int fId, int pId, [FromBody] PostDTO post) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -182,8 +130,8 @@ public class PostsController : ControllerBase {
     
     
     // Remove an existing post (Delete)
-    [HttpDelete(("/{pId:int}"), Name = "Delete")]
-    public async  Task<IActionResult> DeletePost(int fId, int pId) {
+    [HttpDelete(("{pId:int}"), Name = "DeletePost")]
+    public async  Task<IActionResult> DeletePost([FromQuery] int fId, int pId) {
         try {
             // TODO: Validate parameters/arguments!
             

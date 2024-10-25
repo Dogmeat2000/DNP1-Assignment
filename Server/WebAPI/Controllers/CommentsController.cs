@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 // TODO: Investigate how to embed HATEOAS links in responses!
 
 [ApiController]
-[Route("{fId:int}/{pId:int}")]
+[Route("/[controller]")]
 public class CommentsController : ControllerBase {
     private readonly ICommentRepository _commentRepository;
 
@@ -21,8 +21,8 @@ public class CommentsController : ControllerBase {
     // EndPoints are defined below:
     
     // Create a new Comment (Create)
-    [HttpPost(("/"), Name = "PostComment")]
-    public async Task<ActionResult<CommentDTO>> CreateComment(int fId, int pId, [FromBody] CommentDTO newPost) {
+    [HttpPost(Name = "PostComment")]
+    public async Task<ActionResult<CommentDTO>> CreateComment([FromQuery] int fId, [FromQuery] int pId, [FromBody] CommentDTO newPost) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -42,8 +42,8 @@ public class CommentsController : ControllerBase {
     
     
     // Read an existing Comment (Read)
-    [HttpGet(("{cId:int}"), Name = "Get")]
-    public async Task<ActionResult<CommentDTO>> GetComment(int fId, int pId, int cId) {
+    [HttpGet(("{cId:int}"), Name = "GetComment")]
+    public async Task<ActionResult<CommentDTO>> GetComment([FromQuery] int fId, [FromQuery] int pId, int cId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -63,44 +63,18 @@ public class CommentsController : ControllerBase {
     }
     
     
-    // Read Multiple Comments (Read), filtered by forum and post id.
-    [HttpGet(("/[controller]"), Name = "Get")]
-    public ActionResult<List<CommentDTO>> GetComments(int fId, int pId) {
+    // Read Multiple Comments (Read), with query parameters for filtering by forumId, postId or authorId.
+    [HttpGet(Name = "GetComments")]
+    public ActionResult<List<CommentDTO>> GetComments([FromQuery] int fId, [FromQuery] int pId, [FromQuery] int? authorId) {
         try {
             // TODO: Validate parameters/arguments!
             
-            // Query all matching Comments:
+            // Query all matching Comments, within this post:
             IQueryable<Comment> comments = _commentRepository.GetMany().Where(c => c.ParentForum_id == fId && c.ParentPost_id == pId);
             
-            // If none were found ,throw error:
-            if(!comments.Any())
-                throw new KeyNotFoundException();
-            
-            // Convert found objects to DTO:
-            List<CommentDTO> results = new List<CommentDTO>();
-            foreach (Comment comment in comments)
-                results.Add(CommentConverter.CommentToDTO(comment));
-            
-            // return result:
-            return Ok(results);
-            
-        } catch (KeyNotFoundException) { 
-            return NotFound(); // If comment was not found:
-        } catch (Exception) { 
-            return ValidationProblem(); // If some other problem occured:
-        }
-    }
-    
-    
-    // Read Multiple Comments (Read), filtered by forum, post and user_id
-    [HttpGet(("/[controller]"), Name = "Get")]
-    public ActionResult<List<CommentDTO>> GetCommentsByAuthor(int fId, int pId, int authorId) {
-        try {
-            // TODO: Validate parameters/arguments!
-            
-            // Query all matching Comments:
-            IQueryable<Comment> comments = _commentRepository.GetMany().Where(
-                c => c.ParentForum_id == fId && c.ParentPost_id == pId && c.Author_Id == authorId);
+            // If authorId was provided, remove all non-matching authored comments:
+            if (authorId.HasValue)
+                comments = comments.Where(a => a.Author_Id == authorId);
             
             // If none were found ,throw error:
             if(!comments.Any())
@@ -123,8 +97,8 @@ public class CommentsController : ControllerBase {
     
     
     // Replace an existing comment (Update)
-    [HttpPut(("/[controller]"), Name = "Put")]
-    public async Task<IActionResult> Put(int fId, int pId, [FromBody] CommentDTO post) {
+    [HttpPut(("/{cId:int}"), Name = "PutComment")]
+    public async Task<IActionResult> Put([FromQuery] int fId, [FromQuery] int pId, int cId, [FromBody] CommentDTO post) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -132,7 +106,7 @@ public class CommentsController : ControllerBase {
             Comment commentFromClient = CommentConverter.DTOToComment(post);
         
             // Check if a Comment of this type already exists:
-            Comment commentFromRepository = await _commentRepository.GetSingleAsync(commentFromClient.Comment_id, pId, fId);
+            Comment commentFromRepository = await _commentRepository.GetSingleAsync(cId, pId, fId);
             
             // Update Comment properties:
             commentFromRepository.Body_txt = commentFromClient.Body_txt;
@@ -153,8 +127,8 @@ public class CommentsController : ControllerBase {
     
     
     // Remove an existing comment (Delete)
-    [HttpDelete(("/{cId:int}"), Name = "Delete")]
-    public async  Task<IActionResult> DeleteComment(int fId, int pId, int cId) {
+    [HttpDelete(("/{cId:int}"), Name = "DeleteComment")]
+    public async  Task<IActionResult> DeleteComment([FromQuery] int fId, [FromQuery] int pId, int cId) {
         try {
             // TODO: Validate parameters/arguments!
             

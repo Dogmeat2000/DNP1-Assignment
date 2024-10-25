@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 // TODO: Investigate how to embed HATEOAS links in responses!
 
 [ApiController]
-[Route("/Users/{uId:int}")]
+[Route("[controller]")]
 public class UserProfilesController : ControllerBase {
     private readonly IUserProfileRepository _userProfileRepository;
 
@@ -21,7 +21,7 @@ public class UserProfilesController : ControllerBase {
     // EndPoints are defined below:
     
     // Create a new UserProfile (Create)
-    [HttpPost(("/"), Name = "PostUserProfile")]
+    [HttpPost(Name = "PostUserProfile")]
     public async Task<ActionResult<UserProfileDTO>> CreateUserProfile([FromBody] UserProfileDTO newUserProfile) {
         try {
             // TODO: Validate parameters/arguments!
@@ -42,8 +42,8 @@ public class UserProfilesController : ControllerBase {
     
     
     // Read an existing UserProfile (Read)
-    [HttpGet(("/{uId:int}"), Name = "Get")]
-    public async Task<ActionResult<PostDTO>> GetUserProfile(int pId, int uId) {
+    [HttpGet(("{pId:int}"), Name = "GetUserProfile")]
+    public async Task<ActionResult<PostDTO>> GetUserProfile(int pId, [FromQuery] int uId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -64,8 +64,8 @@ public class UserProfilesController : ControllerBase {
     
     
     // Read Multiple UserProfiles (Read):
-    [HttpGet(("/[controller]"), Name = "Get")]
-    public ActionResult<List<UserProfileDTO>> GetUserProfiles(int uId) {
+    [HttpGet(Name = "GetUserProfiles")]
+    public ActionResult<List<UserProfileDTO>> GetUserProfiles([FromQuery] int uId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -93,8 +93,8 @@ public class UserProfilesController : ControllerBase {
     
     
     // Replace an existing UserProfile (Update)
-    [HttpPut(("/{uPId:int}"), Name = "Put")]
-    public async Task<IActionResult> Put(int uPId, int uId, [FromBody] UserProfileDTO userProfile) {
+    [HttpPut(("{uPId:int}"), Name = "PutUserProfile")]
+    public async Task<IActionResult> Put(int uPId, [FromQuery] int uId, [FromBody] UserProfileDTO userProfile) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -123,8 +123,8 @@ public class UserProfilesController : ControllerBase {
     
     
     // Remove an existing UserProfile (Delete)
-    [HttpDelete(("/{uPId:int}"), Name = "Delete")]
-    public async  Task<IActionResult> DeletePost(int uPId, int uId) {
+    [HttpDelete(("{uPId:int}"), Name = "DeleteUserProfile")]
+    public async  Task<IActionResult> DeletePost(int uPId, [FromQuery] int uId) {
         try {
             // TODO: Validate parameters/arguments!
             

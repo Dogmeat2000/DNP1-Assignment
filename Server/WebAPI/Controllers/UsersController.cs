@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 // TODO: Investigate how to embed HATEOAS links in responses!
 
 [ApiController]
-[Route("/[Controller]")]
+[Route("[Controller]")]
 public class UsersController : ControllerBase {
     private readonly IUserRepository _userRepository;
 
@@ -21,7 +21,7 @@ public class UsersController : ControllerBase {
     // EndPoints are defined below:
     
     // Create a new User (Create)
-    [HttpPost(("/"), Name = "PostUser")]
+    [HttpPost(Name = "PostUser")]
     public async Task<ActionResult<UserDTO>> CreateUser([FromBody] UserDTO newUser) {
         try {
             // TODO: Validate parameters/arguments!
@@ -36,13 +36,13 @@ public class UsersController : ControllerBase {
             return CreatedAtAction(nameof(GetUser), new {user.User_id}); // Hands over some exception throwing/handling to AspNetCore.
             
         } catch (Exception) { 
-            return ValidationProblem(); // If some other problem occured:
+            return ValidationProblem(); // If some other problem occured
         }
     }
     
     
     // Read an existing User (Read)
-    [HttpGet(("/{uId:int}"), Name = "Get")]
+    [HttpGet(("{uId:int}"), Name = "GetUser")]
     public async Task<ActionResult<UserDTO>> GetUser(int uId) {
         try {
             // TODO: Validate parameters/arguments!
@@ -56,15 +56,15 @@ public class UsersController : ControllerBase {
             // return result:
             return Ok(result);
         } catch (KeyNotFoundException) { 
-            return NotFound(); // If User was not found:
+            return NotFound(); // If User was not found
         } catch (Exception) { 
-            return ValidationProblem(); // If some other problem occured:
+            return ValidationProblem(); // If some other problem occured
         }
     }
     
     
     // Read Multiple User (Read):
-    [HttpGet((""), Name = "Get")]
+    [HttpGet(Name = "GetUsers")]
     public ActionResult<List<UserDTO>> GetUsers() {
         try {
             // TODO: Validate parameters/arguments!
@@ -85,15 +85,15 @@ public class UsersController : ControllerBase {
             return Ok(results);
             
         } catch (KeyNotFoundException) { 
-            return NotFound(); // If User was not found:
+            return NotFound(); // If User was not found
         } catch (Exception) { 
-            return ValidationProblem(); // If some other problem occured:
+            return ValidationProblem(); // If some other problem occured
         }
     }
     
     
     // Replace an existing User (Update)
-    [HttpPut(("/{uId:int}"), Name = "Put")]
+    [HttpPut(("{uId:int}"), Name = "PutUser")]
     public async Task<IActionResult> Put(int uId, [FromBody] UserDTO user) {
         try {
             // TODO: Validate parameters/arguments!
@@ -114,15 +114,15 @@ public class UsersController : ControllerBase {
             return NoContent();
 
         } catch (KeyNotFoundException) { 
-            return NotFound(); // If User was not found:
+            return NotFound(); // If User was not found
         } catch (Exception) { 
-            return ValidationProblem(); // If some other problem occured:
+            return ValidationProblem(); // If some other problem occured
         }
     }
     
     
     // Remove an existing User (Delete)
-    [HttpDelete(("/{uId:int}"), Name = "Delete")]
+    [HttpDelete(("{uId:int}"), Name = "DeleteUser")]
     public async  Task<IActionResult> DeletePost(int uId) {
         try {
             // TODO: Validate parameters/arguments!
@@ -135,7 +135,7 @@ public class UsersController : ControllerBase {
         } catch (KeyNotFoundException) {
             return NotFound(); // If User was not found:
         } catch (Exception) {
-            return ValidationProblem(); // If some other problem occured:
+            return ValidationProblem(); // If some other problem occured
         }
     }
 }

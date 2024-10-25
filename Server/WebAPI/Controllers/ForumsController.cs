@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 // TODO: Investigate how to embed HATEOAS links in responses!
 
 [ApiController]
-[Route("")]
+[Route("[controller]")]
 public class ForumsController : ControllerBase {
     private readonly IForumRepository _forumRepository;
 
@@ -21,7 +21,7 @@ public class ForumsController : ControllerBase {
     // EndPoints are defined below:
     
     // Create a new Forum (Create)
-    [HttpPost(("/"), Name = "PostForum")]
+    [HttpPost(Name = "PostForum")]
     public async Task<ActionResult<ForumDTO>> CreateForum([FromBody] ForumDTO newForum) {
         try {
             // TODO: Validate parameters/arguments!
@@ -42,8 +42,8 @@ public class ForumsController : ControllerBase {
     
     
     // Read an existing Forum (Read)
-    [HttpGet(("{fId:int}"), Name = "Get")]
-    public async Task<ActionResult<ForumDTO>> GetForum(int fId, int parentForumId) {
+    [HttpGet(("{fId:int}"), Name = "GetForum")]
+    public async Task<ActionResult<ForumDTO>> GetForum([FromQuery] int fId, [FromQuery] int parentForumId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -64,8 +64,8 @@ public class ForumsController : ControllerBase {
     
     
     // Read Multiple Forums (Read), filtered by forum_id.
-    [HttpGet(("/[controller]"), Name = "Get")]
-    public ActionResult<List<ForumDTO>> GetForums(int fId, int parentForumdId) {
+    [HttpGet(Name = "GetForums")]
+    public ActionResult<List<ForumDTO>> GetForums([FromQuery] int fId, [FromQuery] int parentForumdId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -93,8 +93,8 @@ public class ForumsController : ControllerBase {
     
     
     // Replace an existing forum (Update)
-    [HttpPut(("/"), Name = "Put")]
-    public async Task<IActionResult> Put(int fId, [FromBody] ForumDTO forum) {
+    [HttpPut(("{fId:int}"), Name = "PutForum")]
+    public async Task<IActionResult> Put([FromQuery] int fId, [FromBody] ForumDTO forum) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -102,7 +102,7 @@ public class ForumsController : ControllerBase {
             Forum forumFromClient = ForumConverter.DTOToForum(forum);
         
             // Check if a Forum of this type already exists:
-            Forum forumFromRepository = await _forumRepository.GetSingleAsync(forumFromClient.Forum_id, forumFromClient.ParentForum_id);
+            Forum forumFromRepository = await _forumRepository.GetSingleAsync(fId, forumFromClient.ParentForum_id);
             
             // Update Forum properties:
             forumFromRepository.Title_txt = forumFromClient.Title_txt;
@@ -123,8 +123,8 @@ public class ForumsController : ControllerBase {
     
     
     // Remove an existing forum (Delete)
-    [HttpDelete(("/{cId:int}"), Name = "Delete")]
-    public async  Task<IActionResult> DeleteComment(int fId, int parentForumdId) {
+    [HttpDelete(("{fId:int}"), Name = "DeleteForum")]
+    public async  Task<IActionResult> DeleteComment(int fId, [FromQuery] int parentForumdId) {
         try {
             // TODO: Validate parameters/arguments!
             
