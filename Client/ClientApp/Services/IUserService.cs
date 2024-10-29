@@ -7,5 +7,5 @@ public interface IUserService {
     Task UpdateUserAsync(int id, UserDTO request);
     Task DeleteUserAsync(int userId, UserDTO request);
     Task<UserDTO> GetSingleUserAsync(int userId, UserDTO request);
-    IQueryable<UserDTO> GetManyUsers(UserDTO request);
+    Task<IEnumerable<UserDTO>> GetManyUsersAsync ();
 }

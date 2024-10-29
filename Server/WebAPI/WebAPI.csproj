@@ -18,4 +18,8 @@
       <ProjectReference Include="..\RepositoryContracts\RepositoryContracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="DataFiles\comments.json" />
+    </ItemGroup>
+
 </Project>

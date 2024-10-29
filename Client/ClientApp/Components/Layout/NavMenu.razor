@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">ClientApp</a>
     </div>
@@ -9,8 +11,8 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            <NavLink class="nav-link" href="#" @onclick="() => NavigateToForum(-1)" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Forums
             </NavLink>
         </div>
 
@@ -25,5 +27,27 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="users">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Users
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="users1">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Login
+            </NavLink>
+        </div>
     </nav>
 </div>
+
+
+@code {
+
+// Methods to have Blazor navigate the user to the links they click on - while updating the code from the server (prevents and issue where nothing happens when clicking a link):
+    private void NavigateToForum(int forumId) {
+        Navigation.NavigateTo($"/forums/{forumId}", forceLoad: true);
+    }
+
+}

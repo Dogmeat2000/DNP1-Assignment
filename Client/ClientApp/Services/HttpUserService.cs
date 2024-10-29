@@ -38,8 +38,16 @@ public class HttpUserService : IUserService {
         // TODO: Missing implementation
     }
 
-    public IQueryable<UserDTO> GetManyUsers(UserDTO request) {
-        throw new NotImplementedException();
-        // TODO: Missing implementation
+    public async Task<IEnumerable<UserDTO>> GetManyUsersAsync() {
+        HttpResponseMessage httpResponse = await client.GetAsync("users");
+        string response = await httpResponse.Content.ReadAsStringAsync();
+        if (!httpResponse.IsSuccessStatusCode) {
+            throw new Exception(response);
+        }
+        
+        return JsonSerializer.Deserialize<List<UserDTO>>(response, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        }) ?? Enumerable.Empty<UserDTO>();
     }
 }

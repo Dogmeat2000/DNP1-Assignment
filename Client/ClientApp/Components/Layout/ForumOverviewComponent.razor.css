@@ -1,0 +1,77 @@
+.forum-container {
+  font-family: Arial, sans-serif;
+  color: #f0f0f0;
+  background-color: #2b2b2b;
+  padding: 1em;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.forum-header {
+  margin-bottom: 1.5em;
+}
+
+.forum-list-section,
+.post-list-section {
+  margin-bottom: 1em;
+  border: 1px dashed #4ea8de;
+  padding: 1em;
+}
+
+h3 {
+  color: #4ea8de;
+  font-weight: bold;
+}
+
+.forum-list,
+.post-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.forum-item,
+.post-item {
+  display: flex; /* Use Flexbox for horizontal layout */
+  justify-content: space-between; /* Space out content and stats */
+  align-items: center; /* Center align items vertically */
+  border-top: 1px solid #4ea8de;
+  padding: 0.5em 0;
+}
+
+.forum-item:first-child,
+.post-item:first-child {
+  border-top: none;
+}
+
+.forum-link,
+.post-link {
+  color: #4ea8de;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.forum-link:hover,
+.post-link:hover {
+  text-decoration: underline;
+}
+
+.forum-info-container,
+.post-info-container {
+  flex: 1; /* Allow this section to take available space */
+}
+
+.forum-stats,
+.post-stats {
+  display: flex; /* Use Flexbox to align stats vertically */
+  flex-direction: column; /* Stack stats vertically */
+  margin-left: 20px; /* Space between info and stats */
+  color: #d3d3d3; /* Keep stats color consistent */
+  font-size: 0.9em; /* Keep font size consistent */
+}
+
+.forum-info,
+.post-info {
+  color: #d3d3d3;
+  font-size: 0.9em;
+}

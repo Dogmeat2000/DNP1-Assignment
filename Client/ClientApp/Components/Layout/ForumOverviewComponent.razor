@@ -1,0 +1,159 @@
+﻿@using ApiContracts
+@using ClientApp.Services
+@inject IUserProfileService UserProfileService
+@inject NavigationManager Navigation
+
+<div class="forum-container">
+    <section class="forum-header">
+    </section>
+
+    <section class="forum-list-section">
+        <h3>@ForumName:</h3>
+        <div class="forum-list">
+            @if (Forums.Count > 0) {
+                @foreach (var forum in Forums) {
+                    <div class="forum-item">
+                        <div class="forum-info-container">
+                            <h4>
+                                <a href="#" class="forum-link" @onclick="() => NavigateToForum(forum.Forum_id, forum.ParentForum_id)">@forum.Title_txt</a>
+                            </h4>
+                            @if (GetAuthorNameFromMap(forum.Author_id).Equals("UNKNOWN USER")) {
+                                <p class="forum-info">Created by 'Unknown User' on @forum.Timestamp_created</p>
+                            } else {
+                                <p class="forum-info">Created by '@GetAuthorNameFromMap(forum.Author_id)' on @forum.Timestamp_created</p>
+                            }
+                            
+                        </div>
+                        <div class="forum-stats">
+                        <p>Last post: @forum.LastPost_id</p>
+                        <p>Number of posts: NOT IMPLEMENTED</p>
+                        </div>
+                    </div>
+                }
+            }
+            @if (Forums.Count <= 0) {
+                <div class="forum-item">
+                    <div class="forum-info-container">
+                        <p class="forum-info">No forums found!</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="post-list-section">
+        @if (ForumName.Equals("Global Forums")) {
+            <h3>Global Posts:</h3>
+        } else {
+            <h3>Posts:</h3>
+        }
+        
+        <div class="post-list">
+            @if (Posts.Count > 0) {
+                @foreach (var post in Posts) {
+                    <div class="post-item">
+                        <div class="post-info-container">
+                            <h4>
+                                <a href="#" class="post-link" @onclick="() => NavigateToPost(post.Post_id, post.ParentForum_id)">@post.Title_txt</a>
+                            </h4>
+                            @if (GetAuthorNameFromMap(post.Author_id).Equals("UNKNOWN USER")) {
+                                <p class="post-info">Created by 'Unknown User' on @post.Timestamp_created</p>
+                            }
+                            else {
+                                <p class="post-info">Created by '@GetAuthorNameFromMap(post.Author_id)' on @post.Timestamp_created</p>
+                            }
+
+                        </div>
+                        <div class="post-stats">
+                            @if (@post.Timestamp_modified < @post.Timestamp_created) {
+                                <p>Last updated: @post.Timestamp_created</p>
+                            }
+                            else {
+                                <p>Last updated: @post.Timestamp_modified</p>
+                            }
+                            <!--<p>Replies: @post.RepliesCount</p>-->
+                        </div>
+                    </div>
+                }
+            }
+            @if (Posts.Count <= 0) {
+                <div class="post-item">
+                    <div class="post-info-container">
+                        <p class="post-info">No posts found!</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+@code {
+    [Parameter]
+    public string ForumName { get; set; }
+    
+    [Parameter]
+    public List<ForumDTO> Forums { get; set; }
+
+    [Parameter]
+    public List<PostDTO> Posts { get; set; }
+
+    private Dictionary<int, UserProfileDTO> forumAuthorMap = new(); // Holds the AuthorNames associated with each forum_id
+
+    // Load AuthorNames for each Forum:
+    private async Task InitializeAuthorMapAsync() {
+        // Try to get and add Authors present in the loaded forums:
+        try {
+            foreach (var forumDto in Forums) {
+                var userProfiles = await UserProfileService.GetManyUserProfilesAsync(forumDto.Author_id);
+
+                // Find the proper UserProfile:
+                foreach (UserProfileDTO userProfileDto in userProfiles) {
+                    if (userProfileDto.User_id == forumDto.Author_id) {
+                        forumAuthorMap.TryAdd(forumDto.Author_id, userProfileDto);
+                        break;
+                    }
+                }
+            }
+        }
+        catch (KeyNotFoundException ignored) { }
+        
+        // Try to get and add Authors present in the loaded posts:
+        try {
+            foreach (var postDto in Posts) {
+                var userProfiles = await UserProfileService.GetManyUserProfilesAsync(postDto.Author_id);
+
+                // Find the proper UserProfile:
+                foreach (UserProfileDTO userProfileDto in userProfiles) {
+                    if (userProfileDto.User_id == postDto.Author_id) {
+                        forumAuthorMap.TryAdd(postDto.Author_id, userProfileDto);
+                        break;
+                    }
+                }
+            }
+        }
+        catch (KeyNotFoundException ignored) { }
+    }
+    
+    // Initialize values, that depend on injected parameters from the parent:
+    protected override async Task OnParametersSetAsync() {
+        await InitializeAuthorMapAsync();
+    }
+    
+    // Method to get AuthorName from AuthorMap:
+    private String GetAuthorNameFromMap(int authorId) {
+        try {
+            return forumAuthorMap[authorId].Username;
+        } catch (KeyNotFoundException e) {
+            return "UNKNOWN USER";
+        }
+    }
+    
+    // Methods to have Blazor navigate the user to the links they click on - while updating the code from the server (prevents and issue where nothing happens when clicking a link):
+    private void NavigateToForum(int forumId, int parentForumId) {
+        Navigation.NavigateTo($"/forums/{forumId}?parentForumId={parentForumId}", forceLoad:true);
+    }
+    
+    private void NavigateToPost(int postId, int parentForumId) {
+        Navigation.NavigateTo($"/posts/{postId}?fId={parentForumId}", forceLoad:true);
+    }
+}

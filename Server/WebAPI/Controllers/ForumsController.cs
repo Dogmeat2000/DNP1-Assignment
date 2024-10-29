@@ -43,7 +43,7 @@ public class ForumsController : ControllerBase {
     
     // Read an existing Forum (Read)
     [HttpGet(("{fId:int}"), Name = "GetForum")]
-    public async Task<ActionResult<ForumDTO>> GetForum([FromQuery] int fId, [FromQuery] int parentForumId) {
+    public async Task<ActionResult<ForumDTO>> GetForum(int fId, [FromQuery] int parentForumId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -65,12 +65,12 @@ public class ForumsController : ControllerBase {
     
     // Read Multiple Forums (Read), filtered by forum_id.
     [HttpGet(Name = "GetForums")]
-    public ActionResult<List<ForumDTO>> GetForums([FromQuery] int fId, [FromQuery] int parentForumdId) {
+    public ActionResult<List<ForumDTO>> GetForums([FromQuery] int parentForumId) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Query all matching Forums:
-            IQueryable<Forum> forums = _forumRepository.GetMany().Where(f => f.ParentForum_id == fId && f.ParentForum_id == parentForumdId);
+            IQueryable<Forum> forums = _forumRepository.GetMany().Where(f => f.ParentForum_id == parentForumId);
             
             // If none were found, throw error:
             if(!forums.Any())

@@ -1,0 +1,66 @@
+﻿@page "/Forums/{forumId:int?}"
+@rendermode InteractiveServer
+@using ApiContracts
+@using ClientApp.Components.Layout
+@using ClientApp.Services
+@inject IForumService ForumService
+@inject IPostService PostService
+@inject NavigationManager Navigation
+
+<PageTitle>Forums</PageTitle>
+
+@if (forumId == -1) {
+    // This is the Global Forum overview:
+    <ForumOverviewComponent ForumName="Global Forums" Forums="_forums" Posts="_posts" />
+} else {
+    // This is a sub forum:
+    <ForumOverviewComponent ForumName=@_forumTitle Forums="_forums" Posts="_posts" />
+}
+
+@code {
+    [Parameter] public int? forumId { get; set; }
+    private int? ParentForumId { get; set; } // Optional query parameter, which only exists on subForums.
+    private string? _forumTitle = "";
+    private List<ForumDTO> _forums = new ();
+    private List<PostDTO> _posts = new ();
+    
+    protected override async Task OnInitializedAsync() {
+        
+        // Capture the query parameter
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("parentForumId", out var parentForumId)) {
+            ParentForumId = int.TryParse(parentForumId, out var parsedId) ? parsedId : null;
+        }
+        
+        // Load Forums:
+        try {
+            var forums = await ForumService.GetManyForumsAsync(forumId ?? -1);
+
+            foreach (ForumDTO forumDto in forums) {
+                _forums.Add(forumDto);
+            }
+        } catch (KeyNotFoundException ignored) {}
+
+        // Load Posts:
+        try {
+            var posts = await PostService.GetManyPostsAsync(forumId ?? -1, null, null);
+            foreach (PostDTO postDto in posts) {
+                _posts.Add(postDto);
+            }
+            
+        } catch (KeyNotFoundException ignored) {}
+        
+        // Load forum title:
+        await GetForumTitleAsync(forumId ?? -1, ParentForumId ?? -1);
+    }
+
+    private async Task GetForumTitleAsync(int _forumId, int _parentForumId) {
+        try {
+            var forum = await ForumService.GetSingleAsync(_forumId, _parentForumId);
+            _forumTitle = forum.Title_txt + " Sub-Forums";
+
+        } catch (KeyNotFoundException e) {
+            _forumTitle = "Unknown Sub-Forums";
+        }
+    }
+}

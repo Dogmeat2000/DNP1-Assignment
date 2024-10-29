@@ -1,4 +1,5 @@
 using ClientApp.Components;
+using ClientApp.Services;
 
 namespace ClientApp;
 
@@ -22,8 +23,13 @@ public class Program {
             .AddInteractiveServerComponents();
         
         // Dependency injection:
+        builder.Services.AddScoped<IForumService, HttpForumService>();
+        builder.Services.AddScoped<IPostService, HttpPostService>();
+        builder.Services.AddScoped<ICommentService, HttpCommentService>();
+        builder.Services.AddScoped<IUserService, HttpUserService>();
+        builder.Services.AddScoped<IUserProfileService, HttpUserProfileService>();
         builder.Services.AddScoped(sp => new HttpClient {
-            BaseAddress = new Uri("https://localhost:5107") // Remember to update this address:port, so it corresponds with the HTTPS address/port in the WEBAPI.
+            BaseAddress = new Uri("http://localhost:5107") // Remember to update this address:port, so it corresponds with the HTTPS address/port in the WEBAPI.
         });
         
         var app = builder.Build();
