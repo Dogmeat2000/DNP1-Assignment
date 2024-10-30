@@ -24,7 +24,7 @@
     private List<ForumDTO> _forums = new ();
     private List<PostDTO> _posts = new ();
     
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnParametersSetAsync() {
         
         // Capture the query parameter
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
@@ -33,30 +33,42 @@
         }
         
         // Load Forums:
+        await LoadForums(forumId ?? -1);
+
+        // Load Posts:
+        await LoadPosts(forumId ?? -1);
+        
+        // Load forum title:
+        await GetForumTitleAsync(forumId ?? -1, ParentForumId ?? -1);
+        
+        StateHasChanged();
+    }
+
+    private async Task LoadForums(int _forumId) {
         try {
-            var forums = await ForumService.GetManyForumsAsync(forumId ?? -1);
+            _forums.Clear();
+            
+            var forums = await ForumService.GetManyForumsAsync(_forumId);
 
             foreach (ForumDTO forumDto in forums) {
                 _forums.Add(forumDto);
             }
         } catch (KeyNotFoundException ignored) {}
+    }
 
-        // Load Posts:
+    private async Task LoadPosts(int _forumId) {
         try {
-            var posts = await PostService.GetManyPostsAsync(forumId ?? -1, null, null);
+            var posts = await PostService.GetManyPostsAsync(_forumId, null, null);
             foreach (PostDTO postDto in posts) {
                 _posts.Add(postDto);
             }
             
         } catch (KeyNotFoundException ignored) {}
-        
-        // Load forum title:
-        await GetForumTitleAsync(forumId ?? -1, ParentForumId ?? -1);
     }
 
-    private async Task GetForumTitleAsync(int _forumId, int _parentForumId) {
+    private async Task GetForumTitleAsync(int _forumId, int parentForumId) {
         try {
-            var forum = await ForumService.GetSingleAsync(_forumId, _parentForumId);
+            var forum = await ForumService.GetSingleAsync(_forumId, parentForumId);
             _forumTitle = forum.Title_txt + " Sub-Forums";
 
         } catch (KeyNotFoundException e) {

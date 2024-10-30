@@ -27,7 +27,7 @@ public class HttpForumService : IForumService {
     }
 
     public async Task<ForumDTO> GetSingleAsync(int forumId, int parentForumId) {
-        HttpResponseMessage httpResponse = await client.GetAsync($"Forums/fId={forumId}?parentForumId={parentForumId}");
+        HttpResponseMessage httpResponse = await client.GetAsync($"Forums/{forumId}?parentForumId={parentForumId}");
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode) {
             throw new KeyNotFoundException(response);

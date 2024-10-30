@@ -34,12 +34,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGb3J1bXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/ViewComments.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWaWV3Q29tbWVudHMucmF6b3I=
+[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/Posts.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQb3N0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/ViewPosts.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWaWV3UG9zdHMucmF6b3I=
+[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/ViewComments.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWaWV3Q29tbWVudHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/ViewUserProfiles.razor]
@@ -73,3 +73,7 @@ build_metadata.AdditionalFiles.CssScope = b-vkvvxd35b1
 [C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-rph9l1ako2
+
+[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Layout/PostOverviewComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcUG9zdE92ZXJ2aWV3Q29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-rw07wxcj2s

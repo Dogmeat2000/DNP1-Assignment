@@ -89,13 +89,13 @@
 
 @code {
     [Parameter]
-    public string ForumName { get; set; }
+    public string? ForumName { get; set; }
     
     [Parameter]
-    public List<ForumDTO> Forums { get; set; }
+    public List<ForumDTO>? Forums { get; set; }
 
     [Parameter]
-    public List<PostDTO> Posts { get; set; }
+    public List<PostDTO>? Posts { get; set; }
 
     private Dictionary<int, UserProfileDTO> forumAuthorMap = new(); // Holds the AuthorNames associated with each forum_id
 

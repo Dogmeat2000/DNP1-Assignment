@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 // TODO: Investigate how to embed HATEOAS links in responses!
 
 [ApiController]
-[Route("/[controller]")]
+[Route("[controller]")]
 public class CommentsController : ControllerBase {
     private readonly ICommentRepository _commentRepository;
 

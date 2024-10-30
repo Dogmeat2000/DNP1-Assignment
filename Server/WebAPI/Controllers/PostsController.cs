@@ -43,7 +43,7 @@ public class PostsController : ControllerBase {
     
     // Read an existing Post (Read)
     [HttpGet(("{pId:int}"), Name = "GetPost")]
-    public async Task<ActionResult<PostDTO>> GetPost([FromQuery] int fId, int pId) {
+    public async Task<ActionResult<PostDTO>> GetPost(int pId, [FromQuery] int fId) {
         try {
             // TODO: Validate parameters/arguments!
             

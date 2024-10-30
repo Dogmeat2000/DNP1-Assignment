@@ -26,10 +26,18 @@ public class HttpPostService : IPostService {
     }
 
     public async Task<PostDTO> GetSinglePostAsync(int postId, int forumId) {
-        throw new NotImplementedException();
-        // TODO: Missing implementation
+        HttpResponseMessage httpResponse = await client.GetAsync($"Posts/{postId}?fId={forumId}");
+        string response = await httpResponse.Content.ReadAsStringAsync();
+        if (!httpResponse.IsSuccessStatusCode) {
+            throw new KeyNotFoundException(response);
+        }
+        
+        return JsonSerializer.Deserialize<PostDTO>(response, new JsonSerializerOptions {
+            PropertyNameCaseInsensitive = true
+        })!;
     }
 
+    
     public async Task<IEnumerable<PostDTO>> GetManyPostsAsync(int forumId, String? searchTitle, int? authorId) {
         HttpResponseMessage httpResponse;
         

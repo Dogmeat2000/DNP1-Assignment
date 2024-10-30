@@ -1,0 +1,119 @@
+﻿@using ApiContracts
+@using ClientApp.Services
+@inject IPostService PostService
+@inject ICommentService CommentService
+@inject IUserProfileService UserProfileService
+@inject NavigationManager Navigation
+
+<div class="post-details-container">
+    <h2>@_postDto?.Title_txt</h2>
+
+    @if (GetAuthorNameFromMap(_postDto?.Author_id ?? -1).Equals("UNKNOWN USER")) {
+        <p class="post-info"><strong>Authored by:</strong> 'Unknown User'</p>
+    } else {
+        <p class="post-info"><strong>Authored by:</strong> '@GetAuthorNameFromMap(_postDto?.Author_id ?? -1)'</p>
+    }
+    
+    <p class="post-info"><strong>Created on:</strong> @_postDto?.Timestamp_created</p>
+    
+    @if (_postDto?.Timestamp_created != null && _postDto?.Timestamp_modified != null && _postDto.Timestamp_created < _postDto.Timestamp_modified) {
+        <p class="post-info"><strong>Last modified on:</strong> @_postDto?.Timestamp_modified</p>
+    }
+
+    <div class="post-body">
+        <p>@_postDto?.Body_txt</p>
+    </div>
+    
+    <div class="comments-section">
+        <h3>Comments</h3>
+        @if (_comments.Count > 0) {
+            @foreach (var comment in _comments) {
+                <div class="comment-item">
+                    @if (GetAuthorNameFromMap(comment.Author_Id).Equals("UNKNOWN USER")) {
+                        <p><strong>'Unknown User':</strong> @comment.Body_txt</p>
+                    } else {
+                        <p><strong>'@GetAuthorNameFromMap(comment.Author_Id)':</strong> @comment.Body_txt</p>
+                    }
+                    
+                    <p class="comment-timestamp">Posted on: @comment.Timestamp_created</p>
+                </div>
+            }
+        }
+        else {
+            <p>No comments yet.</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int postId { get; set; }
+    [Parameter] public int ParentForumId { get; set; }
+
+    private PostDTO? _postDto;
+    private Dictionary<int, UserProfileDTO> _authorMap = new(); // Holds the AuthorNames associated with each forum_id
+    
+    private List<CommentDTO> _comments = new();
+
+    protected override async Task OnParametersSetAsync() {
+        
+        await FetchPostDetailsAsync();
+        await FetchCommentsAsync();
+       
+        StateHasChanged();
+    }
+
+    private async Task FetchPostDetailsAsync()
+    {
+        try {
+            _postDto = await PostService.GetSinglePostAsync(postId, ParentForumId);
+            
+            // Try to get and add Authors present in the loaded forums:
+            var userProfiles = await UserProfileService.GetManyUserProfilesAsync(_postDto.Author_id);
+                
+            // Find the proper UserProfile:
+            foreach (UserProfileDTO userProfileDto in userProfiles) {
+                if (userProfileDto.User_id == _postDto.Author_id) {
+                    _authorMap.TryAdd(_postDto.Author_id, userProfileDto);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // TODO: Missing implementation
+        }
+    }
+
+    private async Task FetchCommentsAsync()
+    {
+        try {
+            var comments = await CommentService.GetManyCommentsAsync(ParentForumId, postId, null);
+
+            foreach (var comment in comments) {
+                _comments.Add(comment);
+                
+                // Try to get and add Authors present in the loaded forums:
+                var userProfiles = await UserProfileService.GetManyUserProfilesAsync(comment.Author_Id);
+                
+                // Find the proper UserProfile:
+                foreach (UserProfileDTO userProfileDto in userProfiles) {
+                    if (userProfileDto.User_id == comment.Author_Id) {
+                        _authorMap.TryAdd(comment.Author_Id, userProfileDto);
+                        break;
+                    }
+                }
+            }
+        } catch (Exception) {
+            // TODO: Missing implementation
+        }
+    }
+    
+    // Method to get AuthorName from AuthorMap:
+    private String GetAuthorNameFromMap(int authorId) {
+        try {
+            return _authorMap[authorId].Username;
+        } catch (KeyNotFoundException e) {
+            return "UNKNOWN USER";
+        } catch (NullReferenceException e) {
+            return "UNKNOWN USER";
+        }
+    }
+}

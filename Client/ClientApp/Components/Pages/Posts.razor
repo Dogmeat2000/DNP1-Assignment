@@ -1,0 +1,28 @@
+﻿@page "/Posts/{postId:int}"
+@using ClientApp.Components.Layout
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<PageTitle>Post Details</PageTitle>
+
+@if (postId != -1) {
+    <PostOverviewComponent postId=@postId ParentForumId=@ParentForumId/>
+} else {
+    <p>Loading posts and comments...</p>
+}
+
+
+@code {
+    [Parameter] public int postId { get; set; }
+    private int ParentForumId { get; set; } // Mandatory Query parameter
+
+    protected override async Task OnInitializedAsync() {
+        // Capture the query parameter
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("fId", out var parentForumId)) {
+            ParentForumId = int.TryParse(parentForumId, out var parsedId) ? parsedId : -1;
+        }
+        
+        StateHasChanged();
+    }
+}
