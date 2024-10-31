@@ -6,7 +6,8 @@ Run the application, by selected "program.cs" inside the CommandLineInterface pr
 ### To use with Web UI:
 1. Initialize/Start the WebAPI project.
 2. Initialize/Start the ClientApp project and wait for the webpage to be auto-launched inside your standard browser.
-![(Command Line Interface)](Images/Blazor_UI_ForumOverview.png)
+   
+![(Command Line Interface)](Images/Blazor_UI_ForumOverview.jpg)
 
 ### To use with CLI:
 1. Boot up the CLI, and follow on-screen instructions!
