@@ -10,4 +10,8 @@
       <ProjectReference Include="..\..\Shared\ApiContracts\ApiContracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="Components\Pages\ViewUserProfiles.razor" />
+    </ItemGroup>
+
 </Project>

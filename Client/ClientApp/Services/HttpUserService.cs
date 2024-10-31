@@ -11,7 +11,7 @@ public class HttpUserService : IUserService {
     }
     
     public async Task<UserDTO> AddUserAsync(UserDTO request) {
-        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("users", request);
+        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("Users", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode) {
             throw new Exception(response);
@@ -31,9 +31,16 @@ public class HttpUserService : IUserService {
         // TODO: Missing implementation
     }
 
-    public async Task<UserDTO> GetSingleUserAsync(int userId, UserDTO request) {
-        throw new NotImplementedException();
-        // TODO: Missing implementation
+    public async Task<UserDTO> GetSingleUserAsync(int userId) {
+        HttpResponseMessage httpResponse = await client.GetAsync($"Users/{userId}");
+        string response = await httpResponse.Content.ReadAsStringAsync();
+        if (!httpResponse.IsSuccessStatusCode) {
+            throw new KeyNotFoundException(response);
+        }
+        
+        return JsonSerializer.Deserialize<UserDTO>(response, new JsonSerializerOptions {
+            PropertyNameCaseInsensitive = true
+        })!;
     }
 
     public async Task<IEnumerable<UserDTO>> GetManyUsersAsync() {

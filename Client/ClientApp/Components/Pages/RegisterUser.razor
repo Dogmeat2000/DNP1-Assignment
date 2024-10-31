@@ -1,0 +1,92 @@
+﻿@page "/RegisterUser"
+@rendermode InteractiveServer
+@using ApiContracts
+@using ClientApp.Services
+@inject IUserProfileService UserProfileService
+@inject IUserService UserService
+
+<PageTitle>RegisterUser</PageTitle>
+
+<div class="registerUser-details-container">
+    <h2>Sign Up:</h2>
+    
+    <section class="registerUser-section mx-2">
+        @if (!_userWasRegistered) {
+            <div>
+                <p>Choose Username:<br/></p> <InputText class="registerUserCell justify-content-center mb-4" @bind-Value="_username"></InputText>
+            </div>
+            <div>
+                <p>Enter Password:<br/></p> <InputText class="registerUserCell justify-content-center mb-4" @bind-Value="_password"></InputText>
+            </div>
+            
+            <div>
+                <p>Confirm Password:<br/></p> <InputText class="registerUserCell justify-content-center mb-4" @bind-Value="_passwordConfirm"></InputText>
+            </div>
+            
+            @if (_errorMsg != null) {
+                <p class="btn-warning">ERROR: @_errorMsg</p>
+            }
+            
+            <button class="btn btn-primary" @onclick="RegisterNewUser">Sign Up</button>
+        } else {
+            <section class="registerUser-info">
+            <p>Congratulations @_createdUserProfile!.Username, you have successfully signed up!</p>
+            <p class="mt-2">Enjoy your time with us!</p>
+            </section>
+        }
+    </section>
+</div>
+
+@code {
+
+    private bool _userWasRegistered = false;
+    private UserDTO? _createdUser;
+    private UserProfileDTO? _createdUserProfile;
+    private string? _username = String.Empty;
+    private string? _password = String.Empty;
+    private string? _passwordConfirm = String.Empty;
+    private string? _errorMsg = null;
+    
+    
+
+    private async Task RegisterNewUser() {
+        // Validate data fields first:
+        if (!_password.Any() || !_username.Any() || !_passwordConfirm.Any()) {
+            _errorMsg = "Invalid data entered. Please fill out all fields.";
+        } else if (!_password.Equals(_passwordConfirm)) {
+            _errorMsg = "The entered passwords do not match.";
+        } else {
+            // Attempt to submit the user
+            await SubmitUser(_username, _password);
+            _errorMsg = null;
+            _userWasRegistered = true;
+        }
+        StateHasChanged();
+    }
+
+    private async Task SubmitUser(string username, string password) {
+        // TODO: Much of this should be happening on the server-side, instead of here:
+        try {
+            UserDTO newUser = await UserService.AddUserAsync(new UserDTO());
+
+            // Create and add a corresponding userProfile
+            UserProfileDTO newUserProfile = new UserProfileDTO() {
+                Username = username,
+                Password = password,
+                User_id = newUser.User_id,
+            };
+            newUserProfile = await UserProfileService.AddUserProfileAsync(newUserProfile);
+
+            _createdUser = newUser;
+            _createdUserProfile = newUserProfile;
+            _username = String.Empty;
+            _password = String.Empty;
+            _passwordConfirm = String.Empty;
+            
+        } catch (Exception e) {
+            _errorMsg = e.Message; // TODO: Review this exception handling.
+            Console.WriteLine(e.StackTrace);
+        }
+
+    }
+}

@@ -22,10 +22,6 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -36,22 +32,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/Posts.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQb3N0cy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/ViewComments.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWaWV3Q29tbWVudHMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/ViewUserProfiles.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWaWV3VXNlclByb2ZpbGVzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/ViewUsers.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWaWV3VXNlcnMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Routes.razor]
@@ -77,3 +57,7 @@ build_metadata.AdditionalFiles.CssScope = b-rph9l1ako2
 [C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Layout/PostOverviewComponent.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcUG9zdE92ZXJ2aWV3Q29tcG9uZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = b-rw07wxcj2s
+
+[C:/Users/krige/Dropbox/Pc (2)/Documents/Studier/Professionsbachelor/.NET Projects/SW-DNP1-A24/DNP1 - Assignment/Client/ClientApp/Components/Pages/RegisterUser.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3RlclVzZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-rwn2tggd1t

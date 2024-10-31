@@ -41,8 +41,9 @@
         } else {
             <p>No comments yet.</p>
         }
+        <p>Add a comment: </p>
         <div>
-            <textarea id="CommentInput" class="container-fluid d-flex justify-content-center mb-2" @bind="_commentTxt"></textarea>
+            <InputTextArea class="container-fluid d-flex justify-content-center mb-2" @bind-Value="_commentTxt"></InputTextArea>
         </div>
         
         <input type="submit" value="Submit" class="btn btn-primary" @onclick="PostComment"/>
@@ -85,7 +86,8 @@
                 StateHasChanged();
             }
         } catch (Exception e) {
-            throw e; // TODO: Missing proper implementation
+            Navigation.NavigateTo($"/Error", forceLoad:true); // TODO: Missing proper implementation
+            Console.WriteLine(e.StackTrace);
         }
     }
 
@@ -117,7 +119,8 @@
         } catch (KeyNotFoundException ignored) {
             // Do nothing, when no comments are found. User must have the option to add new comments!
         } catch (Exception e) {
-            throw e; // TODO: Missing proper implementation
+            Navigation.NavigateTo($"/Error", forceLoad:true); // TODO: Missing proper implementation
+            Console.WriteLine(e.StackTrace);
         }
     }
     

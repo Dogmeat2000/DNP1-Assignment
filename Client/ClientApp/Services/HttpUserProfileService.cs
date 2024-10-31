@@ -11,8 +11,14 @@ public class HttpUserProfileService : IUserProfileService {
     }
     
     public async Task<UserProfileDTO> AddUserProfileAsync(UserProfileDTO request) {
-        throw new NotImplementedException();
-        // TODO: Missing Implementation
+        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("UserProfiles", request);
+        string response = await httpResponse.Content.ReadAsStringAsync();
+        if (!httpResponse.IsSuccessStatusCode) {
+            throw new Exception(response);
+        }
+        return JsonSerializer.Deserialize<UserProfileDTO>(response, new JsonSerializerOptions {
+            PropertyNameCaseInsensitive = true
+        })!;
     }
 
     public async Task UpdateUserProfileAsync(int id, UserProfileDTO request) {
@@ -26,8 +32,15 @@ public class HttpUserProfileService : IUserProfileService {
     }
 
     public async Task<UserProfileDTO> GetSingleUserProfileAsync(int userProfileId, int userId) {
-        throw new NotImplementedException();
-        // TODO: Missing Implementation
+        HttpResponseMessage httpResponse = await client.GetAsync($"Users/{userProfileId}?uId={userId}");
+        string response = await httpResponse.Content.ReadAsStringAsync();
+        if (!httpResponse.IsSuccessStatusCode) {
+            throw new KeyNotFoundException(response);
+        }
+        
+        return JsonSerializer.Deserialize<UserProfileDTO>(response, new JsonSerializerOptions {
+            PropertyNameCaseInsensitive = true
+        })!;
     }
 
     public async Task<IEnumerable<UserProfileDTO>> GetManyUserProfilesAsync(int? userId) {
