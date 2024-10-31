@@ -1,6 +1,5 @@
 # DNP1-Assignment: Main Course Assignment
 
-## Currently accessable through either Web UI or Command Line Interface:
 ### To use with Web UI:
 1. Initialize/Start the WebAPI project.
 2. Initialize/Start the ClientApp project and wait for the webpage to be auto-launched inside your standard browser.
