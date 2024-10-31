@@ -11,7 +11,7 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="#" @onclick="() => NavigateToForum(-1)" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="http://localhost:5106/forums/-1" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Forums
             </NavLink>
         </div>
@@ -38,10 +38,5 @@
 
 
 @code {
-
-// Methods to have Blazor navigate the user to the links they click on - while updating the code from the server (prevents and issue where nothing happens when clicking a link):
-    private void NavigateToForum(int forumId) {
-        Navigation.NavigateTo($"/forums/{forumId}", forceLoad: true);
-    }
-
+    // Empty
 }
