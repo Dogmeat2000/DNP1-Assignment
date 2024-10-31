@@ -1,7 +1,5 @@
 # DNP1-Assignment: Main Course Assignment
 
-Run the application, by selected "program.cs" inside the CommandLineInterface project and running that! Currently only a very basic implementation!
-
 ## Currently accessable through either Web UI or Command Line Interface:
 ### To use with Web UI:
 1. Initialize/Start the WebAPI project.
