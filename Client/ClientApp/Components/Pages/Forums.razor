@@ -11,10 +11,10 @@
 
 @if (forumId == -1) {
     // This is the Global Forum overview:
-    <ForumOverviewComponent ForumName="Global Forums" Forums="_forums" Posts="_posts" />
+    <ForumOverviewComponent ForumName="Global Forums" Forums="_forums" Posts="_posts" forumId="forumId" parentForumId="ParentForumId"/>
 } else {
     // This is a sub forum:
-    <ForumOverviewComponent ForumName=@_forumTitle Forums="_forums" Posts="_posts" />
+    <ForumOverviewComponent ForumName=@_forumTitle Forums="_forums" Posts="_posts" forumId="forumId" parentForumId="ParentForumId"/>
 }
 
 @code {

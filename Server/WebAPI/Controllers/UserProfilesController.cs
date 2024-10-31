@@ -33,7 +33,7 @@ public class UserProfilesController : ControllerBase {
             userProfile = await _userProfileRepository.AddAsync(userProfile);
             
             // Return result, by looking up the created UserProfile:
-            return CreatedAtAction(nameof(GetUserProfile), new {userProfile.Profile_id, userProfile.User_id}); // Hands over some exception throwing/handling to AspNetCore.
+            return CreatedAtAction(nameof(GetUserProfile), new {pId = userProfile.Profile_id, uId = userProfile.User_id}, userProfile); // Hands over some exception throwing/handling to AspNetCore.
             
         } catch (Exception) { 
             return ValidationProblem(); // If some other problem occured:

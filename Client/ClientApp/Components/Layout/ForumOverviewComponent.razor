@@ -1,6 +1,7 @@
 ﻿@using ApiContracts
 @using ClientApp.Services
 @inject IUserProfileService UserProfileService
+@inject IPostService PostService
 @inject NavigationManager Navigation
 
 <div class="forum-container">
@@ -25,8 +26,8 @@
                             
                         </div>
                         <div class="forum-stats">
-                        <p>Last post: @forum.LastPost_id</p>
-                        <p>Number of posts: NOT IMPLEMENTED</p>
+                            <p>Last post: @forum.LastPost_id</p>
+                            <p>Number of posts: NOT IMPLEMENTED</p>
                         </div>
                     </div>
                 }
@@ -40,6 +41,7 @@
             }
         </div>
     </section>
+    <input type="submit" value="New Forum (Not implemented)" class="btn btn-outline-info"/>
 
     <section class="post-list-section">
         @if (ForumName.Equals("Global Forums")) {
@@ -85,6 +87,24 @@
             }
         </div>
     </section>
+
+    @if (!isSubmitPostDetailsVisible) {
+        <button class="btn btn-primary" @onclick="ToggleAddPostDetailsVisibility">New Post</button>
+    } else {
+        <section class="post-list-section">
+            <h3>Submit Post Details:</h3>
+            <div>
+                Title: <InputText class="container-fluid d-flex justify-content-center mb-2" @bind-Value="_newPostTitle"></InputText>
+            </div>
+
+            <div>
+                Text: <InputTextArea class="container-fluid d-flex justify-content-center mb-2" @bind-Value="_newPostBody"></InputTextArea>
+            </div>
+
+        <button class="btn btn-secondary" @onclick="SubmitNewPost">Submit Post</button>
+        </section>
+    }
+    
 </div>
 
 @code {
@@ -96,9 +116,20 @@
 
     [Parameter]
     public List<PostDTO>? Posts { get; set; }
+    
+    [Parameter]
+    public int? forumId { get; set; }
+    
+    [Parameter]
+    public int? parentForumId { get; set; }
 
     private Dictionary<int, UserProfileDTO> forumAuthorMap = new(); // Holds the AuthorNames associated with each forum_id
 
+    private bool isSubmitPostDetailsVisible = false;
+
+    private string _newPostTitle =  string.Empty;
+    private string _newPostBody =  string.Empty;
+    
     // Load AuthorNames for each Forum:
     private async Task InitializeAuthorMapAsync() {
         // Try to get and add Authors present in the loaded forums:
@@ -155,5 +186,27 @@
     
     private void NavigateToPost(int postId, int parentForumId) {
         Navigation.NavigateTo($"/posts/{postId}?fId={parentForumId}", forceLoad:true);
+    }
+
+    private void ToggleAddPostDetailsVisibility() {
+        isSubmitPostDetailsVisible = !isSubmitPostDetailsVisible;
+    }
+
+    private async Task SubmitNewPost() {
+        // Validate input fields:
+        if (_newPostTitle.Any() && _newPostBody.Any()) {
+            // New Post has proper details. Submit it.
+            PostDTO newPost = new PostDTO {
+                Title_txt = _newPostTitle,
+                Body_txt = _newPostBody,
+                Timestamp_created = DateTime.UtcNow,
+                ParentForum_id = forumId ?? -1,
+                Author_id = -1 // TODO: Update this, once login functionality has been implemented.
+            };
+            await PostService.AddPostAsync(newPost);
+            
+            // Navigate to this page again (to ensure proper loading of the newly added posts to the list):
+            NavigateToForum(forumId ?? -1, parentForumId ?? -1);
+        }
     }
 }

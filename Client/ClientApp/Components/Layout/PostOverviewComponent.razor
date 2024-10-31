@@ -93,16 +93,16 @@
     {
         try {
             var comments = await CommentService.GetManyCommentsAsync(ParentForumId, postId, null);
-            
+
             _comments.Clear();
-            
+
             foreach (var comment in comments) {
                 _comments.Add(comment);
-                
+
                 // Try to get and add Authors present in the loaded forums:
                 if (comment.Author_Id != -1) {
                     var userProfiles = await UserProfileService.GetManyUserProfilesAsync(comment.Author_Id);
-                
+
                     // Find the proper UserProfile:
                     foreach (UserProfileDTO userProfileDto in userProfiles) {
                         if (userProfileDto.User_id == comment.Author_Id) {
@@ -112,8 +112,10 @@
                     }
                 }
             }
-            
+
             StateHasChanged();
+        } catch (KeyNotFoundException ignored) {
+            // Do nothing, when no comments are found. User must have the option to add new comments!
         } catch (Exception e) {
             throw e; // TODO: Missing proper implementation
         }

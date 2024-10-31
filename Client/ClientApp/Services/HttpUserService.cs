@@ -13,12 +13,10 @@ public class HttpUserService : IUserService {
     public async Task<UserDTO> AddUserAsync(UserDTO request) {
         HttpResponseMessage httpResponse = await client.PostAsJsonAsync("users", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
-        if (!httpResponse.IsSuccessStatusCode)
-        {
+        if (!httpResponse.IsSuccessStatusCode) {
             throw new Exception(response);
         }
-        return JsonSerializer.Deserialize<UserDTO>(response, new JsonSerializerOptions
-        {
+        return JsonSerializer.Deserialize<UserDTO>(response, new JsonSerializerOptions {
             PropertyNameCaseInsensitive = true
         })!;
     }

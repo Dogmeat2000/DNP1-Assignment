@@ -71,27 +71,19 @@ public class CommentsController : ControllerBase {
             
             // Query all matching Comments, within this post:
             IQueryable<Comment> comments = _commentRepository.GetMany().Where(c => c.ParentForum_id == fId && c.ParentPost_id == pId);
-
-            Console.WriteLine("FOUND1: " + comments.Count());
             
             // If authorId was provided, remove all non-matching authored comments:
             if (authorId.HasValue)
                 comments = comments.Where(a => a.Author_Id == authorId);
             
-            Console.WriteLine("FOUND2: " + comments.Count());
-            
             // If none were found ,throw error:
             if(!comments.Any())
                 throw new KeyNotFoundException();
-            
-            Console.WriteLine("FOUND3: " + comments.Count());
             
             // Convert found objects to DTO:
             List<CommentDTO> results = new List<CommentDTO>();
             foreach (Comment comment in comments)
                 results.Add(CommentConverter.CommentToDTO(comment));
-            
-            Console.WriteLine("FOUND4: " + results.Count());
             
             // return result:
             return Ok(results);

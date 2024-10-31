@@ -11,8 +11,15 @@ public class HttpPostService : IPostService {
     }
 
     public async Task<PostDTO> AddPostAsync(PostDTO request) {
-        throw new NotImplementedException();
-        // TODO: Missing implementation
+        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("Posts", request);
+        string response = await httpResponse.Content.ReadAsStringAsync();
+        if (!httpResponse.IsSuccessStatusCode) {
+            throw new Exception(response);
+        }
+        return JsonSerializer.Deserialize<PostDTO>(response, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        })!;
     }
 
     public async Task UpdatePostAsync(int postId, PostDTO request) {

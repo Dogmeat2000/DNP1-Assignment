@@ -33,7 +33,7 @@ public class PostsController : ControllerBase {
             post = await _postRepository.AddAsync(post);
             
             // Return result, by looking up the created Post:
-            return CreatedAtAction(nameof(GetPost), new {post.Post_id, post.ParentForum_id}); // Hands over some exception throwing/handling to AspNetCore.
+            return CreatedAtAction(nameof(GetPost), new {fId = post.ParentForum_id, pId = post.Post_id}, post); // Hands over some exception throwing/handling to AspNetCore.
             
         } catch (Exception) { 
             return ValidationProblem(); // If some other problem occured:

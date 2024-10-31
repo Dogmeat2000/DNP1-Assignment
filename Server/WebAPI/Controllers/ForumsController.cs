@@ -33,7 +33,7 @@ public class ForumsController : ControllerBase {
             forum = await _forumRepository.AddAsync(forum);
             
             // Return result, by looking up the created Forum:
-            return CreatedAtAction(nameof(GetForum), new {forum.Forum_id, forum.ParentForum_id}); // Hands over some exception throwing/handling to AspNetCore.
+            return CreatedAtAction(nameof(GetForum), new {fId = forum.Forum_id, parentForumId = forum.ParentForum_id}, forum); // Hands over some exception throwing/handling to AspNetCore.
             
         } catch (Exception) { 
             return ValidationProblem(); // If some other problem occured:
