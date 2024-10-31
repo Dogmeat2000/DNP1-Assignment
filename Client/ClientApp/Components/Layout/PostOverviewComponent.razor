@@ -38,10 +38,14 @@
                     <p class="comment-timestamp">Posted on: @comment.Timestamp_created</p>
                 </div>
             }
-        }
-        else {
+        } else {
             <p>No comments yet.</p>
         }
+        <div>
+            <textarea id="CommentInput" class="container-fluid d-flex justify-content-center mb-2" @bind="_commentTxt"></textarea>
+        </div>
+        
+        <input type="submit" value="Submit" class="btn btn-primary" @onclick="PostComment"/>
     </div>
 </div>
 
@@ -49,6 +53,8 @@
     [Parameter] public int postId { get; set; }
     [Parameter] public int ParentForumId { get; set; }
 
+    private string _commentTxt = string.Empty;
+    
     private PostDTO? _postDto;
     private Dictionary<int, UserProfileDTO> _authorMap = new(); // Holds the AuthorNames associated with each forum_id
     
@@ -58,8 +64,6 @@
         
         await FetchPostDetailsAsync();
         await FetchCommentsAsync();
-       
-        StateHasChanged();
     }
 
     private async Task FetchPostDetailsAsync()
@@ -68,17 +72,20 @@
             _postDto = await PostService.GetSinglePostAsync(postId, ParentForumId);
             
             // Try to get and add Authors present in the loaded forums:
-            var userProfiles = await UserProfileService.GetManyUserProfilesAsync(_postDto.Author_id);
+            if (_postDto.Author_id != -1) {
+                var userProfiles = await UserProfileService.GetManyUserProfilesAsync(_postDto.Author_id);
                 
-            // Find the proper UserProfile:
-            foreach (UserProfileDTO userProfileDto in userProfiles) {
-                if (userProfileDto.User_id == _postDto.Author_id) {
-                    _authorMap.TryAdd(_postDto.Author_id, userProfileDto);
-                    break;
+                // Find the proper UserProfile:
+                foreach (UserProfileDTO userProfileDto in userProfiles) {
+                    if (userProfileDto.User_id == _postDto.Author_id) {
+                        _authorMap.TryAdd(_postDto.Author_id, userProfileDto);
+                        break;
+                    }
                 }
+                StateHasChanged();
             }
         } catch (Exception e) {
-            // TODO: Missing implementation
+            throw e; // TODO: Missing proper implementation
         }
     }
 
@@ -86,23 +93,29 @@
     {
         try {
             var comments = await CommentService.GetManyCommentsAsync(ParentForumId, postId, null);
-
+            
+            _comments.Clear();
+            
             foreach (var comment in comments) {
                 _comments.Add(comment);
                 
                 // Try to get and add Authors present in the loaded forums:
-                var userProfiles = await UserProfileService.GetManyUserProfilesAsync(comment.Author_Id);
+                if (comment.Author_Id != -1) {
+                    var userProfiles = await UserProfileService.GetManyUserProfilesAsync(comment.Author_Id);
                 
-                // Find the proper UserProfile:
-                foreach (UserProfileDTO userProfileDto in userProfiles) {
-                    if (userProfileDto.User_id == comment.Author_Id) {
-                        _authorMap.TryAdd(comment.Author_Id, userProfileDto);
-                        break;
+                    // Find the proper UserProfile:
+                    foreach (UserProfileDTO userProfileDto in userProfiles) {
+                        if (userProfileDto.User_id == comment.Author_Id) {
+                            _authorMap.TryAdd(comment.Author_Id, userProfileDto);
+                            break;
+                        }
                     }
                 }
             }
-        } catch (Exception) {
-            // TODO: Missing implementation
+            
+            StateHasChanged();
+        } catch (Exception e) {
+            throw e; // TODO: Missing proper implementation
         }
     }
     
@@ -114,6 +127,30 @@
             return "UNKNOWN USER";
         } catch (NullReferenceException e) {
             return "UNKNOWN USER";
+        }
+    }
+
+    private async Task PostComment() {
+        await PostComment(_commentTxt);
+        
+        _commentTxt = String.Empty;
+        
+        await FetchCommentsAsync();
+
+        Console.WriteLine("Count: " + _comments.Count);
+        
+        StateHasChanged();
+    }
+
+    private async Task PostComment(string commentTxt) {
+        if (commentTxt.Any() && _postDto != null) {
+            CommentDTO commentDto = new CommentDTO {
+                Author_Id = -1, // TODO: Update this, so logged in users can be referenced.
+                Body_txt = commentTxt,
+                ParentForum_id = _postDto.ParentForum_id,
+                ParentPost_id = postId
+            };
+            await CommentService.AddCommentAsync(commentDto);
         }
     }
 }

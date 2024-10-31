@@ -11,8 +11,16 @@ public class HttpCommentService : ICommentService {
     }
 
     public async Task<CommentDTO> AddCommentAsync(CommentDTO comment) {
-        throw new NotImplementedException();
-        // TODO: Missing implementation
+        HttpResponseMessage httpResponse = await client.PostAsJsonAsync($"Comments?fId={comment.ParentForum_id}&pId={comment.ParentPost_id}", comment);
+        string response = await httpResponse.Content.ReadAsStringAsync();
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            throw new Exception(response);
+        }
+        return JsonSerializer.Deserialize<CommentDTO>(response, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        })!;
     }
 
     public async Task UpdateCommentAsync(CommentDTO comment) {

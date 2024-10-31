@@ -22,18 +22,18 @@ public class CommentsController : ControllerBase {
     
     // Create a new Comment (Create)
     [HttpPost(Name = "PostComment")]
-    public async Task<ActionResult<CommentDTO>> CreateComment([FromQuery] int fId, [FromQuery] int pId, [FromBody] CommentDTO newPost) {
+    public async Task<ActionResult<CommentDTO>> CreateComment([FromQuery] int fId, [FromQuery] int pId, [FromBody] CommentDTO newComment) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Convert DTO to proper entity:
-            Comment comment = CommentConverter.DTOToComment(newPost);
+            Comment comment = CommentConverter.DTOToComment(newComment);
             
             // Attempt to add Comment to repository:
             comment = await _commentRepository.AddAsync(comment);
             
             // Return result, by looking up the created Comment:
-            return CreatedAtAction(nameof(GetComment), new {fId, pId, comment.Comment_id}); // Hands over some exception throwing/handling to AspNetCore.
+            return CreatedAtAction(nameof(GetComment), new {fId, pId, cId = comment.Comment_id}, comment); // Hands over some exception throwing/handling to AspNetCore.
             
         } catch (Exception) { 
             return ValidationProblem(); // If some other problem occured:
@@ -71,19 +71,27 @@ public class CommentsController : ControllerBase {
             
             // Query all matching Comments, within this post:
             IQueryable<Comment> comments = _commentRepository.GetMany().Where(c => c.ParentForum_id == fId && c.ParentPost_id == pId);
+
+            Console.WriteLine("FOUND1: " + comments.Count());
             
             // If authorId was provided, remove all non-matching authored comments:
             if (authorId.HasValue)
                 comments = comments.Where(a => a.Author_Id == authorId);
             
+            Console.WriteLine("FOUND2: " + comments.Count());
+            
             // If none were found ,throw error:
             if(!comments.Any())
                 throw new KeyNotFoundException();
+            
+            Console.WriteLine("FOUND3: " + comments.Count());
             
             // Convert found objects to DTO:
             List<CommentDTO> results = new List<CommentDTO>();
             foreach (Comment comment in comments)
                 results.Add(CommentConverter.CommentToDTO(comment));
+            
+            Console.WriteLine("FOUND4: " + results.Count());
             
             // return result:
             return Ok(results);

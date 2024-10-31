@@ -16,7 +16,7 @@
     [Parameter] public int postId { get; set; }
     private int ParentForumId { get; set; } // Mandatory Query parameter
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnParametersSetAsync() {
         // Capture the query parameter
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("fId", out var parentForumId)) {
