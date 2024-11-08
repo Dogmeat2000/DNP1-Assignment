@@ -136,7 +136,29 @@ public class UserProfileFileRepository : IUserProfileRepository {
         throw new IOException(ErrorGetSingleFailed);
     }
 
-    
+    public async Task<UserProfile> GetSingleAsync(string username) {
+                                        
+        // Load raw data from file:
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile());
+        
+        // If data is not null, continue, else abort by throwing an exception!
+        if (rawData != null) {
+            
+            // Cast the loaded data to the proper load format:
+            UserProfileList = rawData.OfType<UserProfile>().ToList();
+            
+            // Check if the UserProfile actually exists:
+            UserProfile? userProfileToReturn = UserProfileList.SingleOrDefault(uP => uP.Username == username && uP.Username == username);
+            if (userProfileToReturn is null)
+                throw new KeyNotFoundException($"No UserProfile with Username '{username}' could be found");
+            
+            // If it does exist, return it:
+            return userProfileToReturn;
+        } 
+        throw new IOException(ErrorGetSingleFailed);
+    }
+
+
     public IQueryable<UserProfile> GetMany() {
         // Load raw data from file:
         List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile()).Result;

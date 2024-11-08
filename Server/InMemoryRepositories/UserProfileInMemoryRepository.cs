@@ -54,6 +54,16 @@ public class UserProfileInMemoryRepository : IUserProfileRepository {
         return Task.FromResult(userProfileToReturn);
     }
 
+    public Task<UserProfile> GetSingleAsync(string username) {
+        UserProfile? userProfileToReturn = UserProfileList.SingleOrDefault(uP => uP.Username == username && uP.Username == username);
+        if (userProfileToReturn is null) {
+            throw new InvalidOperationException(
+                $"No UserProfile with username '{username}' could be found");
+        }
+        
+        return Task.FromResult(userProfileToReturn);
+    }
+
     public IQueryable<UserProfile> GetMany() {
         return UserProfileList.AsQueryable();
     }

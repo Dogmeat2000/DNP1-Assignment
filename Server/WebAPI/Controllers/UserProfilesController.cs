@@ -1,4 +1,5 @@
-﻿using ApiContracts;
+﻿using System.ComponentModel.DataAnnotations;
+using ApiContracts;
 using DTOconverters;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ public class UserProfilesController : ControllerBase {
     
     // Read an existing UserProfile (Read)
     [HttpGet(("{pId:int}"), Name = "GetUserProfile")]
-    public async Task<ActionResult<PostDTO>> GetUserProfile(int pId, [FromQuery] int uId) {
+    public async Task<ActionResult<UserProfileDTO>> GetUserProfile(int pId, [FromQuery] int uId) {
         try {
             // TODO: Validate parameters/arguments!
             
@@ -61,6 +62,30 @@ public class UserProfilesController : ControllerBase {
             return ValidationProblem(); // If some other problem occured:
         }
     }
+    
+    
+    // Read an existing UserProfile (Read) with a specific username
+    /*[HttpGet(Name = "GetUserProfileWithSpecifiedUsername")]
+    public async Task<ActionResult<PostDTO>> GetUserProfileWithSpecifiedUsername([FromQuery] string username) {
+        try {
+            // Validate:
+            if (String.IsNullOrEmpty(username) || String.IsNullOrWhiteSpace(username))
+                throw new ValidationException();
+            
+            // Attempt to retrieve UserProfile from repository:
+            UserProfile userProfile = await _userProfileRepository.GetSingleAsync(username);
+            
+            // Convert to DTO as response:
+            var result = UserProfileConverter.UserProfileToDTO(userProfile);
+            
+            // return result:
+            return Ok(result);
+        } catch (KeyNotFoundException) { 
+            return NotFound(); // If UserProfile was not found:
+        } catch (Exception) { 
+            return ValidationProblem(); // If some other problem occured:
+        }
+    }*/
     
     
     // Read Multiple UserProfiles (Read):

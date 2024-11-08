@@ -522,51 +522,44 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\krige\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\krige\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\WebAPI\\WebAPI.csproj",
+      "projectUniqueName": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\WebAPI\\WebAPI.csproj",
       "projectName": "WebAPI",
-      "projectPath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\WebAPI\\WebAPI.csproj",
+      "projectPath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\WebAPI\\WebAPI.csproj",
       "packagesPath": "C:\\Users\\krige\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\WebAPI\\obj\\",
+      "outputPath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\WebAPI\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\krige\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\krige\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\Entities\\Entities.csproj": {
-              "projectPath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\Entities\\Entities.csproj"
+            "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\Entities\\Entities.csproj": {
+              "projectPath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\Entities\\Entities.csproj"
             },
-            "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\FileRepositories\\FileRepositories.csproj": {
-              "projectPath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\FileRepositories\\FileRepositories.csproj"
+            "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\FileRepositories\\FileRepositories.csproj": {
+              "projectPath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\FileRepositories\\FileRepositories.csproj"
             },
-            "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\RepositoryContracts\\RepositoryContracts.csproj": {
-              "projectPath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\RepositoryContracts\\RepositoryContracts.csproj"
+            "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\RepositoryContracts\\RepositoryContracts.csproj": {
+              "projectPath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Server\\RepositoryContracts\\RepositoryContracts.csproj"
             },
-            "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\ApiContracts\\ApiContracts.csproj": {
-              "projectPath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\ApiContracts\\ApiContracts.csproj"
+            "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\ApiContracts\\ApiContracts.csproj": {
+              "projectPath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\ApiContracts\\ApiContracts.csproj"
             },
-            "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\DTOconverters\\DTOconverters.csproj": {
-              "projectPath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\DTOconverters\\DTOconverters.csproj"
+            "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\DTOconverters\\DTOconverters.csproj": {
+              "projectPath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Shared\\DTOconverters\\DTOconverters.csproj"
             }
           }
         }
@@ -610,7 +603,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

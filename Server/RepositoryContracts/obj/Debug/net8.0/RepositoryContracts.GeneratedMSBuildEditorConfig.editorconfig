@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = RepositoryContracts
-build_property.ProjectDir = C:\Users\krige\Dropbox\Pc (2)\Documents\Studier\Professionsbachelor\.NET Projects\SW-DNP1-A24\DNP1 - Assignment\Server\RepositoryContracts\
+build_property.ProjectDir = C:\Dropbox\Pc (2)\Documents\Studier\Professionsbachelor\.NET Projects\SW-DNP1-A24\DNP1 - Assignment\Server\RepositoryContracts\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
