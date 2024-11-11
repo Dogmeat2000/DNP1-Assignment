@@ -1,5 +1,7 @@
+using ClientApp.Auth;
 using ClientApp.Components;
 using ClientApp.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace ClientApp;
 
@@ -28,6 +30,7 @@ public class Program {
         builder.Services.AddScoped<ICommentService, HttpCommentService>();
         builder.Services.AddScoped<IUserService, HttpUserService>();
         builder.Services.AddScoped<IUserProfileService, HttpUserProfileService>();
+        builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthProvider>();
         builder.Services.AddScoped(sp => new HttpClient {
             BaseAddress = new Uri("http://localhost:5107") // Remember to update this address:port, so it corresponds with the HTTPS address/port in the WEBAPI.
         });

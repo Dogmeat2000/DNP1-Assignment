@@ -16,23 +16,29 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/RegisterUser">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Sign Up
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Error"> <!-- TODO: Update this link once implemented-->
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Login (Not implemented)
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Error"> <!-- TODO: Update this link once implemented-->
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Logout (Not implemented)
-            </NavLink>
-        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/logout">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Logout
+                    </NavLink>
+                </div>
+            </Authorized>
+            
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/login">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+                
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/RegisterUser">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Sign Up
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </nav>
 </div>
 

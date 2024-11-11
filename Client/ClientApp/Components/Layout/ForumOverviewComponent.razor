@@ -6,6 +6,15 @@
 
 <div class="forum-container">
     <section class="forum-header">
+            <AuthorizeView>
+                <Authorized>
+                    <h3>Logged in as: @context.User.Identity.Name</h3>
+                </Authorized>
+                <NotAuthorized>
+                    <h3>You are not logged in!</h3>
+                    <button @onclick='() => Navigation.NavigateTo("login")'>go to login</button>
+                </NotAuthorized>
+            </AuthorizeView>
     </section>
 
     <section class="forum-list-section">

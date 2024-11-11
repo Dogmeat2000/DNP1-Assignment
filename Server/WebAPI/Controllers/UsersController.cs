@@ -51,7 +51,7 @@ public class UsersController : ControllerBase {
             User? user = await _userRepository.GetSingleAsync(uId);
             
             // Convert to DTO as response:
-            var result = UserConverter.UserToDTO(user);
+            var result = UserConverter.UserToDTO(user, null);
             
             // return result:
             return Ok(result);
@@ -79,7 +79,7 @@ public class UsersController : ControllerBase {
             // Convert found objects to DTO:
             List<UserDTO> results = new List<UserDTO>();
             foreach (User user in users)
-                results.Add(UserConverter.UserToDTO(user));
+                results.Add(UserConverter.UserToDTO(user, null));
             
             // return result:
             return Ok(results);

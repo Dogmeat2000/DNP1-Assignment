@@ -4,9 +4,10 @@ using Entities;
 namespace DTOconverters;
 
 public class UserConverter {
-    public static UserDTO UserToDTO(User user) {
+    public static UserDTO UserToDTO(User user, string? userName) {
         return new UserDTO() {
             User_id = user.User_id,
+            Username = userName
         };
     }
     

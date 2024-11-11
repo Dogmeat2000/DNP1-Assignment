@@ -1,0 +1,35 @@
+﻿@page "/logout"
+@using ClientApp.Auth
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager navMgr
+
+<AuthorizeView>
+    <Authorized>
+        <h3>Hello, @context.User.Identity.Name</h3>
+        <h3>Logout: Are you sure?</h3>
+        <button @onclick="LogoutAsync">Confirm Log Out</button>
+        @if (!string.IsNullOrEmpty(errorLabel)) {
+        <label style="color: red">
+            @errorLabel
+        </label>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <h3>You are already logged out</h3>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    private string errorLabel;
+    
+    private async Task LogoutAsync() {
+        try {
+            errorLabel = "";
+            await ((SimpleAuthProvider) AuthProvider).Logout();
+            navMgr.NavigateTo("Forums/-1");
+        } catch (Exception e) {
+        errorLabel = $"Error: {e.Message}"; 
+        } 
+    }
+}

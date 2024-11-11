@@ -1,8 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "cEHn6zo68/o=",
+  "dgSpecHash": "kVqCMMyUlj4=",
   "success": true,
-  "projectFilePath": "C:\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Client\\ClientApp\\ClientApp.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\krige\\Dropbox\\Pc (2)\\Documents\\Studier\\Professionsbachelor\\.NET Projects\\SW-DNP1-A24\\DNP1 - Assignment\\Client\\ClientApp\\ClientApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.10\\microsoft.aspnetcore.authorization.8.0.10.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.aspnetcore.components\\8.0.10\\microsoft.aspnetcore.components.8.0.10.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\8.0.10\\microsoft.aspnetcore.components.analyzers.8.0.10.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.aspnetcore.components.authorization\\8.0.10\\microsoft.aspnetcore.components.authorization.8.0.10.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.aspnetcore.metadata\\8.0.10\\microsoft.aspnetcore.metadata.8.0.10.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
+    "C:\\Users\\krige\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

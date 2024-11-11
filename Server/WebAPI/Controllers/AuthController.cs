@@ -20,8 +20,8 @@ public class AuthController : ControllerBase {
     
     
     // Login Endpoint
-    [HttpPost(("/login"), Name = "Login")]
-    public async Task<ActionResult<UserDTO>> CreateComment([FromBody] LoginDTO loginRequest) {
+    [HttpPost(("login"), Name = "Login")]
+    public async Task<ActionResult<UserDTO>> Login([FromBody] LoginDTO loginRequest) {
         try {
             // Validate loginRequest:
             if (string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrWhiteSpace(loginRequest.Username))
@@ -29,16 +29,16 @@ public class AuthController : ControllerBase {
 
             // Check if UserProfile with this name exists:
             UserProfile userProfile = await _userProfileRepository.GetSingleAsync(loginRequest.Username);
-
+            
             // Check if the Password provided, matches the found user:
-            if(userProfile.Password != loginRequest.Password)
+            if (userProfile.Password != loginRequest.Password)
                 return Unauthorized(ValidationProblem());
             
             // Lookup the proper User entity:
             var userFound = await _userRepository.GetSingleAsync(userProfile.User_id);
             
             // Convert DTO to proper entity:
-            var result = UserConverter.UserToDTO(userFound);
+            var result = UserConverter.UserToDTO(userFound, userProfile.Username);
 
             // Return result, by looking up the created Comment:
             return Ok(result); // Hands over some exception throwing/handling to AspNetCore.
