@@ -69,6 +69,10 @@ public class SimpleAuthProvider : AuthenticationStateProvider {
         string serialisedData = JsonSerializer.Serialize(userDto);
         await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
         
+        if (string.IsNullOrEmpty(userDto.Username) || userDto.User_id == 0) {
+            throw new Exception("Invalid user data received during login.");
+        }
+        
         // The UserDto is converted to a list of claims.
         List<Claim> claims = new List<Claim> {
             new Claim(ClaimTypes.Name, userDto.Username ?? "ERROR: Failed to load Username"),

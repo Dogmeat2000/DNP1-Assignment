@@ -24,6 +24,8 @@ public class Program {
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
         
+        builder.Services.AddAuthorizationCore();
+        
         // Dependency injection:
         builder.Services.AddScoped<IForumService, HttpForumService>();
         builder.Services.AddScoped<IPostService, HttpPostService>();
@@ -31,10 +33,13 @@ public class Program {
         builder.Services.AddScoped<IUserService, HttpUserService>();
         builder.Services.AddScoped<IUserProfileService, HttpUserProfileService>();
         builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthProvider>();
-        builder.Services.AddScoped(sp => new HttpClient {
+       /* builder.Services.AddScoped(sp => new HttpClient {
             BaseAddress = new Uri("http://localhost:5107") // Remember to update this address:port, so it corresponds with the HTTPS address/port in the WEBAPI.
-        });
-        
+        });*/
+       builder.Services.AddSingleton(new HttpClient {
+           BaseAddress = new Uri("http://localhost:5107")
+       });
+       
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -45,6 +50,7 @@ public class Program {
         }
 
         app.UseHttpsRedirection();
+        //app.UseAuthentication();
 
         app.UseStaticFiles();
         app.UseAntiforgery();

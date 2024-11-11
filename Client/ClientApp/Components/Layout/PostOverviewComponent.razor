@@ -1,4 +1,5 @@
-﻿@using ApiContracts
+﻿@using System.Security.Claims
+@using ApiContracts
 @using ClientApp.Services
 @inject IPostService PostService
 @inject ICommentService CommentService
@@ -33,6 +34,9 @@
                         <p><strong>'Unknown User':</strong> @comment.Body_txt</p>
                     } else {
                         <p><strong>'@GetAuthorNameFromMap(comment.Author_Id)':</strong> @comment.Body_txt</p>
+                        @if (_loggedInUserId != null && comment.Author_Id == _loggedInUserId) {
+                            <button class="btn btn-outline-info">Edit Comment (not implemented)</button>
+                        }
                     }
                     
                     <p class="comment-timestamp">Posted on: @comment.Timestamp_created</p>
@@ -52,6 +56,9 @@
 
 
 @code {
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private int? _loggedInUserId;
+    
     [Parameter] public int postId { get; set; }
     [Parameter] public int ParentForumId { get; set; }
 
@@ -63,7 +70,8 @@
     private List<CommentDTO> _comments = new();
 
     protected override async Task OnParametersSetAsync() {
-        
+
+        await InitializeLoggedInUser();
         await FetchPostDetailsAsync();
         await FetchCommentsAsync();
     }
@@ -84,7 +92,6 @@
                         break;
                     }
                 }
-                StateHasChanged();
             }
         } catch (Exception e) {
             Navigation.NavigateTo($"/Error", forceLoad:true); // TODO: Missing proper implementation
@@ -116,7 +123,7 @@
                 }
             }
 
-            StateHasChanged();
+            //StateHasChanged();
         } catch (KeyNotFoundException ignored) {
             // Do nothing, when no comments are found. User must have the option to add new comments!
         } catch (Exception e) {
@@ -127,13 +134,8 @@
     
     // Method to get AuthorName from AuthorMap:
     private String GetAuthorNameFromMap(int authorId) {
-        try {
-            return _authorMap[authorId].Username;
-        } catch (KeyNotFoundException e) {
-            return "UNKNOWN USER";
-        } catch (NullReferenceException e) {
-            return "UNKNOWN USER";
-        }
+        return _authorMap.ContainsKey(authorId) ? _authorMap[authorId].Username : "UNKNOWN USER";
+
     }
 
     private async Task PostComment() {
@@ -145,18 +147,40 @@
 
         Console.WriteLine("Count: " + _comments.Count);
         
-        StateHasChanged();
+        //StateHasChanged();
     }
 
+    
     private async Task PostComment(string commentTxt) {
         if (commentTxt.Any() && _postDto != null) {
             CommentDTO commentDto = new CommentDTO {
-                Author_Id = -1, // TODO: Update this, so logged in users can be referenced.
+                Author_Id = _loggedInUserId ?? -1,
                 Body_txt = commentTxt,
                 ParentForum_id = _postDto.ParentForum_id,
                 ParentPost_id = postId
             };
             await CommentService.AddCommentAsync(commentDto);
+        }
+    }
+    
+    
+    private async Task InitializeLoggedInUser() {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if(claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated) {
+            // the user is not logged in
+            return;
+        }
+        string? userName = claimsPrincipal.Identity?.Name;
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+
+        Claim? userIdClaim = claims.FirstOrDefault(c => c.Type == "Id");
+
+        if (userIdClaim != null) {
+            string userIdAsString = userIdClaim.Value;
+            _loggedInUserId = int.Parse(userIdAsString);
+        } else {
+            _loggedInUserId = null;
         }
     }
 }
