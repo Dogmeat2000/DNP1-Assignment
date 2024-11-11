@@ -76,7 +76,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider {
         // The UserDto is converted to a list of claims.
         List<Claim> claims = new List<Claim> {
             new Claim(ClaimTypes.Name, userDto.Username ?? "ERROR: Failed to load Username"),
-            new Claim("Id", userDto.User_id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, userDto.User_id.ToString()),
             // Add more claims here with your own claim type as a string, e.g.:
             // new Claim("DateOfBirth", userDto.DateOfBirth.ToString("yyyy-MM-dd"))
             // new Claim("IsAdmin", userDto.IsAdmin.ToString())

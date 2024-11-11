@@ -34,12 +34,12 @@
                         <p><strong>'Unknown User':</strong> @comment.Body_txt</p>
                     } else {
                         <p><strong>'@GetAuthorNameFromMap(comment.Author_Id)':</strong> @comment.Body_txt</p>
-                        @if (_loggedInUserId != null && comment.Author_Id == _loggedInUserId) {
-                            <button class="btn btn-outline-info">Edit Comment (not implemented)</button>
-                        }
                     }
                     
                     <p class="comment-timestamp">Posted on: @comment.Timestamp_created</p>
+                    @if (_loggedInUserId != null && comment.Author_Id == _loggedInUserId) {
+                        <button class="btn btn-outline-info">Edit Comment (not impl.)</button>
+                    }
                 </div>
             }
         } else {
@@ -70,10 +70,12 @@
     private List<CommentDTO> _comments = new();
 
     protected override async Task OnParametersSetAsync() {
-
-        await InitializeLoggedInUser();
         await FetchPostDetailsAsync();
         await FetchCommentsAsync();
+    }
+
+    protected override async Task OnInitializedAsync() {
+        await InitializeLoggedInUser();
     }
 
     private async Task FetchPostDetailsAsync()
@@ -144,10 +146,8 @@
         _commentTxt = String.Empty;
         
         await FetchCommentsAsync();
-
-        Console.WriteLine("Count: " + _comments.Count);
         
-        //StateHasChanged();
+        StateHasChanged();
     }
 
     
@@ -174,7 +174,7 @@
         string? userName = claimsPrincipal.Identity?.Name;
         IEnumerable<Claim> claims = claimsPrincipal.Claims;
 
-        Claim? userIdClaim = claims.FirstOrDefault(c => c.Type == "Id");
+        Claim? userIdClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
         if (userIdClaim != null) {
             string userIdAsString = userIdClaim.Value;

@@ -182,11 +182,14 @@
     
     // Initialize values, that depend on injected parameters from the parent:
     protected override async Task OnParametersSetAsync() {
-        // Initialize the logged-in user:
-        await InitializeLoggedInUser();
         
         // Initialize the map of Authors:
         await InitializeAuthorMapAsync();
+    }
+    
+    protected override async Task OnInitializedAsync() {
+        // Initialize the logged-in user:
+        await InitializeLoggedInUser();
     }
     
     // Method to get AuthorName from AuthorMap:
@@ -239,7 +242,7 @@
         string? userName = claimsPrincipal.Identity?.Name;
         IEnumerable<Claim> claims = claimsPrincipal.Claims;
 
-        Claim? userIdClaim = claims.FirstOrDefault(c => c.Type == "Id");
+        Claim? userIdClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
         if (userIdClaim != null) {
             string userIdAsString = userIdClaim.Value;
