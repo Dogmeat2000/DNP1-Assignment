@@ -25,7 +25,18 @@ public class PostsController : ControllerBase {
     [HttpPost(Name = "PostPost")]
     public async Task<ActionResult<PostDTO>> CreatePost([FromBody] PostDTO newPost) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if (newPost == null)
+                throw new BadHttpRequestException("Forum object is null");
+
+            if (newPost.ParentForum_id == 0)
+                newPost.ParentForum_id = null;
+            
+            if(newPost.Timestamp_modified != null && newPost.Timestamp_modified == DateTime.MinValue)
+                newPost.Timestamp_modified = null;
+            
+            if(newPost.Timestamp_deleted != null && newPost.Timestamp_deleted == DateTime.MinValue)
+                newPost.Timestamp_deleted = null;
             
             // Convert DTO to proper entity:
             Post post = PostConverter.DTOToPost(newPost);
@@ -44,9 +55,11 @@ public class PostsController : ControllerBase {
     
     // Read an existing Post (Read)
     [HttpGet(("{pId:int}"), Name = "GetPost")]
-    public async Task<ActionResult<PostDTO>> GetPost(int pId, [FromQuery] int fId) {
+    public async Task<ActionResult<PostDTO>> GetPost(int pId, [FromQuery] int? fId) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if (fId != null && fId == 0)
+                fId = null;
             
             // Attempt to retrieve Post from repository:
             Post? post = await _postRepository.GetSingleAsync(pId, fId);
@@ -66,9 +79,14 @@ public class PostsController : ControllerBase {
     
     // Read Multiple Posts (Read), filtered by forum_id, with optional parameters for filtering by title contents or authorId
     [HttpGet(Name = "GetPosts")]
-    public async Task<ActionResult<List<PostDTO>>> GetPosts([FromQuery] int fId, [FromQuery] string? searchString, [FromQuery] int? authorId) {
+    public async Task<ActionResult<List<PostDTO>>> GetPosts([FromQuery] int? fId, [FromQuery] string? searchString, [FromQuery] int? authorId) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if (fId != null && fId == 0)
+                fId = null;
+            
+            if(authorId != null && authorId == 0)
+                authorId = null;
             
             // Query all matching Posts:
             IEnumerable<Post> posts = await _postRepository.GetMany().Where(p => p.ParentForum_id == fId).ToListAsync();
@@ -101,9 +119,23 @@ public class PostsController : ControllerBase {
     
     // Replace an existing post (Update)
     [HttpPut(("{pId:int}"), Name = "PutPost")]
-    public async Task<IActionResult> Put([FromQuery] int fId, int pId, [FromBody] PostDTO post) {
+    public async Task<IActionResult> Put([FromQuery] int? fId, int pId, [FromBody] PostDTO post) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if (fId != null && fId == 0)
+                fId = null;
+            
+            if (post == null)
+                throw new BadHttpRequestException("Forum object is null");
+
+            if (post.ParentForum_id == 0)
+                post.ParentForum_id = null;
+            
+            if(post.Timestamp_modified != null && post.Timestamp_modified == DateTime.MinValue)
+                post.Timestamp_modified = null;
+            
+            if(post.Timestamp_deleted != null && post.Timestamp_deleted == DateTime.MinValue)
+                post.Timestamp_deleted = null;
             
             // Convert received DTO to repository entity:
             Post postFromClient = PostConverter.DTOToPost(post);
@@ -132,9 +164,11 @@ public class PostsController : ControllerBase {
     
     // Remove an existing post (Delete)
     [HttpDelete(("{pId:int}"), Name = "DeletePost")]
-    public async  Task<IActionResult> DeletePost([FromQuery] int fId, int pId) {
+    public async  Task<IActionResult> DeletePost([FromQuery] int? fId, int pId) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if (fId != null && fId == 0)
+                fId = null;
             
             await _postRepository.DeleteAsync(pId, fId);
 

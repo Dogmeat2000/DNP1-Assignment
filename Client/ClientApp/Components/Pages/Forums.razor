@@ -9,7 +9,7 @@
 
 <PageTitle>Forums</PageTitle>
 
-@if (forumId == -1) {
+@if (forumId == 0) {
     // This is the Global Forum overview:
     <ForumOverviewComponent ForumName="Global Forums" Forums="_forums" Posts="_posts" forumId="forumId" parentForumId="ParentForumId"/>
 } else {
@@ -33,13 +33,13 @@
         }
         
         // Load Forums:
-        await LoadForums(forumId ?? -1);
+        await LoadForums(forumId ?? 0);
 
         // Load Posts:
-        await LoadPosts(forumId ?? -1);
+        await LoadPosts(forumId ?? 0);
         
         // Load forum title:
-        await GetForumTitleAsync(forumId ?? -1, ParentForumId ?? -1);
+        await GetForumTitleAsync(forumId ?? 0, ParentForumId ?? 0);
         
         //StateHasChanged();
     }

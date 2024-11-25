@@ -90,7 +90,7 @@ public class PostFileRepository : IPostRepository {
     }
 
     
-    public async Task DeleteAsync(int postId, int parentForumId) {
+    public async Task DeleteAsync(int postId, int? parentForumId) {
                 
         // Load raw data from file:
         List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post {Title_txt = "", Body_txt = ""});
@@ -122,7 +122,7 @@ public class PostFileRepository : IPostRepository {
     }
 
     
-    public async Task<Post> GetSingleAsync(int postId, int parentForumId) {
+    public async Task<Post> GetSingleAsync(int postId, int? parentForumId) {
                         
         // Load raw data from file:
         List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post {Title_txt = "", Body_txt = ""});

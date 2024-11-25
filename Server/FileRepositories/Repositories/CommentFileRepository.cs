@@ -90,7 +90,7 @@ public class CommentFileRepository : ICommentRepository {
     }
 
     
-    public async Task DeleteAsync(int commentId, int postId, int forumId) {
+    public async Task DeleteAsync(int commentId, int postId, int? forumId) {
         
         // Load raw data from file:
         List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment {Body_txt = ""});
@@ -122,7 +122,7 @@ public class CommentFileRepository : ICommentRepository {
     }
     
     
-    public async Task<Comment> GetSingleAsync(int commentId, int postId, int forumId) {
+    public async Task<Comment> GetSingleAsync(int commentId, int postId, int? forumId) {
                 
         // Load raw data from file:
         List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment {Body_txt = ""});

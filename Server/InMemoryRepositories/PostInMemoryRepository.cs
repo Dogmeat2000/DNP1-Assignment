@@ -33,7 +33,7 @@ public class PostInMemoryRepository : IPostRepository {
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(int postId, int parentForumId) {
+    public Task DeleteAsync(int postId, int? parentForumId) {
         Post? postToRemove = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
         if (postToRemove is null) {
             throw new InvalidOperationException(
@@ -44,7 +44,7 @@ public class PostInMemoryRepository : IPostRepository {
         return Task.CompletedTask;
     }
 
-    public Task<Post> GetSingleAsync(int postId, int parentForumId) {
+    public Task<Post> GetSingleAsync(int postId, int? parentForumId) {
         Post? postToReturn = PostList.SingleOrDefault(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
         if (postToReturn is null) {
             throw new InvalidOperationException(

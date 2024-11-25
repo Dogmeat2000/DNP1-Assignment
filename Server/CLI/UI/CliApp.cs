@@ -175,7 +175,7 @@ public class CliApp {
         
         // Display Post Details
         if (NavHelper.CurrentPost != null) {
-            await new ViewSinglePost().Display(NavHelper.CurrentPost.Post_id, NavHelper.CurrentPost.ParentForum_id, PostRepository, UserRepository, UserProfileRepository);
+            await new ViewSinglePost().Display(NavHelper.CurrentPost.Post_id, NavHelper.CurrentPost.ParentForum_id ?? 0, PostRepository, UserRepository, UserProfileRepository);
             
             // Display Corresponding Comments:
             Console.ForegroundColor = Settings.CommentTextColor;
@@ -312,9 +312,9 @@ public class CliApp {
                     NavHelper.ParentsParentForum = NavHelper.CurrentParentForum;
                     NavHelper.CurrentForum = NavHelper.CurrentParentForum;
                     if(NavHelper.ParentsParentForum != null)
-                        NavHelper.CurrentParentForum = ForumRepository.GetSingleAsync(NavHelper.CurrentForum.ParentForum_id, NavHelper.ParentsParentForum.Forum_id).Result;
+                        NavHelper.CurrentParentForum = ForumRepository.GetSingleAsync(NavHelper.CurrentForum.ParentForum_id ?? 0, NavHelper.ParentsParentForum.Forum_id).Result;
                     else
-                        NavHelper.CurrentParentForum = ForumRepository.GetSingleAsync(NavHelper.CurrentForum.ParentForum_id, -1).Result;
+                        NavHelper.CurrentParentForum = ForumRepository.GetSingleAsync(NavHelper.CurrentForum.ParentForum_id ?? 0, 0).Result;
                 } else if (NavHelper.CurrentForum != null && NavHelper.CurrentParentForum == null) {
                     NavHelper.ParentsParentForum = null;
                     NavHelper.CurrentForum = null;

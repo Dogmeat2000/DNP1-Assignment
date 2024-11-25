@@ -8,9 +8,9 @@ public class User
     
     // Navigation Properties:
     public UserProfile? UserProfile { get; set; } = null;
-    public List<Forum> ManagedForums { get; } = new();
-    public List<Post> ManagedPosts { get; } = new();
-    public List<Comment> ManagedComments { get; } = new();
+    public List<Forum>? ManagedForums { get; } = new();
+    public List<Post>? ManagedPosts { get; } = new();
+    public List<Comment>? ManagedComments { get; } = new();
     
     
     public User(int user_id) {

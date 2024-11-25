@@ -27,7 +27,7 @@
         try {
             errorLabel = "";
             await ((SimpleAuthProvider) AuthProvider).Logout();
-            navMgr.NavigateTo("Forums/-1");
+            navMgr.NavigateTo("Forums/0");
         } catch (Exception e) {
         errorLabel = $"Error: {e.Message}"; 
         } 

@@ -14,9 +14,18 @@ public class UserEfcRepository : IUserRepository {
     }
     
     public async Task<User> AddAsync(User user) {
-        EntityEntry<User> entityEntry = await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
-        return entityEntry.Entity;
+        try {
+            EntityEntry<User> entityEntry = await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return entityEntry.Entity;
+        } catch (DbUpdateException dbEx)
+        {
+            Console.WriteLine($"Database Update Exception: {dbEx.InnerException?.Message ?? dbEx.Message}");
+            throw;
+        } catch (Exception ex) {
+            Console.WriteLine(ex.StackTrace);
+            return null;
+        }
     }
 
     public async Task UpdateAsync(User user) {

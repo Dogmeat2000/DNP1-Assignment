@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EfcRepositories;
 
@@ -11,7 +12,9 @@ public class LocalAppContext : DbContext {
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        optionsBuilder.UseSqlite("Data Source=app.db");
+        optionsBuilder.UseSqlite(@"Data Source = ..\EfcRepositories\app.db")
+            .LogTo(Console.WriteLine, LogLevel.Information);;
+        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -26,7 +29,8 @@ public class LocalAppContext : DbContext {
             // Navigation properties
             entity.HasOne(uP => uP.User)
                 .WithOne(u => u.UserProfile)
-                .HasForeignKey<UserProfile>(uP => uP.User_id);
+                .HasForeignKey<UserProfile>(uP => uP.User_id)
+                .IsRequired();
         });
         
         
@@ -38,19 +42,23 @@ public class LocalAppContext : DbContext {
 
             // Navigation properties
             entity.HasOne(u => u.UserProfile)
-                .WithOne(uP => uP.User);
+                .WithOne(uP => uP.User)
+                .IsRequired(false);
             
             entity.HasMany(u => u.ManagedForums)
                 .WithOne(f => f.AuthoringUser)
-                .HasForeignKey(f => f.Author_id);
+                .HasForeignKey(f => f.Author_id)
+                .IsRequired(false);
             
             entity.HasMany(u => u.ManagedPosts)
                 .WithOne(p => p.AuthoringUser)
-                .HasForeignKey(p => p.Author_id);
+                .HasForeignKey(p => p.Author_id)
+                .IsRequired(false);
             
             entity.HasMany(u => u.ManagedComments)
                 .WithOne(c => c.AuthoringUser)
-                .HasForeignKey(c => c.Author_Id);
+                .HasForeignKey(c => c.Author_Id)
+                .IsRequired(false);
         });
 
         
@@ -60,29 +68,28 @@ public class LocalAppContext : DbContext {
             entity.ToTable("Forums");
             entity.HasKey(f => f.Forum_id);
             entity.Property(f => f.Timestamp_created).IsRequired();
-            entity.Property(f => f.Timestamp_modified);
-            entity.Property(f => f.Timestamp_deleted);
-            entity.Property(f => f.LastPost_id);
-            entity.Property(f => f.LastComment_id);
-            entity.Property(f => f.LastCommentPost_id);
+            entity.Property(f => f.Timestamp_modified).IsRequired(false);
+            entity.Property(f => f.Timestamp_deleted).IsRequired(false);
+            entity.Property(f => f.LastPost_id).IsRequired(false);
+            entity.Property(f => f.LastComment_id).IsRequired(false);
+            entity.Property(f => f.LastCommentPost_id).IsRequired(false);
             
 
             // Navigation properties
             entity.HasOne(f => f.AuthoringUser)
                 .WithMany(u => u.ManagedForums)
-                .HasForeignKey(f => f.Author_id);
-            
+                .HasForeignKey(f => f.Author_id)
+                .IsRequired();
+
             entity.HasMany(f => f.ChildPosts)
                 .WithOne(p => p.ParentForum)
-                .HasForeignKey(p => p.ParentForum_id);
-            
-            entity.HasOne(f => f.ParentForum)
-                .WithMany(f => f.ChildForums)
-                .HasForeignKey(f => f.ParentForum_id);
+                .HasForeignKey(p => p.ParentForum_id)
+                .IsRequired(false);
             
             entity.HasMany( f => f.ChildForums)
                 .WithOne(f => f.ParentForum)
-                .HasForeignKey(f => f.ParentForum_id);
+                .HasForeignKey(f => f.ParentForum_id)
+                .IsRequired(false);
         });
         
         
@@ -92,21 +99,24 @@ public class LocalAppContext : DbContext {
             entity.ToTable("Posts");
             entity.HasKey(p => p.Post_id);
             entity.Property(p => p.Timestamp_created).IsRequired();
-            entity.Property(p => p.Timestamp_modified);
-            entity.Property(p => p.Timestamp_deleted);
+            entity.Property(p => p.Timestamp_modified).IsRequired(false);
+            entity.Property(p => p.Timestamp_deleted).IsRequired(false);
 
             // Navigation properties
             entity.HasOne(p => p.AuthoringUser)
                 .WithMany(u => u.ManagedPosts)
-                .HasForeignKey(p => p.Author_id);
+                .HasForeignKey(p => p.Author_id)
+                .IsRequired();
             
             entity.HasOne(p => p.ParentForum)
                 .WithMany(f => f.ChildPosts)
-                .HasForeignKey(f => f.ParentForum_id);
+                .HasForeignKey(f => f.ParentForum_id)
+                .IsRequired(false);
             
             entity.HasMany(p => p.ChildComments)
                 .WithOne(c => c.ParentPost)
-                .HasForeignKey(c => c.ParentPost_id);
+                .HasForeignKey(c => c.ParentPost_id)
+                .IsRequired(false);
         });
         
         
@@ -119,11 +129,13 @@ public class LocalAppContext : DbContext {
             // Navigation properties
             entity.HasOne(p => p.AuthoringUser)
                 .WithMany(u => u.ManagedComments)
-                .HasForeignKey(c => c.Author_Id);
+                .HasForeignKey(c => c.Author_Id)
+                .IsRequired(false);
             
             entity.HasOne(c => c.ParentPost)
                 .WithMany(p => p.ChildComments)
-                .HasForeignKey(c => c.ParentPost_id);
+                .HasForeignKey(c => c.ParentPost_id)
+                .IsRequired();
         });
         
     }

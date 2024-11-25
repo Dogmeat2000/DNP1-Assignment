@@ -23,14 +23,14 @@ namespace EfcRepositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Author_Id")
+                    b.Property<int?>("Author_Id")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Body_txt")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ParentForum_id")
+                    b.Property<int?>("ParentForum_id")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ParentPost_id")
@@ -39,10 +39,10 @@ namespace EfcRepositories.Migrations
                     b.Property<DateTime>("Timestamp_created")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp_deleted")
+                    b.Property<DateTime?>("Timestamp_deleted")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp_modified")
+                    b.Property<DateTime?>("Timestamp_modified")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Comment_id");
@@ -63,25 +63,25 @@ namespace EfcRepositories.Migrations
                     b.Property<int>("Author_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LastCommentPost_id")
+                    b.Property<int?>("LastCommentPost_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LastComment_id")
+                    b.Property<int?>("LastComment_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LastPost_id")
+                    b.Property<int?>("LastPost_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ParentForum_id")
+                    b.Property<int?>("ParentForum_id")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Timestamp_created")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp_deleted")
+                    b.Property<DateTime?>("Timestamp_deleted")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp_modified")
+                    b.Property<DateTime?>("Timestamp_modified")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title_txt")
@@ -110,16 +110,16 @@ namespace EfcRepositories.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ParentForum_id")
+                    b.Property<int?>("ParentForum_id")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Timestamp_created")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp_deleted")
+                    b.Property<DateTime?>("Timestamp_deleted")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Timestamp_modified")
+                    b.Property<DateTime?>("Timestamp_modified")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title_txt")
@@ -177,9 +177,7 @@ namespace EfcRepositories.Migrations
                 {
                     b.HasOne("Entities.User", "AuthoringUser")
                         .WithMany("ManagedComments")
-                        .HasForeignKey("Author_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Author_Id");
 
                     b.HasOne("Entities.Post", "ParentPost")
                         .WithMany("ChildComments")
@@ -202,9 +200,7 @@ namespace EfcRepositories.Migrations
 
                     b.HasOne("Entities.Forum", "ParentForum")
                         .WithMany("ChildForums")
-                        .HasForeignKey("ParentForum_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentForum_id");
 
                     b.Navigation("AuthoringUser");
 
@@ -221,9 +217,7 @@ namespace EfcRepositories.Migrations
 
                     b.HasOne("Entities.Forum", "ParentForum")
                         .WithMany("ChildPosts")
-                        .HasForeignKey("ParentForum_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentForum_id");
 
                     b.Navigation("AuthoringUser");
 
@@ -234,9 +228,7 @@ namespace EfcRepositories.Migrations
                 {
                     b.HasOne("Entities.User", "User")
                         .WithOne("UserProfile")
-                        .HasForeignKey("Entities.UserProfile", "User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Entities.UserProfile", "User_id");
 
                     b.Navigation("User");
                 });

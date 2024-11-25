@@ -92,7 +92,7 @@ public class ForumFileRepository : IForumRepository {
     }
 
     
-    public async Task DeleteAsync(int forumId, int parentForumId) {
+    public async Task DeleteAsync(int forumId, int? parentForumId) {
                 
         // Load raw data from file:
         List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum {Title_txt = ""});
@@ -124,7 +124,7 @@ public class ForumFileRepository : IForumRepository {
     }
 
     
-    public async Task<Forum> GetSingleAsync(int forumId, int parentForumId) {
+    public async Task<Forum> GetSingleAsync(int forumId, int? parentForumId) {
                         
         // Load raw data from file:
         List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum {Title_txt = ""});

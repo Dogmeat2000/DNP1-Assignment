@@ -27,7 +27,7 @@ public class PostEfcRepository : IPostRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int postId, int parentForumId) {
+    public async Task DeleteAsync(int postId, int? parentForumId) {
         Post? existing = await _context.Posts.SingleOrDefaultAsync(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
         if (existing == null) {
             throw new KeyNotFoundException($"Post with ID '{postId}' in Forum '{parentForumId}' not found");
@@ -36,7 +36,7 @@ public class PostEfcRepository : IPostRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Post> GetSingleAsync(int postId, int parentForumId) {
+    public async Task<Post> GetSingleAsync(int postId, int? parentForumId) {
         Post? existing = await _context.Posts.SingleOrDefaultAsync(p => p.Post_id == postId && p.ParentForum_id == parentForumId);
         if (existing == null) {
             throw new KeyNotFoundException($"Post with ID '{postId}' Forum '{parentForumId}' not found");

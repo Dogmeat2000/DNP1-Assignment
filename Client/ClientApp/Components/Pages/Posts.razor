@@ -5,7 +5,7 @@
 
 <PageTitle>Post Details</PageTitle>
 
-@if (postId != -1) {
+@if (postId != 0) {
     <PostOverviewComponent postId=@postId ParentForumId=@ParentForumId/>
 } else {
     <p>Loading posts and comments...</p>
@@ -20,7 +20,7 @@
         // Capture the query parameter
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("fId", out var parentForumId)) {
-            ParentForumId = int.TryParse(parentForumId, out var parsedId) ? parsedId : -1;
+            ParentForumId = int.TryParse(parentForumId, out var parsedId) ? parsedId : 0;
         }
         
         StateHasChanged();

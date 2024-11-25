@@ -34,7 +34,7 @@ public class CommentInMemoryRepository : ICommentRepository {
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(int commentId, int postId, int forumId) {
+    public Task DeleteAsync(int commentId, int postId, int? forumId) {
         Comment? commentToRemove = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
         if (commentToRemove is null) {
             throw new InvalidOperationException(
@@ -45,7 +45,7 @@ public class CommentInMemoryRepository : ICommentRepository {
         return Task.CompletedTask;
     }
 
-    public Task<Comment> GetSingleAsync(int commentId, int postId, int forumId) {
+    public Task<Comment> GetSingleAsync(int commentId, int postId, int? forumId) {
         Comment? commentToReturn = CommentList.SingleOrDefault(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
         if (commentToReturn is null) {
             throw new InvalidOperationException(

@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RepositoryContracts;
@@ -14,9 +15,27 @@ public class ForumEfcRepository : IForumRepository {
     }
     
     public async Task<Forum> AddAsync(Forum forum) {
-        EntityEntry<Forum> entityEntry = await _context.Forums.AddAsync(forum);
-        await _context.SaveChangesAsync();
-        return entityEntry.Entity;
+        try {
+            EntityEntry<Forum> entityEntry = await _context.Forums.AddAsync(forum);
+            await _context.SaveChangesAsync();
+            return entityEntry.Entity;
+        } catch (DbUpdateException dbEx)
+        {
+            if (dbEx.InnerException is SqliteException sqliteEx)
+            {
+                if (sqliteEx.Message.Contains("FOREIGN KEY constraint failed"))
+                {
+                    Console.WriteLine($"Foreign Key Constraint Failed: {sqliteEx.Message}");
+                }
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.StackTrace);
+            return null;
+        }
     }
 
     public async Task UpdateAsync(Forum forum) {
@@ -27,7 +46,7 @@ public class ForumEfcRepository : IForumRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int forumId, int parentForumId) {
+    public async Task DeleteAsync(int forumId, int? parentForumId) {
         Forum? existing = await _context.Forums.SingleOrDefaultAsync(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
         if (existing == null) {
             throw new KeyNotFoundException($"Forum with ID '{forumId}' not found");
@@ -36,7 +55,7 @@ public class ForumEfcRepository : IForumRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Forum> GetSingleAsync(int forumId, int parentForumId) {
+    public async Task<Forum> GetSingleAsync(int forumId, int? parentForumId) {
         Forum? existing = await _context.Forums.SingleOrDefaultAsync(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
         if (existing == null) {
             throw new KeyNotFoundException($"Forum with ID '{forumId}' not found");

@@ -27,7 +27,7 @@ public class CommentEfcRepository : ICommentRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int commentId, int postId, int forumId) {
+    public async Task DeleteAsync(int commentId, int postId, int? forumId) {
         Comment? existing = await _context.Comments.SingleOrDefaultAsync(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
         if (existing == null) {
             throw new KeyNotFoundException($"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");
@@ -36,7 +36,7 @@ public class CommentEfcRepository : ICommentRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Comment> GetSingleAsync(int commentId, int postId, int forumId) {
+    public async Task<Comment> GetSingleAsync(int commentId, int postId, int? forumId) {
         Comment? existing = await _context.Comments.SingleOrDefaultAsync(c => c.Comment_id == commentId && c.ParentPost_id == postId && c.ParentForum_id == forumId);
         if (existing == null) {
             throw new KeyNotFoundException($"Comment with ID '{commentId}' in Post '{postId}' in Forum '{forumId}' not found");

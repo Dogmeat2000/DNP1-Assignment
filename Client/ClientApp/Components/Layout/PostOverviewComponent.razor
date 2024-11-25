@@ -9,10 +9,10 @@
 <div class="post-details-container">
     <h2>@_postDto?.Title_txt</h2>
 
-    @if (GetAuthorNameFromMap(_postDto?.Author_id ?? -1).Equals("UNKNOWN USER")) {
+    @if (GetAuthorNameFromMap(_postDto?.Author_id ?? 0).Equals("UNKNOWN USER")) {
         <p class="post-info"><strong>Authored by:</strong> 'Unknown User'</p>
     } else {
-        <p class="post-info"><strong>Authored by:</strong> '@GetAuthorNameFromMap(_postDto?.Author_id ?? -1)'</p>
+        <p class="post-info"><strong>Authored by:</strong> '@GetAuthorNameFromMap(_postDto?.Author_id ?? 0)'</p>
     }
     
     <p class="post-info"><strong>Created on:</strong> @_postDto?.Timestamp_created</p>
@@ -30,10 +30,10 @@
         @if (_comments.Count > 0) {
             @foreach (var comment in _comments) {
                 <div class="comment-item">
-                    @if (GetAuthorNameFromMap(comment.Author_Id).Equals("UNKNOWN USER")) {
+                    @if (GetAuthorNameFromMap(comment.Author_Id ?? 0).Equals("UNKNOWN USER")) {
                         <p><strong>'Unknown User':</strong> @comment.Body_txt</p>
                     } else {
-                        <p><strong>'@GetAuthorNameFromMap(comment.Author_Id)':</strong> @comment.Body_txt</p>
+                        <p><strong>'@GetAuthorNameFromMap(comment.Author_Id ?? 0)':</strong> @comment.Body_txt</p>
                     }
                     
                     <p class="comment-timestamp">Posted on: @comment.Timestamp_created</p>
@@ -84,7 +84,7 @@
             _postDto = await PostService.GetSinglePostAsync(postId, ParentForumId);
             
             // Try to get and add Authors present in the loaded forums:
-            if (_postDto.Author_id != -1) {
+            if (_postDto.Author_id != 0) {
                 var userProfiles = await UserProfileService.GetManyUserProfilesAsync(_postDto.Author_id);
                 
                 // Find the proper UserProfile:
@@ -112,13 +112,13 @@
                 _comments.Add(comment);
 
                 // Try to get and add Authors present in the loaded forums:
-                if (comment.Author_Id != -1) {
+                if (comment.Author_Id != null && comment.Author_Id != 0) {
                     var userProfiles = await UserProfileService.GetManyUserProfilesAsync(comment.Author_Id);
 
                     // Find the proper UserProfile:
                     foreach (UserProfileDTO userProfileDto in userProfiles) {
                         if (userProfileDto.User_id == comment.Author_Id) {
-                            _authorMap.TryAdd(comment.Author_Id, userProfileDto);
+                            _authorMap.TryAdd(comment.Author_Id ?? 0, userProfileDto);
                             break;
                         }
                     }
@@ -154,10 +154,11 @@
     private async Task PostComment(string commentTxt) {
         if (commentTxt.Any() && _postDto != null) {
             CommentDTO commentDto = new CommentDTO {
-                Author_Id = _loggedInUserId ?? -1,
+                Author_Id = _loggedInUserId ?? 0,
                 Body_txt = commentTxt,
                 ParentForum_id = _postDto.ParentForum_id,
-                ParentPost_id = postId
+                ParentPost_id = postId,
+                Timestamp_created = DateTime.Now
             };
             await CommentService.AddCommentAsync(commentDto);
         }

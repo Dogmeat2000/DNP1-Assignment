@@ -1,4 +1,5 @@
-﻿using ApiContracts;
+﻿using System.Diagnostics;
+using ApiContracts;
 using DTOconverters;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,8 @@ public class UsersController : ControllerBase {
             // Return result, by looking up the created User:
             return CreatedAtAction(nameof(GetUser), new {uId = user.User_id}, user); // Hands over some exception throwing/handling to AspNetCore.
             
-        } catch (Exception) { 
+        } catch (Exception e) {
+            Console.WriteLine(e.StackTrace);
             return ValidationProblem(); // If some other problem occured
         }
     }

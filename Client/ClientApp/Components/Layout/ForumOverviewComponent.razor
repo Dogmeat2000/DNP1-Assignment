@@ -26,7 +26,7 @@
                     <div class="forum-item">
                         <div class="forum-info-container">
                             <h4>
-                                <a href="#" class="forum-link" @onclick="() => NavigateToForum(forum.Forum_id, forum.ParentForum_id)">@forum.Title_txt</a>
+                                <a href="#" class="forum-link" @onclick="() => NavigateToForum(forum.Forum_id, forum.ParentForum_id ?? 0)">@forum.Title_txt</a>
                             </h4>
                             @if (GetAuthorNameFromMap(forum.Author_id).Equals("UNKNOWN USER")) {
                                 <p class="forum-info">Created by 'Unknown User' on @forum.Timestamp_created</p>
@@ -51,7 +51,7 @@
             }
         </div>
     </section>
-    @if (_loggedInUserId != null && _loggedInUserId != -1) {
+    @if (_loggedInUserId != null && _loggedInUserId != 0) {
         <input type="submit" value="New Forum (Not implemented)" class="btn btn-outline-info"/>
     }
 
@@ -68,7 +68,7 @@
                     <div class="post-item">
                         <div class="post-info-container">
                             <h4>
-                                <a href="#" class="post-link" @onclick="() => NavigateToPost(post.Post_id, post.ParentForum_id)">@post.Title_txt</a>
+                                <a href="#" class="post-link" @onclick="() => NavigateToPost(post.Post_id, post.ParentForum_id ?? 0)">@post.Title_txt</a>
                             </h4>
                             @if (GetAuthorNameFromMap(post.Author_id).Equals("UNKNOWN USER")) {
                                 <p class="post-info">Created by 'Unknown User' on @post.Timestamp_created</p>
@@ -222,13 +222,13 @@
                 Title_txt = _newPostTitle,
                 Body_txt = _newPostBody,
                 Timestamp_created = DateTime.UtcNow,
-                ParentForum_id = forumId ?? -1,
-                Author_id = _loggedInUserId ?? -1
+                ParentForum_id = forumId ?? 0,
+                Author_id = _loggedInUserId ?? 0
             };
             await PostService.AddPostAsync(newPost);
             
             // Navigate to this page again (to ensure proper loading of the newly added posts to the list):
-            NavigateToForum(forumId ?? -1, parentForumId ?? -1);
+            NavigateToForum(forumId ?? 0, parentForumId ?? 0);
         }
     }
 

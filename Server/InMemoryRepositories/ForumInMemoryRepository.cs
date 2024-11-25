@@ -33,7 +33,7 @@ public class ForumInMemoryRepository : IForumRepository {
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(int forumId, int parentForumId) {
+    public Task DeleteAsync(int forumId, int? parentForumId) {
         Forum? forumToRemove = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
         if (forumToRemove is null) {
             throw new InvalidOperationException(
@@ -44,7 +44,7 @@ public class ForumInMemoryRepository : IForumRepository {
         return Task.CompletedTask;
     }
 
-    public Task<Forum> GetSingleAsync(int forumId, int parentForumId) {
+    public Task<Forum> GetSingleAsync(int forumId, int? parentForumId) {
         Forum? forumToReturn = ForumList.SingleOrDefault(f => f.Forum_id == forumId && f.ParentForum_id == parentForumId);
         if (forumToReturn is null) {
             throw new InvalidOperationException(

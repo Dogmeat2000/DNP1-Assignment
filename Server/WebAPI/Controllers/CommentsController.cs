@@ -23,9 +23,23 @@ public class CommentsController : ControllerBase {
     
     // Create a new Comment (Create)
     [HttpPost(Name = "PostComment")]
-    public async Task<ActionResult<CommentDTO>> CreateComment([FromQuery] int fId, [FromQuery] int pId, [FromBody] CommentDTO newComment) {
+    public async Task<ActionResult<CommentDTO>> CreateComment([FromQuery] int? fId, [FromQuery] int pId, [FromBody] CommentDTO newComment) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if (fId != null && fId == 0)
+                fId = null;
+            
+            if(newComment.ParentForum_id != null && newComment.ParentForum_id == 0)
+                newComment.ParentForum_id = null;
+            
+            if(newComment.Timestamp_modified != null && newComment.Timestamp_modified == DateTime.MinValue)
+                newComment.Timestamp_modified = null;
+            
+            if(newComment.Timestamp_deleted != null && newComment.Timestamp_deleted == DateTime.MinValue)
+                newComment.Timestamp_deleted = null;
+            
+            if(newComment.Author_Id == 0)
+                newComment.Author_Id = null;
             
             // Convert DTO to proper entity:
             Comment comment = CommentConverter.DTOToComment(newComment);
@@ -36,7 +50,8 @@ public class CommentsController : ControllerBase {
             // Return result, by looking up the created Comment:
             return CreatedAtAction(nameof(GetComment), new {fId, pId, cId = comment.Comment_id}, comment); // Hands over some exception throwing/handling to AspNetCore.
             
-        } catch (Exception) { 
+        } catch (Exception e) {
+            Console.WriteLine(e.StackTrace);
             return ValidationProblem(); // If some other problem occured:
         }
     }
@@ -44,9 +59,11 @@ public class CommentsController : ControllerBase {
     
     // Read an existing Comment (Read)
     [HttpGet(("{cId:int}"), Name = "GetComment")]
-    public async Task<ActionResult<CommentDTO>> GetComment([FromQuery] int fId, [FromQuery] int pId, int cId) {
+    public async Task<ActionResult<CommentDTO>> GetComment([FromQuery] int? fId, [FromQuery] int pId, int cId) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if(fId != null && fId == 0)
+                fId = null;
             
             // Attempt to retrieve Comment from repository:
             Comment? comment = await _commentRepository.GetSingleAsync(cId, pId, fId);
@@ -66,9 +83,14 @@ public class CommentsController : ControllerBase {
     
     // Read Multiple Comments (Read), with query parameters for filtering by forumId, postId or authorId.
     [HttpGet(Name = "GetComments")]
-    public async Task<ActionResult<List<CommentDTO>>> GetComments([FromQuery] int fId, [FromQuery] int pId, [FromQuery] int? authorId) {
+    public async Task<ActionResult<List<CommentDTO>>> GetComments([FromQuery] int? fId, [FromQuery] int pId, [FromQuery] int? authorId) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if(fId != null && fId == 0)
+                fId = null;
+            
+            if(authorId != null && authorId == 0)
+                authorId = null;
             
             // Query all matching Comments, within this post:
             IEnumerable<Comment> comments = await _commentRepository.GetMany().Where(c => c.ParentForum_id == fId && c.ParentPost_id == pId).ToListAsync();
@@ -99,12 +121,23 @@ public class CommentsController : ControllerBase {
     
     // Replace an existing comment (Update)
     [HttpPut(("/{cId:int}"), Name = "PutComment")]
-    public async Task<IActionResult> Put([FromQuery] int fId, [FromQuery] int pId, int cId, [FromBody] CommentDTO post) {
+    public async Task<IActionResult> Put([FromQuery] int? fId, [FromQuery] int pId, int cId, [FromBody] CommentDTO comment) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if (fId != null && fId == 0)
+                fId = null;
+            
+            if(comment.ParentForum_id != null && comment.ParentForum_id == 0)
+                comment.ParentForum_id = null;
+            
+            if(comment.Timestamp_modified != null && comment.Timestamp_modified == DateTime.MinValue)
+                comment.Timestamp_modified = null;
+            
+            if(comment.Timestamp_deleted != null && comment.Timestamp_deleted == DateTime.MinValue)
+                comment.Timestamp_deleted = null;
             
             // Convert received DTO to repository entity:
-            Comment commentFromClient = CommentConverter.DTOToComment(post);
+            Comment commentFromClient = CommentConverter.DTOToComment(comment);
         
             // Check if a Comment of this type already exists:
             Comment commentFromRepository = await _commentRepository.GetSingleAsync(cId, pId, fId);
@@ -129,11 +162,13 @@ public class CommentsController : ControllerBase {
     
     // Remove an existing comment (Delete)
     [HttpDelete(("/{cId:int}"), Name = "DeleteComment")]
-    public async  Task<IActionResult> DeleteComment([FromQuery] int fId, [FromQuery] int pId, int cId) {
+    public async  Task<IActionResult> DeleteComment([FromQuery] int? fId, [FromQuery] int pId, int cId) {
         try {
-            // TODO: Validate parameters/arguments!
+            // Validate parameters/arguments!
+            if(fId != null && fId == 0)
+                fId = null;
             
-            await _commentRepository.DeleteAsync(fId, pId, cId);
+            await _commentRepository.DeleteAsync(cId, pId, fId);
 
             // Return:
             return NoContent();

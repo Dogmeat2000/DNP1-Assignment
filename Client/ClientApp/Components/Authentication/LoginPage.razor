@@ -34,7 +34,7 @@
         errorLabel = "";
         try {
             await ((SimpleAuthProvider) AuthProvider).Login(userName, password);
-            navMgr.NavigateTo("Forums/-1");
+            navMgr.NavigateTo("Forums/0");
         } catch (Exception e) {
             errorLabel = $"Error: {e.Message}";
         }
