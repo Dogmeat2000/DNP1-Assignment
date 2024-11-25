@@ -2,6 +2,7 @@
 using DTOconverters;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -65,12 +66,12 @@ public class CommentsController : ControllerBase {
     
     // Read Multiple Comments (Read), with query parameters for filtering by forumId, postId or authorId.
     [HttpGet(Name = "GetComments")]
-    public ActionResult<List<CommentDTO>> GetComments([FromQuery] int fId, [FromQuery] int pId, [FromQuery] int? authorId) {
+    public async Task<ActionResult<List<CommentDTO>>> GetComments([FromQuery] int fId, [FromQuery] int pId, [FromQuery] int? authorId) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Query all matching Comments, within this post:
-            IQueryable<Comment> comments = _commentRepository.GetMany().Where(c => c.ParentForum_id == fId && c.ParentPost_id == pId);
+            IEnumerable<Comment> comments = await _commentRepository.GetMany().Where(c => c.ParentForum_id == fId && c.ParentPost_id == pId).ToListAsync();
             
             // If authorId was provided, remove all non-matching authored comments:
             if (authorId.HasValue)

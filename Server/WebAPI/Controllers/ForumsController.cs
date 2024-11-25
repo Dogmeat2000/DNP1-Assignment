@@ -2,6 +2,7 @@
 using DTOconverters;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -65,12 +66,12 @@ public class ForumsController : ControllerBase {
     
     // Read Multiple Forums (Read), filtered by forum_id.
     [HttpGet(Name = "GetForums")]
-    public ActionResult<List<ForumDTO>> GetForums([FromQuery] int parentForumId) {
+    public async Task<ActionResult<List<ForumDTO>>> GetForums([FromQuery] int parentForumId) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Query all matching Forums:
-            IQueryable<Forum> forums = _forumRepository.GetMany().Where(f => f.ParentForum_id == parentForumId);
+            IEnumerable<Forum> forums = await _forumRepository.GetMany().Where(f => f.ParentForum_id == parentForumId).ToListAsync();
             
             // If none were found, throw error:
             if(!forums.Any())

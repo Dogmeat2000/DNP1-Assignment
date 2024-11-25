@@ -2,6 +2,7 @@
 using DTOconverters;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -65,12 +66,12 @@ public class UsersController : ControllerBase {
     
     // Read Multiple User (Read):
     [HttpGet(Name = "GetUsers")]
-    public ActionResult<List<UserDTO>> GetUsers() {
+    public async Task<ActionResult<List<UserDTO>>> GetUsers() {
         try {
             // TODO: Validate parameters/arguments!
             
             // Query all matching User:
-            IQueryable<User> users = _userRepository.GetMany();
+            IEnumerable<User> users = await _userRepository.GetMany().ToListAsync();
             
             // If none were found, throw error:
             if(!users.Any())

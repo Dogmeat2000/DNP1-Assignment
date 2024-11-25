@@ -2,6 +2,7 @@
 using DTOconverters;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -65,12 +66,12 @@ public class PostsController : ControllerBase {
     
     // Read Multiple Posts (Read), filtered by forum_id, with optional parameters for filtering by title contents or authorId
     [HttpGet(Name = "GetPosts")]
-    public ActionResult<List<PostDTO>> GetPosts([FromQuery] int fId, [FromQuery] string? searchString, [FromQuery] int? authorId) {
+    public async Task<ActionResult<List<PostDTO>>> GetPosts([FromQuery] int fId, [FromQuery] string? searchString, [FromQuery] int? authorId) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Query all matching Posts:
-            IQueryable<Post> posts = _postRepository.GetMany().Where(p => p.ParentForum_id == fId);
+            IEnumerable<Post> posts = await _postRepository.GetMany().Where(p => p.ParentForum_id == fId).ToListAsync();
             
             if(authorId.HasValue)
                 posts = posts.Where(p => p.Author_id == authorId);

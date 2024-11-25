@@ -3,6 +3,7 @@ using ApiContracts;
 using DTOconverters;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -90,12 +91,12 @@ public class UserProfilesController : ControllerBase {
     
     // Read Multiple UserProfiles (Read):
     [HttpGet(Name = "GetUserProfiles")]
-    public ActionResult<List<UserProfileDTO>> GetUserProfiles([FromQuery] int uId) {
+    public async Task<ActionResult<List<UserProfileDTO>>> GetUserProfiles([FromQuery] int uId) {
         try {
             // TODO: Validate parameters/arguments!
             
             // Query all matching UserProfile:
-            IQueryable<UserProfile> userProfiles = _userProfileRepository.GetMany().Where(uP => uP.User_id == uId);
+            IEnumerable<UserProfile> userProfiles = await _userProfileRepository.GetMany().Where(uP => uP.User_id == uId).ToListAsync();
             
             // If none were found, throw error:
             if(!userProfiles.Any())
