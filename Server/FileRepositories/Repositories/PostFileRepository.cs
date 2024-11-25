@@ -18,7 +18,7 @@ public class PostFileRepository : IPostRepository {
     public async Task<Post> AddAsync(Post post) {
                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post {Title_txt = "", Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -55,7 +55,7 @@ public class PostFileRepository : IPostRepository {
     public async Task UpdateAsync(Post post) {
                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post {Title_txt = "", Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -93,7 +93,7 @@ public class PostFileRepository : IPostRepository {
     public async Task DeleteAsync(int postId, int parentForumId) {
                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post {Title_txt = "", Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -125,7 +125,7 @@ public class PostFileRepository : IPostRepository {
     public async Task<Post> GetSingleAsync(int postId, int parentForumId) {
                         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Post {Title_txt = "", Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -147,7 +147,7 @@ public class PostFileRepository : IPostRepository {
     
     public IQueryable<Post> GetMany() {
         // Load raw data from file:
-        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new Post()).Result;
+        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new Post {Title_txt = "", Body_txt = ""}).Result;
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {

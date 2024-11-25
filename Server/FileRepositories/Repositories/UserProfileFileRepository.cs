@@ -18,7 +18,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
     public async Task<UserProfile> AddAsync(UserProfile userProfile) {
                                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile {Username = "", Password = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -52,7 +52,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
     public async Task UpdateAsync(UserProfile userProfile) {
                                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile {Username = "", Password = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -86,7 +86,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
     public async Task DeleteAsync(int profileId, int userId) {
                                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile {Username = "", Password = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -117,7 +117,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
     public async Task<UserProfile> GetSingleAsync(int profileId, int userId) {
                                         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile {Username = "", Password = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -139,7 +139,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
     public async Task<UserProfile> GetSingleAsync(string username) {
                                         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile {Username = "", Password = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -161,7 +161,7 @@ public class UserProfileFileRepository : IUserProfileRepository {
 
     public IQueryable<UserProfile> GetMany() {
         // Load raw data from file:
-        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile()).Result;
+        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new UserProfile {Username = "", Password = ""}).Result;
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {

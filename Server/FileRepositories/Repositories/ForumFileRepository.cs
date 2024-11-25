@@ -18,7 +18,7 @@ public class ForumFileRepository : IForumRepository {
     public async Task<Forum> AddAsync(Forum forum) {
                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum {Title_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -55,7 +55,7 @@ public class ForumFileRepository : IForumRepository {
     public async Task UpdateAsync(Forum forum) {
                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum {Title_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -95,7 +95,7 @@ public class ForumFileRepository : IForumRepository {
     public async Task DeleteAsync(int forumId, int parentForumId) {
                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum {Title_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -127,7 +127,7 @@ public class ForumFileRepository : IForumRepository {
     public async Task<Forum> GetSingleAsync(int forumId, int parentForumId) {
                         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Forum {Title_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -149,7 +149,7 @@ public class ForumFileRepository : IForumRepository {
     
     public IQueryable<Forum> GetMany() {
         // Load raw data from file:
-        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new Forum()).Result;
+        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new Forum {Title_txt = ""}).Result;
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {

@@ -61,7 +61,10 @@ public class CommentInMemoryRepository : ICommentRepository {
     
     private void GenerateDummyData() {
         for (int i = 0; i <= 5; i++) {
-            Comment comment = new Comment();
+            Comment comment = new Comment {
+                Body_txt = ""
+            };
+            
             switch (i) {
                 case 0:
                     comment.Comment_id = i;

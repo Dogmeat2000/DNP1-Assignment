@@ -26,10 +26,8 @@ public class CreatePost {
             return null;
         
         // Create the post
-        Post newPost = new Post();
+        Post newPost = new Post {Title_txt = title, Body_txt = body};
         newPost.ParentForum_id = parentForumId;
-        newPost.Title_txt = title;
-        newPost.Body_txt = body;
         newPost.Author_id = localUser.User_id;
         
         // Attempt to add post

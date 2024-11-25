@@ -60,7 +60,11 @@ public class PostInMemoryRepository : IPostRepository {
     
     private void GenerateDummyData() {
         for (int i = 0; i <= 6; i++) {
-            Post post = new Post();
+            Post post = new Post {
+                Title_txt = "",
+                Body_txt = ""
+            };
+            
             switch (i) {
                 case 0:
                     post.Post_id = i;

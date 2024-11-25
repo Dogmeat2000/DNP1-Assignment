@@ -39,9 +39,12 @@ public class CreateUser {
             //TODO Check that user was created (is not null)!
             
             // Create and add a corresponding userProfile
-            newUserProfile = await userProfileRepo.AddAsync(new UserProfile(-1, newUser.User_id));
-            newUserProfile.Username = UserName ?? "ERROR NO NAME!";
-            newUserProfile.Password = Password ?? "ERROR NO PASSWORD!";
+            newUserProfile = await userProfileRepo.AddAsync(new UserProfile {
+                Profile_id = -1, 
+                User_id = newUser.User_id, 
+                Username = UserName ?? "ERROR NO NAME!",
+                Password = Password ?? "ERROR NO PASSWORD!"
+            });
 
             await userProfileRepo.UpdateAsync(newUserProfile);
             

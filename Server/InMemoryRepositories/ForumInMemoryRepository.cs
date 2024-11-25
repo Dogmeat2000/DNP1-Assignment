@@ -60,7 +60,10 @@ public class ForumInMemoryRepository : IForumRepository {
     
     private void GenerateDummyData() {
         for (int i = 0; i <= 5; i++) {
-            Forum forum = new Forum();
+            Forum forum = new Forum {
+                Title_txt = ""
+            };
+            
             switch (i) {
                 case 0:
                     forum.Forum_id = i;

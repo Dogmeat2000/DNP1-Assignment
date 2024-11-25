@@ -70,7 +70,11 @@ public class UserProfileInMemoryRepository : IUserProfileRepository {
     
     private void GenerateDummyData() {
         for (int i = 0; i <= 5; i++) {
-            UserProfile userProfile = new UserProfile(0,0);
+            UserProfile userProfile = new UserProfile(0,0) {
+                Password = "",
+                Username = ""
+            };
+            
             switch (i) {
                 case 0:
                     userProfile.Profile_id = 5;

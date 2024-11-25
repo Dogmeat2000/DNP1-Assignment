@@ -15,10 +15,9 @@ public class CreateComment {
             return null;
         
         // Create the Comment:
-        Comment newComment = new Comment();
+        Comment newComment = new Comment {Body_txt = body};
         newComment.ParentPost_id = parentPostId;
         newComment.ParentForum_id = parentForumId;
-        newComment.Body_txt = body;
         newComment.Author_Id = localUser.User_id;
         
         // Attempt to add Comment

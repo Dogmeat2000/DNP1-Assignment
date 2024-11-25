@@ -19,7 +19,7 @@ public class CommentFileRepository : ICommentRepository {
     public async Task<Comment> AddAsync(Comment comment) {
         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment {Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -56,7 +56,7 @@ public class CommentFileRepository : ICommentRepository {
     public async Task UpdateAsync(Comment comment) {
         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment {Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -93,7 +93,7 @@ public class CommentFileRepository : ICommentRepository {
     public async Task DeleteAsync(int commentId, int postId, int forumId) {
         
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment {Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -125,7 +125,7 @@ public class CommentFileRepository : ICommentRepository {
     public async Task<Comment> GetSingleAsync(int commentId, int postId, int forumId) {
                 
         // Load raw data from file:
-        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment());
+        List<object>? rawData = await FileManager.ReadFromJsonFileAsync(_filePath, new Comment {Body_txt = ""});
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
@@ -147,7 +147,7 @@ public class CommentFileRepository : ICommentRepository {
     
     public IQueryable<Comment> GetMany() {
         // Load raw data from file:
-        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new Comment()).Result;
+        List<object>? rawData = FileManager.ReadFromJsonFileAsync(_filePath, new Comment {Body_txt = ""}).Result;
         
         // If data is not null, continue, else abort by throwing an exception!
         if (rawData != null) {
