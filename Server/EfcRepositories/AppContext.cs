@@ -67,7 +67,7 @@ public class AppContext : DbContext {
             
             entity.HasMany(f => f.ChildPosts)
                 .WithOne(p => p.ParentForum)
-                .HasForeignKey(p => p.ParentForum);
+                .HasForeignKey(p => p.ParentForum_id);
             
             entity.HasOne(f => f.ParentForum)
                 .WithMany(f => f.ChildForums)
@@ -83,11 +83,28 @@ public class AppContext : DbContext {
 
             // Navigation properties
             entity.HasOne(p => p.AuthoringUser)
-                .WithMany(p => p.ManagedPosts)
+                .WithMany(u => u.ManagedPosts)
                 .HasForeignKey(p => p.Author_id);
             
             entity.HasMany(p => p.ChildComments)
                 .WithOne(c => c.ParentPost)
+                .HasForeignKey(c => c.ParentPost_id);
+        });
+        
+        
+        // Post entity configuration
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.ToTable("Comments");
+            entity.HasKey(c => c.Comment_id);
+
+            // Navigation properties
+            entity.HasOne(p => p.AuthoringUser)
+                .WithMany(u => u.ManagedComments)
+                .HasForeignKey(c => c.Author_Id);
+            
+            entity.HasOne(c => c.ParentPost)
+                .WithMany(p => p.ChildComments)
                 .HasForeignKey(c => c.ParentPost_id);
         });
         
