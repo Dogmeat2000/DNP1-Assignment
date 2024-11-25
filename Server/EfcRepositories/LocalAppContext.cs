@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EfcRepositories;
 
-public class AppContext : DbContext {
+public class LocalAppContext : DbContext {
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Comment> Comments => Set<Comment>();
@@ -52,13 +52,20 @@ public class AppContext : DbContext {
                 .WithOne(c => c.AuthoringUser)
                 .HasForeignKey(c => c.Author_Id);
         });
-                
+
         
         // Forum entity configuration
         modelBuilder.Entity<Forum>(entity =>
         {
             entity.ToTable("Forums");
             entity.HasKey(f => f.Forum_id);
+            entity.Property(f => f.Timestamp_created).IsRequired();
+            entity.Property(f => f.Timestamp_modified);
+            entity.Property(f => f.Timestamp_deleted);
+            entity.Property(f => f.LastPost_id);
+            entity.Property(f => f.LastComment_id);
+            entity.Property(f => f.LastCommentPost_id);
+            
 
             // Navigation properties
             entity.HasOne(f => f.AuthoringUser)
@@ -72,6 +79,10 @@ public class AppContext : DbContext {
             entity.HasOne(f => f.ParentForum)
                 .WithMany(f => f.ChildForums)
                 .HasForeignKey(f => f.ParentForum_id);
+            
+            entity.HasMany( f => f.ChildForums)
+                .WithOne(f => f.ParentForum)
+                .HasForeignKey(f => f.ParentForum_id);
         });
         
         
@@ -80,11 +91,18 @@ public class AppContext : DbContext {
         {
             entity.ToTable("Posts");
             entity.HasKey(p => p.Post_id);
+            entity.Property(p => p.Timestamp_created).IsRequired();
+            entity.Property(p => p.Timestamp_modified);
+            entity.Property(p => p.Timestamp_deleted);
 
             // Navigation properties
             entity.HasOne(p => p.AuthoringUser)
                 .WithMany(u => u.ManagedPosts)
                 .HasForeignKey(p => p.Author_id);
+            
+            entity.HasOne(p => p.ParentForum)
+                .WithMany(f => f.ChildPosts)
+                .HasForeignKey(f => f.ParentForum_id);
             
             entity.HasMany(p => p.ChildComments)
                 .WithOne(c => c.ParentPost)

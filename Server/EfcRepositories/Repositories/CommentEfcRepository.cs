@@ -7,9 +7,9 @@ namespace EfcRepositories.Repositories;
 
 public class CommentEfcRepository : ICommentRepository {
     
-    private readonly AppContext _context;
+    private readonly LocalAppContext _context;
 
-    public CommentEfcRepository(AppContext context) {
+    public CommentEfcRepository(LocalAppContext context) {
         _context = context;
     }
     

@@ -11,11 +11,6 @@ public class UserProfile
     public User User { get; set; } = null!;
     
     
-    
-    
-    
-    
-    
     public UserProfile(int profile_id, int user_id) {
         Username = "";
         Password = "";

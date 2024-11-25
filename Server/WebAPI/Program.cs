@@ -1,5 +1,5 @@
+using EfcRepositories;
 using EfcRepositories.Repositories;
-using FileRepositories.Repositories;
 using RepositoryContracts;
 
 namespace WebAPI;
@@ -27,6 +27,9 @@ public class Program {
         builder.Services.AddScoped<IPostRepository, PostEfcRepository>();
         builder.Services.AddScoped<IUserProfileRepository, UserProfileEfcRepository>();
         builder.Services.AddScoped<IUserRepository, UserEfcRepository>();
+        
+        // Add the Database context:
+        builder.Services.AddDbContext<LocalAppContext>();
 
         var app = builder.Build();
 

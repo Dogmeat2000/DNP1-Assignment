@@ -7,9 +7,9 @@ namespace EfcRepositories.Repositories;
 
 public class ForumEfcRepository : IForumRepository {
     
-    private readonly AppContext _context;
+    private readonly LocalAppContext _context;
 
-    public ForumEfcRepository(AppContext context) {
+    public ForumEfcRepository(LocalAppContext context) {
         _context = context;
     }
     

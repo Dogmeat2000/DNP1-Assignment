@@ -7,9 +7,9 @@ namespace EfcRepositories.Repositories;
 
 public class PostEfcRepository : IPostRepository {
     
-    private readonly AppContext _context;
+    private readonly LocalAppContext _context;
 
-    public PostEfcRepository(AppContext context) {
+    public PostEfcRepository(LocalAppContext context) {
         _context = context;
     }
     

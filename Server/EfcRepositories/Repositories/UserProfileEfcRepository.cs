@@ -7,9 +7,9 @@ namespace EfcRepositories.Repositories;
 
 public class UserProfileEfcRepository : IUserProfileRepository {
     
-    private readonly AppContext _context;
+    private readonly LocalAppContext _context;
 
-    public UserProfileEfcRepository(AppContext context) {
+    public UserProfileEfcRepository(LocalAppContext context) {
         _context = context;
     }
     
